@@ -29,8 +29,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.FindCallback;
+import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 import com.squareup.picasso.Picasso;
@@ -51,13 +54,6 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -203,20 +199,22 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
             focusView.requestFocus();
         } else {
             // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+            // perform the user login/registration attempt.
+
             mAuthTask = new UserRegisterTask(email, password);
-            mAuthTask.execute((Void) null);
+            /*
+                IMPORTANT: We need two buttons. Login and register. If login clicked:
+             */
+            // mAuthTask.loginUser();
+            // If register:
+            // mAuthTask.registerUser();
+
         }
     }
 
     private boolean isEmailValid(String email) {
         final String email_pattern = "[0-9a-z]+.?[0-9a-z]+@(mail.)?mcgill.ca";
-
-        if (TextUtils.isEmpty(email)) {
-            return false;
-        } else {
-            return Pattern.compile(email_pattern).matcher(email).matches();
-        }
+        return Pattern.compile(email_pattern).matcher(email).matches();
     }
 
     private void validatePassword(String password) {
@@ -338,25 +336,8 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            registerUser(mEmail, mPassword);
+            // Send request to Parse and match if user name and password exist
+            //
             return true;
         }
 
@@ -378,12 +359,23 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
 
         }
 
-        void registerUser(String email, String password) {
+        void loginUser() {
+            ParseUser.logInInBackground(mEmail, mPassword, new LogInCallback() {
+                public void done(ParseUser user, ParseException e) {
+                    if (user != null) {
+                        // Hooray! The user is logged in.
+                    } else {
+                        // Signup failed. Look at the ParseException to see what happened.
+                    }
+                }
+            });
+        }
+
+        void registerUser() {
             ParseUser user = new ParseUser();
-            user.setUsername(email);
-            user.setPassword(password);
-            user.setEmail(email);
-//          user.put("phone", "650-555-0000");
+            user.setUsername(mEmail);
+            user.setPassword(mPassword);
+//            user.setEmail(email);
             user.signUpInBackground(new SignUpCallback() {
                 public void done(ParseException e) {
                     if (e == null) {
