@@ -28,6 +28,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -65,11 +69,9 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
         // load an image to the image view
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         Picasso.with(this).load("file:///android_asset/tutr_img.jpg").fit().into(imageView);
-
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -95,12 +97,37 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
             }
         });
 
-       // mLoginFormView = findViewById(R.id.login_form);
+        //TODO: Just for testing
+        parseRegistrationTest();
+       
+        // mLoginFormView = findViewById(R.id.login_form);
         // hide the action bar
         //getActionBar().hide();
         getSupportActionBar().hide();
     }
 
+    void parseRegistrationTest() {
+        Parse.initialize(this);
+        ParseUser user = new ParseUser();
+        user.setUsername("my name");
+        user.setPassword("my pass");
+        user.setEmail("email@example.com");
+
+// other fields can be set just like with ParseObject
+        user.put("phone", "650-555-0000");
+
+        user.signUpInBackground(new SignUpCallback() {
+            public void done(ParseException e) {
+                if (e == null) {
+                    // Hooray! Let them use the app now.
+                } else {
+                    // Sign up didn't succeed. Look at the ParseException
+                    // to figure out what went wrong
+                }
+            }
+        });
+
+    }
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
