@@ -59,7 +59,7 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+    private UserRegisterTask mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -69,6 +69,8 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+        Parse.initialize(this);
+
         // load an image to the image view
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         Picasso.with(this).load("file:///android_asset/tutr_img.jpg").fit().into(imageView);
@@ -82,7 +84,7 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    attemptRegister();
                     return true;
                 }
                 return false;
@@ -93,41 +95,16 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                attemptRegister();
             }
         });
 
-        //TODO: Just for testing
-        parseRegistrationTest();
-       
         // mLoginFormView = findViewById(R.id.login_form);
         // hide the action bar
         //getActionBar().hide();
         getSupportActionBar().hide();
     }
 
-    void parseRegistrationTest() {
-        Parse.initialize(this);
-        ParseUser user = new ParseUser();
-        user.setUsername("my name");
-        user.setPassword("my pass");
-        user.setEmail("email@example.com");
-
-// other fields can be set just like with ParseObject
-        user.put("phone", "650-555-0000");
-
-        user.signUpInBackground(new SignUpCallback() {
-            public void done(ParseException e) {
-                if (e == null) {
-                    // Hooray! Let them use the app now.
-                } else {
-                    // Sign up didn't succeed. Look at the ParseException
-                    // to figure out what went wrong
-                }
-            }
-        });
-
-    }
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
@@ -185,7 +162,8 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
      */
     boolean cancel = false;
     View focusView = null;
-    private void attemptLogin() {
+
+    private void attemptRegister() {
         if (mAuthTask != null) {
             return;
         }
@@ -200,12 +178,11 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
 
 
         // Check for a valid password
-        if (TextUtils.isEmpty(password)){
+        if (TextUtils.isEmpty(password)) {
             mPasswordView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
-        }
-        else validatePassword(password);
+        } else validatePassword(password);
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
@@ -225,7 +202,7 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserRegisterTask(email, password);
             mAuthTask.execute((Void) null);
         }
     }
@@ -240,25 +217,20 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
         boolean haslowerCaseLetter = !password.equals(password.toUpperCase());
 
         // handle length of password
-        if(password.length() < 8 || password.length() > 16 ) {
+        if (password.length() < 8 || password.length() > 16) {
             mPasswordView.setError(getString(R.string.error_length_password));
             focusView = mPasswordView;
             cancel = true;
-        }
-        else if(!hasCapLetter)
-        {
+        } else if (!hasCapLetter) {
             mPasswordView.setError(getString(R.string.error_CapCase));
             focusView = mPasswordView;
             cancel = true;
-        }
-        else if(!haslowerCaseLetter)
-        {
+        } else if (!haslowerCaseLetter) {
             mPasswordView.setError(getString(R.string.error_lowerCase));
             focusView = mPasswordView;
             cancel = true;
         }
     }
-
 
 
     @Override
@@ -348,12 +320,11 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
+    public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
         private final String mEmail;
         private final String mPassword;
 
-        UserLoginTask(String email, String password) {
+        UserRegisterTask(String email, String password) {
             mEmail = email;
             mPassword = password;
         }
@@ -378,13 +349,13 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
             }
 
             // TODO: register the new account here.
+            registerUser(mEmail, mPassword);
             return true;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-
 
             if (success) {
                 finish();
@@ -398,6 +369,24 @@ public class RegistrationActivity extends AppCompatActivity implements LoaderCal
         protected void onCancelled() {
             mAuthTask = null;
 
+        }
+
+        void registerUser(String email, String password) {
+            ParseUser user = new ParseUser();
+            user.setUsername(email);
+            user.setPassword(password);
+            user.setEmail(email);
+//          user.put("phone", "650-555-0000");
+            user.signUpInBackground(new SignUpCallback() {
+                public void done(ParseException e) {
+                    if (e == null) {
+                        // Hooray! Let them use the app now.
+                    } else {
+                        // Sign up didn't succeed. Look at the ParseException
+                        // to figure out what went wrong
+                    }
+                }
+            });
         }
     }
 }
