@@ -121,7 +121,7 @@
         style="?android:textAppearanceLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save Settings"
+        android:text="Save Changes"
         android:textStyle="bold"
         android:layout_marginTop="25dp"
         android:layout_alignParentBottom="true"
