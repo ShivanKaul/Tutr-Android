@@ -119,7 +119,9 @@ public class AccSetActivity extends AppCompatPreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.settings);
         setupActionBar();
+
     }
 
     /**
