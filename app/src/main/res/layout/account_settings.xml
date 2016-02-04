@@ -9,6 +9,39 @@
     android:background="@color/aluminium">
 
     <TextView
+        android:layout_marginTop="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:textColor="@color/peacockBlue"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        android:text="Change Name"
+        android:id="@+id/textView1"
+        android:layout_gravity="center_horizontal" />
+
+    <EditText
+        android:layout_width="289dp"
+        android:layout_height="@dimen/acc_settings_height"
+        android:hint="@string/promp_enter_new_name"
+        android:imeActionId="@+id/login"
+        android:imeActionLabel="@string/action_sign_in_short"
+        android:imeOptions="actionUnspecified"
+        android:inputType="textPassword"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:background="@color/peacockBlue"
+        android:textColorHint="#ffffff"
+        android:layout_marginTop="25dp"
+        android:textAlignment="center"
+        android:layout_alignBaseline="@+id/email_sign_in_button"
+        android:layout_alignBottom="@+id/email_sign_in_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textColorHighlight="#ffffff"
+        android:textColor="#ffffff" />
+
+    <TextView
         android:layout_marginTop="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -81,38 +114,7 @@
         android:textColorHighlight="#ffffff"
         android:textColor="#ffffff" />
 
-    <TextView
-        android:layout_marginTop="25dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="25dp"
-        android:textColor="@color/peacockBlue"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold"
-        android:text="Change Name"
-        android:id="@+id/textView1"
-        android:layout_gravity="center_horizontal" />
 
-    <EditText
-        android:layout_width="289dp"
-        android:layout_height="@dimen/acc_settings_height"
-        android:hint="@string/promp_enter_new_name"
-        android:imeActionId="@+id/login"
-        android:imeActionLabel="@string/action_sign_in_short"
-        android:imeOptions="actionUnspecified"
-        android:inputType="textPassword"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:background="@color/peacockBlue"
-        android:textColorHint="#ffffff"
-        android:layout_marginTop="25dp"
-        android:textAlignment="center"
-        android:layout_alignBaseline="@+id/email_sign_in_button"
-        android:layout_alignBottom="@+id/email_sign_in_button"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textColorHighlight="#ffffff"
-        android:textColor="#ffffff" />
 
     <Button
         android:id="@+id/email_sign_in_button"
