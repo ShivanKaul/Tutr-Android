@@ -2,7 +2,6 @@ package com.example.android.tutr;
 
 import android.annotation.TargetApi;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentResolver;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -11,39 +10,39 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.parse.LogInCallback;
-import com.parse.Parse;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.SignUpCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class RegistrationActivity extends ActionBarActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -51,74 +50,87 @@ public class RegistrationActivity extends ActionBarActivity implements LoaderCal
     private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
+     * A dummy authentication store containing known user names and passwords.
+     * TODO: remove after connecting to a real authentication system.
+     */
+    private static final String[] DUMMY_CREDENTIALS = new String[]{
+            "foo@example.com:hello", "bar@example.com:world"
+    };
+    /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserRegisterTask mAuthTask = null;
+    private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private TextView mEmailView;
+    private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
-        //Parse.initialize(this);
+        setContentView(R.layout.activity_login);
 
-
-       // Parse.initialize(this);
-
-        // load an image to the image view
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         Picasso.with(this).load("file:///android_asset/tutr_img.jpg").fit().into(imageView);
 
-        // Set up the login form.
-        mEmailView = (TextView) findViewById(R.id.email);
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.email_login);
         populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = (EditText) findViewById(R.id.password_login);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptRegister();
+                    attemptLogin();
                     return true;
                 }
                 return false;
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_login_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptRegister();
+                attemptLogin();
             }
         });
 
-        // hide the action bar
-        //getActionBar().hide();
-        //getSupportActionBar().s;
+        goToRegister();
+        getSupportActionBar().hide();
     }
 
-    public void receiveIntent()
-    {
-        Intent intent = this.getIntent();
-    }
 
+
+    private void goToRegister(){
+        SpannableString ss = new SpannableString("New User? Register here");
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+                startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(true);
+                ds.setColor(R.color.black);
+            }
+        };
+        ss.setSpan(clickableSpan, 19, 23, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        TextView register = (TextView)findViewById(R.id.new_user_text);
+        register.setText(ss);
+        register.setMovementMethod(LinkMovementMethod.getInstance());
+
+
+    }
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
         }
 
-        if (VERSION.SDK_INT >= 14) {
-            // Use ContactsContract.Profile (API 14+)
-            getLoaderManager().initLoader(0, null, this);
-        } else if (VERSION.SDK_INT >= 8) {
-            // Use AccountManager (API 8+)
-            new SetupEmailAutoCompleteTask().execute(null, null);
-        }
+        getLoaderManager().initLoader(0, null, this);
     }
 
     private boolean mayRequestContacts() {
@@ -162,10 +174,7 @@ public class RegistrationActivity extends ActionBarActivity implements LoaderCal
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private boolean cancel = false;
-    private View focusView = null;
-
-    private void attemptRegister() {
+    private void attemptLogin() {
         if (mAuthTask != null) {
             return;
         }
@@ -178,13 +187,15 @@ public class RegistrationActivity extends ActionBarActivity implements LoaderCal
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
+        boolean cancel = false;
+        View focusView = null;
 
-        // Check for a valid password
-        if (TextUtils.isEmpty(password)) {
-            mPasswordView.setError(getString(R.string.error_field_required));
+        // Check for a valid password, if the user entered one.
+        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+            mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
-        } else validatePassword(password);
+        }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
@@ -203,43 +214,22 @@ public class RegistrationActivity extends ActionBarActivity implements LoaderCal
             focusView.requestFocus();
         } else {
             // Show a progress spinner, and kick off a background task to
-            // perform the user login/registration attempt.
-
-            mAuthTask = new UserRegisterTask(email, password);
-            /*
-                IMPORTANT: We need two buttons. Login and register. If login clicked:
-             */
-            // mAuthTask.loginUser();
-            // If register:
-            // mAuthTask.registerUser();
-
+            // perform the user login attempt.
+            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask.execute((Void) null);
         }
     }
 
     private boolean isEmailValid(String email) {
-        final String email_pattern = "[0-9a-z]+.?[0-9a-z]+@(mail.)?mcgill.ca";
-        return Pattern.compile(email_pattern).matcher(email).matches();
+        //TODO: Replace this with your own logic
+        return email.contains("@");
     }
 
-    private void validatePassword(String password) {
-        boolean hasCapLetter = !password.equals(password.toLowerCase());
-        boolean haslowerCaseLetter = !password.equals(password.toUpperCase());
-
-        // handle length of password
-        if (password.length() < 8 || password.length() > 16) {
-            mPasswordView.setError(getString(R.string.error_length_password));
-            focusView = mPasswordView;
-            cancel = true;
-        } else if (!hasCapLetter) {
-            mPasswordView.setError(getString(R.string.error_CapCase));
-            focusView = mPasswordView;
-            cancel = true;
-        } else if (!haslowerCaseLetter) {
-            mPasswordView.setError(getString(R.string.error_lowerCase));
-            focusView = mPasswordView;
-            cancel = true;
-        }
+    private boolean isPasswordValid(String password) {
+        //TODO: Replace this with your own logic
+        return password.length() > 4;
     }
+
 
 
     @Override
@@ -268,11 +258,21 @@ public class RegistrationActivity extends ActionBarActivity implements LoaderCal
             cursor.moveToNext();
         }
 
+        addEmailsToAutoComplete(emails);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
 
+    }
+
+    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
+        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(LoginActivity.this,
+                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
+
+        mEmailView.setAdapter(adapter);
     }
 
 
@@ -287,57 +287,46 @@ public class RegistrationActivity extends ActionBarActivity implements LoaderCal
     }
 
     /**
-     * Use an AsyncTask to fetch the user's email addresses on a background thread, and update
-     * the email text field with results on the main UI thread.
-     */
-    class SetupEmailAutoCompleteTask extends AsyncTask<Void, Void, List<String>> {
-
-        @Override
-        protected List<String> doInBackground(Void... voids) {
-            ArrayList<String> emailAddressCollection = new ArrayList<>();
-
-            // Get all emails from the user's contacts and copy them to a list.
-            ContentResolver cr = getContentResolver();
-            Cursor emailCur = cr.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,
-                    null, null, null);
-            while (emailCur.moveToNext()) {
-                String email = emailCur.getString(emailCur.getColumnIndex(ContactsContract
-                        .CommonDataKinds.Email.DATA));
-                emailAddressCollection.add(email);
-            }
-            emailCur.close();
-
-            return emailAddressCollection;
-        }
-
-        @Override
-        protected void onPostExecute(List<String> emailAddressCollection) {
-        }
-    }
-
-    /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
+    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+
         private final String mEmail;
         private final String mPassword;
 
-        UserRegisterTask(String email, String password) {
+        UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // Send request to Parse and match if user name and password exist
-            //
+            // TODO: attempt authentication against a network service.
+
+            try {
+                // Simulate network access.
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                return false;
+            }
+
+            for (String credential : DUMMY_CREDENTIALS) {
+                String[] pieces = credential.split(":");
+                if (pieces[0].equals(mEmail)) {
+                    // Account exists, return true if the password matches.
+                    return pieces[1].equals(mPassword);
+                }
+            }
+
+            // TODO: register the new account here.
             return true;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
+
 
             if (success) {
                 finish();
@@ -350,36 +339,6 @@ public class RegistrationActivity extends ActionBarActivity implements LoaderCal
         @Override
         protected void onCancelled() {
             mAuthTask = null;
-
-        }
-
-        void loginUser() {
-            ParseUser.logInInBackground(mEmail, mPassword, new LogInCallback() {
-                public void done(ParseUser user, ParseException e) {
-                    if (user != null) {
-                        // Hooray! The user is logged in.
-                    } else {
-                        // Signup failed. Look at the ParseException to see what happened.
-                    }
-                }
-            });
-        }
-
-        void registerUser() {
-            ParseUser user = new ParseUser();
-            user.setUsername(mEmail);
-            user.setPassword(mPassword);
-//            user.setEmail(email);
-            user.signUpInBackground(new SignUpCallback() {
-                public void done(ParseException e) {
-                    if (e == null) {
-                        // Hooray! Let them use the app now.
-                    } else {
-                        // Sign up didn't succeed. Look at the ParseException
-                        // to figure out what went wrong
-                    }
-                }
-            });
         }
     }
 }

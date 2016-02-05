@@ -14,9 +14,14 @@
     <string name="error_lowerCase">The password must have a lower case letter</string>
 
 
-
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="title_activity_login">Login</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="new_user_test">new user? Register <u>here</u></string>
+    <string name="name">Name</string>
+
+    <string name="here"><u>here</u></string>
 </resources>

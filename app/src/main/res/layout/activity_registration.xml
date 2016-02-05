@@ -5,13 +5,15 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context="com.example.android.tutr.RegistrationActivity"
-    android:background="@color/aluminium">
+    android:background="@color/aluminium"
+    >
+
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="145dp"
+        android:layout_height="120dp"
         android:id="@+id/imageView"
-        android:src="@mipmap/tutr_logo"
+        android:src="@mipmap/ic_launcher"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -19,10 +21,10 @@
         android:layout_alignParentStart="true" />
 
 
-    <AutoCompleteTextView
+    <EditText
         android:id="@+id/email"
         android:layout_width="289dp"
-        android:layout_height="@dimen/height"
+        android:layout_height="50dp"
         android:hint="@string/prompt_email"
         android:inputType="textEmailAddress"
         android:maxLines="1"
@@ -33,15 +35,36 @@
         android:textColorHint="#ffffff"
         android:textIsSelectable="true"
         android:textAlignment="center"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="35dp"
         android:layout_above="@+id/password"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        />
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="289dp"
+        android:layout_height="50dp"
+        android:hint="@string/name"
+        android:inputType="text"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:background="@color/peacockBlue"
+        android:textColor="#ffffff"
+        android:textColorHighlight="#ffffff"
+        android:textColorHint="#ffffff"
+        android:textIsSelectable="true"
+        android:textAlignment="center"
+        android:layout_marginTop="25dp"
+        android:layout_above="@+id/password"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        />
 
     <EditText
         android:id="@+id/password"
         android:layout_width="289dp"
-        android:layout_height="@dimen/height"
+        android:layout_height="50dp"
         android:hint="@string/prompt_password"
         android:imeActionId="@+id/login"
         android:imeActionLabel="@string/action_sign_in_short"
@@ -53,8 +76,7 @@
         android:textColorHint="#ffffff"
         android:layout_marginTop="25dp"
         android:textAlignment="center"
-        android:layout_alignBaseline="@+id/email_sign_in_button"
-        android:layout_alignBottom="@+id/email_sign_in_button"
+        android:layout_alignBottom="@+id/name"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textColorHighlight="#ffffff"
