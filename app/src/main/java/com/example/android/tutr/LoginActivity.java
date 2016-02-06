@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
 //            ParseUser.logOut();
-            System.out.println("User already logged in!");
+            System.out.println("DEBUG: User already logged in!");
             finish();
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
         }

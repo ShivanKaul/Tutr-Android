@@ -37,10 +37,6 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
     private EditText nameView;
     private EditText mPasswordView;
 
-//    private static String mEmail;
-//    private static String mPassword;
-//    private static String mName;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,8 +119,6 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
             // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login/registration attempt.
             register(mEmail, mPassword, mName);
         }
     }
