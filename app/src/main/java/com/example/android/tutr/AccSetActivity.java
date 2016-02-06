@@ -138,6 +138,8 @@ public class AccSetActivity extends AppCompatPreferenceActivity {
     }
 
 
+    View focusView = null;
+    boolean cancel = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,34 +147,106 @@ public class AccSetActivity extends AppCompatPreferenceActivity {
         setContentView(R.layout.account_settings);
         setupActionBar();
 
-        EditText newNameText = (EditText)findViewById(R.id.enterNewName);
-        String newNameString = newNameText.getText().toString();
-
-        EditText oldPasswordText = (EditText)findViewById(R.id.enterOldPassword);
-        String oldPasswordString = newNameText.getText().toString();
-
-        EditText newPasswordText = (EditText)findViewById(R.id.enterNewPassword);
-        String newPasswordString = newNameText.getText().toString();
-
-        EditText confirmPasswordText = (EditText)findViewById(R.id.confirmNewPassword);
-        String confirmPasswordString = newNameText.getText().toString();
-
-        Button saveChangesButton; = findViewById(R.id.accountSettingsSaveChangesButton);
+        Button saveChangesButton = (Button) findViewById(R.id.accountSettingsSaveChangesButton);
 
         saveChangesButton.setOnClickListener(
                 new OnClickListener() {
                     public void onClick(View view) {
-                       saveChanges();
+                        saveChanges();
                     }
                 });
     }
 
     protected void saveChanges() {
 
+        // get all use text inputs
+        EditText oldPasswordText = (EditText)findViewById(R.id.enterOldPassword);
+        String oldPasswordString = oldPasswordText.getText().toString();
+
+        EditText newPasswordText = (EditText)findViewById(R.id.enterNewPassword);
+        String newPasswordString = newPasswordText.getText().toString();
+
+        EditText confirmPasswordText = (EditText)findViewById(R.id.confirmNewPassword);
+        String confirmPasswordString = confirmPasswordText.getText().toString();
+
+        EditText newNameText = (EditText)findViewById(R.id.enterNewName);
+        String newNameString = newNameText.getText().toString();
+        // all user inputs acquired
+
+        // Check for a validity of input
+        if (TextUtils.isEmpty(oldPasswordString)) {
+            oldPasswordText.setError(getString(R.string.error_field_required));
+            focusView = oldPasswordText;
+            cancel = true;
+        }
+        else if (TextUtils.isEmpty(newPasswordString)) {
+            newPasswordText.setError(getString(R.string.error_field_required));
+            focusView = newPasswordText;
+            cancel = true;
+        }
+        else if (TextUtils.isEmpty(confirmPasswordString)) {
+            confirmPasswordText.setError(getString(R.string.error_field_required));
+            focusView = confirmPasswordText;
+            cancel = true;
+        }
+        else if (checkEqualsPasswords(newPasswordString,oldPasswordString))
+            validatePassword(newPasswordString, newPasswordText);
+
+        if (cancel) {
+            // There was an error; don't attempt saving password
+            // form field with an error.
+            focusView.requestFocus();
+        } else
+            setNewPasswordOnParse(newPasswordString);
+
+        cancel = false;
+        if (TextUtils.isEmpty(newNameString)) {
+            newNameText.setError(getString(R.string.error_field_required));
+            focusView = newNameText;
+            cancel = true;
+        }
+        else if (checkValidName(newNameString))
+            setNewNameOnParse(newNameString);
+
+        if (cancel) {
+            // There was an error; don't attempt saving password
+            // form field with an error.
+            focusView.requestFocus();
+        } else
+            setNewNameOnParse(newPasswordString);
     }
 
-    protected void changePassword() {
+    protected boolean checkEqualsPasswords(String s1, String s2) {
+        return (s1.equals(s2) && s1.length() != 0 && s2.length() != 0);
+    }
 
+    private void validatePassword(String password, EditText newPasswordText) {
+        boolean hasCapLetter = !password.equals(password.toLowerCase());
+        boolean haslowerCaseLetter = !password.equals(password.toUpperCase());
+
+        // handle length of password
+        if (password.length() < 8 || password.length() > 16) {
+            newPasswordText.setError(getString(R.string.error_length_password));
+            focusView = newPasswordText;
+            cancel = true;
+        } else if (!hasCapLetter) {
+            newPasswordText.setError(getString(R.string.error_CapCase));
+            focusView = newPasswordText;
+            cancel = true;
+        } else if (!haslowerCaseLetter) {
+            newPasswordText.setError(getString(R.string.error_lowerCase));
+            focusView = newPasswordText;
+            cancel = true;
+        }
+    }
+
+    protected boolean checkValidName(String s) {
+        // TODO
+        return false;
+    }
+
+    protected void setNewNameOnParse(String s) {
+        // TODO
     }
 
     protected void setNewPasswordOnParse(String new_password) {
