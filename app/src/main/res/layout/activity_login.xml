@@ -10,7 +10,7 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="145dp"
+            android:layout_height="130dp"
             android:id="@+id/imageView"
             android:src="@mipmap/ic_launcher"
             android:layout_alignParentTop="true"
@@ -20,24 +20,26 @@
             android:layout_alignParentStart="true" />
 
 
-            <AutoCompleteTextView
+            <EditText
                 android:id="@+id/email_login"
                 android:layout_width="289dp"
                 android:layout_height="@dimen/height"
                 android:hint="@string/prompt_email"
                 android:inputType="textEmailAddress"
+                android:imeActionId="@+id/login"
+                android:imeActionLabel="@string/action_sign_in"
+                android:imeOptions="actionSend"
                 android:maxLines="1"
                 android:singleLine="true"
+                android:focusable="true"
                 android:background="@color/peacockBlue"
                 android:textColor="#ffffff"
                 android:textColorHighlight="#ffffff"
                 android:textColorHint="#ffffff"
-                android:textIsSelectable="true"
                 android:textAlignment="center"
                 android:layout_marginTop="45dp"
                 android:layout_above="@+id/password_login">
-
-            </AutoCompleteTextView>
+            </EditText>
 
 
 
@@ -47,11 +49,12 @@
                 android:layout_height="@dimen/height"
                 android:hint="@string/prompt_password"
                 android:imeActionId="@+id/login"
-                android:imeActionLabel="@string/action_sign_in_short"
-                android:imeOptions="actionUnspecified"
+                android:imeActionLabel="@string/action_sign_in"
+                android:imeOptions="actionSend"
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:singleLine="true"
+                android:focusable="true"
                 android:background="@color/peacockBlue"
                 android:textColorHint="#ffffff"
                 android:layout_marginTop="25dp"
@@ -67,7 +70,7 @@
             style="?android:textAppearanceLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/action_register"
+            android:text="@string/action_sign_in"
             android:textStyle="bold"
             android:layout_marginTop="25dp"
             android:layout_alignParentBottom="true"

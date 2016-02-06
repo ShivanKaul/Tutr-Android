@@ -1,25 +1,26 @@
 <resources>
     <string name="app_name">Tutr</string>
 
-    <!-- Strings related to login -->
+    <!-- Strings related to Registration -->
+    <string name="title_activity_registration">Registration</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_register">Sign Up</string>
-    <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_length_password">The password has to be 8 to 16 characters long</string>
     <string name="error_CapCase">The password must have a capitol letter</string>
     <string name="error_lowerCase">The password must have a lower case letter</string>
-
-
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <!-- Strings related to Login -->
+
     <string name="title_activity_login">Login</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in">Sign in</string>
     <string name="new_user_test">new user? Register <u>here</u></string>
     <string name="name">Name</string>
 
