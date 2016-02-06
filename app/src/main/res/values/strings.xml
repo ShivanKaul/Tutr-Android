@@ -14,10 +14,10 @@
     <string name="error_CapCase">The password must have a capital letter</string>
     <string name="error_lowerCase">The password must have a lower case letter</string>
 
-    <string name="promp_old_password">Enter Old Password</string>
-    <string name="promp_new_password">Enter New Password</string>
-    <string name="promp_confirm_new_password">Confirm New Password</string>
-    <string name="promp_enter_new_name">Enter New Name</string>
+    <string name="prompt_old_password">Enter Old Password</string>
+    <string name="prompt_new_password">Enter New Password</string>
+    <string name="prompt_confirm_new_password">Confirm New Password</string>
+    <string name="prompt_enter_new_name">Enter New Name</string>
 
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email

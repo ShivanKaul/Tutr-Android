@@ -17,17 +17,14 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold"
         android:text="Change Name"
-        android:id="@+id/textView1"
         android:layout_gravity="center_horizontal" />
 
     <EditText
+        android:id="@+id/enterNewName"
         android:layout_width="289dp"
         android:layout_height="@dimen/acc_settings_height"
-        android:hint="@string/promp_enter_new_name"
-        android:imeActionId="@+id/login"
-        android:imeActionLabel="@string/action_sign_in_short"
-        android:imeOptions="actionUnspecified"
-        android:inputType="textPassword"
+        android:hint="@string/prompt_enter_new_name"
+        android:inputType="text"
         android:maxLines="1"
         android:singleLine="true"
         android:background="@color/peacockBlue"
@@ -53,10 +50,11 @@
         android:id="@+id/textView"
         android:layout_gravity="center_horizontal" />
 
-    <AutoCompleteTextView
+    <EditText
+        android:id="@+id/enterOldPassword"
         android:layout_width="289dp"
         android:layout_height="@dimen/acc_settings_height"
-        android:hint="@string/promp_old_password"
+        android:hint="@string/prompt_old_password"
         android:inputType="textPassword"
         android:maxLines="1"
         android:singleLine="true"
@@ -73,14 +71,12 @@
         android:ellipsize="start" />
 
     <EditText
+        android:id="@+id/enterNewPassword"
         android:layout_width="289dp"
         android:layout_height="@dimen/acc_settings_height"
-        android:hint="@string/promp_new_password"
-        android:imeActionId="@+id/login"
-        android:imeActionLabel="@string/action_sign_in_short"
-        android:imeOptions="actionUnspecified"
         android:inputType="textPassword"
         android:maxLines="1"
+        android:hint="@string/prompt_new_password"
         android:singleLine="true"
         android:background="@color/peacockBlue"
         android:textColorHint="#ffffff"
@@ -94,12 +90,10 @@
         android:textColor="#ffffff" />
 
     <EditText
+        android:id="@+id/confirmNewPassword"
         android:layout_width="289dp"
         android:layout_height="@dimen/acc_settings_height"
-        android:hint="@string/promp_confirm_new_password"
-        android:imeActionId="@+id/login"
-        android:imeActionLabel="@string/action_sign_in_short"
-        android:imeOptions="actionUnspecified"
+        android:hint="@string/prompt_confirm_new_password"
         android:inputType="textPassword"
         android:maxLines="1"
         android:singleLine="true"
@@ -114,10 +108,8 @@
         android:textColorHighlight="#ffffff"
         android:textColor="#ffffff" />
 
-
-
     <Button
-        android:id="@+id/email_sign_in_button"
+        android:id="@+id/accountSettingsSaveChangesButton"
         style="?android:textAppearanceLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

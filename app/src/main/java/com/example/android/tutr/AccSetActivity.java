@@ -18,7 +18,23 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.parse.FindCallback;
+import com.parse.LogInCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 import java.util.List;
 
@@ -85,6 +101,11 @@ public class AccSetActivity extends AppCompatPreferenceActivity {
             return true;
         }
     };
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     /**
      * Helper method to determine if the device has an extra-large screen. For
@@ -116,12 +137,48 @@ public class AccSetActivity extends AppCompatPreferenceActivity {
                         .getString(preference.getKey(), ""));
     }
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_settings);
         setupActionBar();
 
+        EditText newNameText = (EditText)findViewById(R.id.enterNewName);
+        String newNameString = newNameText.getText().toString();
+
+        EditText oldPasswordText = (EditText)findViewById(R.id.enterOldPassword);
+        String oldPasswordString = newNameText.getText().toString();
+
+        EditText newPasswordText = (EditText)findViewById(R.id.enterNewPassword);
+        String newPasswordString = newNameText.getText().toString();
+
+        EditText confirmPasswordText = (EditText)findViewById(R.id.confirmNewPassword);
+        String confirmPasswordString = newNameText.getText().toString();
+
+        Button saveChangesButton; = findViewById(R.id.accountSettingsSaveChangesButton);
+
+        saveChangesButton.setOnClickListener(
+                new OnClickListener() {
+                    public void onClick(View view) {
+                       saveChanges();
+                    }
+                });
+    }
+
+    protected void saveChanges() {
+
+    }
+
+    protected void changePassword() {
+
+    }
+
+    protected void setNewPasswordOnParse(String new_password) {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        currentUser.setPassword(new_password);
+        currentUser.saveInBackground();
     }
 
     /**
@@ -163,6 +220,46 @@ public class AccSetActivity extends AppCompatPreferenceActivity {
                 || NotificationPreferenceFragment.class.getName().equals(fragmentName);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "AccSet Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.android.tutr/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "AccSet Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.android.tutr/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
+
     /**
      * This fragment shows general preferences only. It is used when the
      * activity is showing a two-pane account_settings UI.
@@ -187,7 +284,7 @@ public class AccSetActivity extends AppCompatPreferenceActivity {
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
             if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                startActivity(new Intent(getActivity(), AccSetActivity.class));
                 return true;
             }
             return super.onOptionsItemSelected(item);
@@ -217,7 +314,7 @@ public class AccSetActivity extends AppCompatPreferenceActivity {
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
             if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                startActivity(new Intent(getActivity(), AccSetActivity.class));
                 return true;
             }
             return super.onOptionsItemSelected(item);
@@ -247,7 +344,7 @@ public class AccSetActivity extends AppCompatPreferenceActivity {
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
             if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                startActivity(new Intent(getActivity(), AccSetActivity.class));
                 return true;
             }
             return super.onOptionsItemSelected(item);
