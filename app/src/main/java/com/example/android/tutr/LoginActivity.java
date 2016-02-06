@@ -131,8 +131,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         TextView register = (TextView) findViewById(R.id.new_user_text);
         register.setText(ss);
         register.setMovementMethod(LinkMovementMethod.getInstance());
-
-
     }
 
     private void populateAutoComplete() {
@@ -357,7 +355,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         // Hooray! The user is logged in.
                         Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_LONG).show();
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        //TODO: After redirection, 'back' button should not redirect to here again
+                        finish();
                     } else {
                         // Signup failed. Look at the ParseException to see what happened.
                         Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();

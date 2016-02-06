@@ -198,15 +198,8 @@ public class RegistrationActivity extends ActionBarActivity implements LoaderCal
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login/registration attempt.
-
             mAuthTask = new UserRegisterTask(email, password);
-            /*
-                IMPORTANT: We need two buttons. Login and register. If login clicked:
-             */
-            // mAuthTask.loginUser();
-            // If register:
             mAuthTask.registerUser();
-
         }
     }
 
@@ -347,18 +340,6 @@ public class RegistrationActivity extends ActionBarActivity implements LoaderCal
 
         }
 
-        void loginUser() {
-            ParseUser.logInInBackground(mEmail, mPassword, new LogInCallback() {
-                public void done(ParseUser user, ParseException e) {
-                    if (user != null) {
-                        // Hooray! The user is logged in.
-                    } else {
-                        // Signup failed. Look at the ParseException to see what happened.
-                    }
-                }
-            });
-        }
-
         void registerUser() {
             ParseUser user = new ParseUser();
             user.setUsername(mEmail);
@@ -372,7 +353,7 @@ public class RegistrationActivity extends ActionBarActivity implements LoaderCal
                         try {
                             ParseUser.logIn(mEmail, mPassword);
                             startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
-                            //TODO: After redirection, 'back' button should not redirect to here again
+                            finish();
                         } catch (ParseException e1) {
                             Intent intent = getIntent();
                             finish();
