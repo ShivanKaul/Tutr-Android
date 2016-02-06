@@ -369,11 +369,22 @@ public class RegistrationActivity extends ActionBarActivity implements LoaderCal
                     if (e == null) {
                         // Hooray! Let them use the app now.
                         Toast.makeText(RegistrationActivity.this, "Registration Successful!", Toast.LENGTH_LONG).show();
-                        //TODO: Redirection to another activity needed.
+                        try {
+                            ParseUser.logIn(mEmail, mPassword);
+                            startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+                            //TODO: After redirection, 'back' button should not redirect to here again
+                        } catch (ParseException e1) {
+                            Intent intent = getIntent();
+                            finish();
+                            startActivity(intent);
+                        }
                     } else {
                         // Sign up didn't succeed. Look at the ParseException
                         // to figure out what went wrong
                         Toast.makeText(RegistrationActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        Intent intent = getIntent();
+                        finish();
+                        startActivity(intent);
                     }
                 }
             });

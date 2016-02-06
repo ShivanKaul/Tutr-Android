@@ -356,10 +356,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     if (user != null) {
                         // Hooray! The user is logged in.
                         Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_LONG).show();
-                        //TODO: Redirection to Main page needed.
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        //TODO: After redirection, 'back' button should not redirect to here again
                     } else {
                         // Signup failed. Look at the ParseException to see what happened.
                         Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        Intent intent = getIntent();
+                        finish();
+                        startActivity(intent);
                     }
                 }
             });
