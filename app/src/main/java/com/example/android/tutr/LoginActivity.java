@@ -19,7 +19,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.parse.LogInCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -27,6 +32,8 @@ import com.squareup.picasso.Picasso;
  */
 public class LoginActivity extends AppCompatActivity implements TextView.OnEditorActionListener {
 
+
+    private static boolean PARSE_INITIALIZED = false;
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -48,7 +55,10 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        if (!PARSE_INITIALIZED) {
+            Parse.initialize(this);
+            PARSE_INITIALIZED = true;
+        }
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         Picasso.with(this).load("file:///android_asset/tutr_img.jpg").fit().into(imageView);
 
@@ -70,7 +80,6 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
     }
 
 
-
     // set the "here" clickable in "new user? Register here
     private void goToRegister(){
         SpannableString ss = new SpannableString("New User? Register here");
@@ -79,6 +88,7 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
             public void onClick(View textView) {
                 startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
             }
+
             @Override
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
@@ -88,11 +98,9 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         };
         ss.setSpan(clickableSpan, 19, 23, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        TextView register = (TextView)findViewById(R.id.new_user_text);
+        TextView register = (TextView) findViewById(R.id.new_user_text);
         register.setText(ss);
         register.setMovementMethod(LinkMovementMethod.getInstance());
-
-
     }
 
     /**
@@ -142,7 +150,7 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            mAuthTask.loginUser();
         }
     }
 
@@ -164,10 +172,6 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         }
         return false;
     }
-
-
-
-
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -209,7 +213,6 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
 
-
             if (success) {
                 finish();
             } else {
@@ -221,6 +224,25 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         @Override
         protected void onCancelled() {
             mAuthTask = null;
+        }
+
+        void loginUser() {
+            ParseUser.logInInBackground(mEmail, mPassword, new LogInCallback() {
+                public void done(ParseUser user, ParseException e) {
+                    if (user != null) {
+                        // Hooray! The user is logged in.
+                        Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
+                    } else {
+                        // Signup failed. Look at the ParseException to see what happened.
+                        Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        Intent intent = getIntent();
+                        finish();
+                        startActivity(intent);
+                    }
+                }
+            });
         }
     }
 }

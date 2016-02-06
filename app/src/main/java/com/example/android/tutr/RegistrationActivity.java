@@ -1,5 +1,6 @@
 package com.example.android.tutr;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -12,12 +13,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.parse.LogInCallback;
+import android.widget.Toast;
+
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 import com.squareup.picasso.Picasso;
+
 import java.util.regex.Pattern;
+
 
 /**
  * A login screen that offers login via email/password.
@@ -38,8 +42,6 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-        //Parse.initialize(this);
-
 
         // load an image to the image view
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
@@ -125,15 +127,8 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login/registration attempt.
-
             mAuthTask = new UserRegisterTask(email, password);
-            /*
-                IMPORTANT: We need two buttons. Login and register. If login clicked:
-             */
-            // mAuthTask.loginUser();
-            // If register:
-            // mAuthTask.registerUser();
-
+            mAuthTask.registerUser();
         }
     }
 
@@ -211,18 +206,6 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
 
         }
 
-        void loginUser() {
-            ParseUser.logInInBackground(mEmail, mPassword, new LogInCallback() {
-                public void done(ParseUser user, ParseException e) {
-                    if (user != null) {
-                        // Hooray! The user is logged in.
-                    } else {
-                        // Signup failed. Look at the ParseException to see what happened.
-                    }
-                }
-            });
-        }
-
         void registerUser() {
             ParseUser user = new ParseUser();
             user.setUsername(mEmail);
@@ -232,9 +215,23 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
                 public void done(ParseException e) {
                     if (e == null) {
                         // Hooray! Let them use the app now.
+                        Toast.makeText(RegistrationActivity.this, "Registration Successful!", Toast.LENGTH_LONG).show();
+                        try {
+                            ParseUser.logIn(mEmail, mPassword);
+                            startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+                            finish();
+                        } catch (ParseException e1) {
+                            Intent intent = getIntent();
+                            finish();
+                            startActivity(intent);
+                        }
                     } else {
                         // Sign up didn't succeed. Look at the ParseException
                         // to figure out what went wrong
+                        Toast.makeText(RegistrationActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        Intent intent = getIntent();
+                        finish();
+                        startActivity(intent);
                     }
                 }
             });

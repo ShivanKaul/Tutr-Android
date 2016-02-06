@@ -25,4 +25,12 @@
     <string name="name">Name</string>
 
     <string name="here"><u>here</u></string>
+    <string name="title_activity_homepage">HomepageActivity</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_login">Sign In</string>
 </resources>
