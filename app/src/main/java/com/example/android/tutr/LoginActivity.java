@@ -27,6 +27,8 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
+import java.util.regex.Pattern;
+
 /**
  * A login screen that offers login via email/password.
  */
@@ -133,8 +135,8 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
         }
@@ -150,6 +152,8 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
             cancel = true;
         }
 
+
+
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
@@ -163,8 +167,8 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+        final String email_pattern = "[0-9a-z]+.?[0-9a-z]+@(mail.)?mcgill.ca";
+        return Pattern.compile(email_pattern).matcher(email).matches();
     }
 
     private boolean isPasswordValid(String password) {
