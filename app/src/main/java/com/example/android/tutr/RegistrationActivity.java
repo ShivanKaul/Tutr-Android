@@ -26,9 +26,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.parse.LogInCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -63,11 +63,6 @@ public class RegistrationActivity extends ActionBarActivity implements LoaderCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-        //Parse.initialize(this);
-
-
-       // Parse.initialize(this);
-
         // load an image to the image view
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         Picasso.with(this).load("file:///android_asset/tutr_img.jpg").fit().into(imageView);
@@ -101,8 +96,7 @@ public class RegistrationActivity extends ActionBarActivity implements LoaderCal
         //getSupportActionBar().s;
     }
 
-    public void receiveIntent()
-    {
+    public void receiveIntent() {
         Intent intent = this.getIntent();
     }
 
@@ -211,7 +205,7 @@ public class RegistrationActivity extends ActionBarActivity implements LoaderCal
              */
             // mAuthTask.loginUser();
             // If register:
-            // mAuthTask.registerUser();
+            mAuthTask.registerUser();
 
         }
     }
@@ -374,9 +368,12 @@ public class RegistrationActivity extends ActionBarActivity implements LoaderCal
                 public void done(ParseException e) {
                     if (e == null) {
                         // Hooray! Let them use the app now.
+                        Toast.makeText(RegistrationActivity.this, "Registration Successful!", Toast.LENGTH_LONG).show();
+                        //TODO: Redirection to another activity needed.
                     } else {
                         // Sign up didn't succeed. Look at the ParseException
                         // to figure out what went wrong
+                        Toast.makeText(RegistrationActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             });

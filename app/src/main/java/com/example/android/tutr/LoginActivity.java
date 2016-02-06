@@ -31,7 +31,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.parse.LogInCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -69,6 +74,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Parse.initialize(this);
 
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         Picasso.with(this).load("file:///android_asset/tutr_img.jpg").fit().into(imageView);
@@ -101,14 +107,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
 
-
-    private void goToRegister(){
+    private void goToRegister() {
         SpannableString ss = new SpannableString("New User? Register here");
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View textView) {
                 startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
             }
+
             @Override
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
@@ -118,7 +124,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         };
         ss.setSpan(clickableSpan, 19, 23, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        TextView register = (TextView)findViewById(R.id.new_user_text);
+        TextView register = (TextView) findViewById(R.id.new_user_text);
         register.setText(ss);
         register.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -216,7 +222,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            mAuthTask.loginUser();
         }
     }
 
@@ -229,7 +235,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         //TODO: Replace this with your own logic
         return password.length() > 4;
     }
-
 
 
     @Override
@@ -339,6 +344,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected void onCancelled() {
             mAuthTask = null;
+        }
+
+        void loginUser() {
+            ParseUser.logInInBackground(mEmail, mPassword, new LogInCallback() {
+                public void done(ParseUser user, ParseException e) {
+                    if (user != null) {
+                        // Hooray! The user is logged in.
+                        Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_LONG).show();
+                        //TODO: Redirection to Main page needed.
+                    } else {
+                        // Signup failed. Look at the ParseException to see what happened.
+                        Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
         }
     }
 }
