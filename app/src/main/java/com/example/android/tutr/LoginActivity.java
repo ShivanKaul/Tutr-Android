@@ -59,6 +59,14 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
             Parse.initialize(this);
             PARSE_INITIALIZED = true;
         }
+
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
+//            ParseUser.logOut();
+            System.out.println("User already logged in!");
+            finish();
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        }
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
         Picasso.with(this).load("file:///android_asset/tutr_img.jpg").fit().into(imageView);
 

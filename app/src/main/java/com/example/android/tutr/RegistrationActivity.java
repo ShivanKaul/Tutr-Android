@@ -31,12 +31,15 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserRegisterTask mAuthTask = null;
 
     // UI references.
     private EditText mEmailView;
     private EditText nameView;
     private EditText mPasswordView;
+
+//    private static String mEmail;
+//    private static String mPassword;
+//    private static String mName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +68,6 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
                 attemptRegister();
             }
         });
-
-        // hide the action bar
-        //getActionBar().hide();
-        //getSupportActionBar().s;
     }
 
 
@@ -81,9 +80,7 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
     private View focusView = null;
 
     private void attemptRegister() {
-        if (mAuthTask != null) {
-            return;
-        }
+        System.out.println("DEBUG: Entered attemptRegister method");
 
         // Reset errors.
         mEmailView.setError(null);
@@ -92,29 +89,30 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
 
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String mEmail = mEmailView.getText().toString();
+        final String mPassword = mPasswordView.getText().toString();
+        final String mName = nameView.getText().toString();
 
 
         // Check for a valid password
-        if (TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(mPassword)) {
             mPasswordView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
-        } else validatePassword(password);
+        } else validatePassword(mPassword);
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
+        if (TextUtils.isEmpty(mEmail)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        } else if (!isEmailValid(mEmail)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
         }
         // Check for name
-        if (TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(mName)) {
             nameView.setError(getString(R.string.error_field_required));
             focusView = nameView;
             cancel = true;
@@ -127,8 +125,7 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login/registration attempt.
-            mAuthTask = new UserRegisterTask(email, password);
-            mAuthTask.registerUser();
+            register(mEmail, mPassword, mName);
         }
     }
 
@@ -168,74 +165,28 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
         return handled;
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
-        private final String mEmail;
-        private final String mPassword;
-
-        UserRegisterTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // Send request to Parse and match if user name and password exist
-            //
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-
-            if (success) {
-                finish();
-            } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-
-        }
-
-        void registerUser() {
-            ParseUser user = new ParseUser();
-            user.setUsername(mEmail);
-            user.setPassword(mPassword);
-//            user.setEmail(email);
-            user.signUpInBackground(new SignUpCallback() {
-                public void done(ParseException e) {
-                    if (e == null) {
-                        // Hooray! Let them use the app now.
-                        Toast.makeText(RegistrationActivity.this, "Registration Successful!", Toast.LENGTH_LONG).show();
-                        try {
-                            ParseUser.logIn(mEmail, mPassword);
-                            startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
-                            finish();
-                        } catch (ParseException e1) {
-                            Intent intent = getIntent();
-                            finish();
-                            startActivity(intent);
-                        }
-                    } else {
-                        // Sign up didn't succeed. Look at the ParseException
-                        // to figure out what went wrong
-                        Toast.makeText(RegistrationActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                        Intent intent = getIntent();
-                        finish();
-                        startActivity(intent);
-                    }
+    void register(final String mEmail, final String mPassword, final String mName) {
+        ParseUser user = new ParseUser();
+        user.setUsername(mName);
+        user.setPassword(mPassword);
+        user.setEmail(mEmail);
+        user.signUpInBackground(new SignUpCallback() {
+            public void done(ParseException e) {
+                if (e == null) {
+                    // Hooray! Let them use the app now.
+                    Toast.makeText(RegistrationActivity.this, "Registration Successful!", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
+                    finish();
+                } else {
+                    // Sign up didn't succeed. Look at the ParseException
+                    // to figure out what went wrong
+                    Toast.makeText(RegistrationActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
                 }
-            });
-        }
+            }
+        });
     }
 }
 
