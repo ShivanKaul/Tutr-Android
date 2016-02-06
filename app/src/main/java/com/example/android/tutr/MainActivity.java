@@ -71,11 +71,11 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_logout) {
             // Handle the camera action
-        }  else if (id == R.id.nav_share) {
+        }  else if (id == R.id.nav_account_mod) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_profile_mod) {
 
         }
 
