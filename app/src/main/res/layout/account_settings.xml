@@ -1,45 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:id="@+id/my_linear_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context="com.example.android.tutr.RegistrationActivity"
+    tools:context="com.example.android.tutr.AccSetActivity"
     android:background="@color/aluminium">
 
-    <TextView
-        android:layout_marginTop="25dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="25dp"
-        android:textColor="@color/peacockBlue"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textStyle="bold"
-        android:text="Change Name"
-        android:layout_gravity="center_horizontal" />
-
     <EditText
-        android:id="@+id/enterNewName"
+        android:id="@+id/enterOldPassword"
         android:layout_width="289dp"
         android:layout_height="@dimen/acc_settings_height"
-        android:hint="@string/prompt_enter_new_name"
-        android:inputType="text"
-        android:maxLines="1"
-        android:singleLine="true"
+        android:hint="@string/prompt_old_password"
+        android:textSize="15dp"
+        android:inputType="textPassword"
         android:background="@color/peacockBlue"
+        android:textColor="#ffffff"
+        android:textColorHighlight="#ffffff"
         android:textColorHint="#ffffff"
-        android:layout_marginTop="25dp"
+        android:textIsSelectable="true"
         android:textAlignment="center"
-        android:layout_alignBaseline="@+id/email_sign_in_button"
-        android:layout_alignBottom="@+id/email_sign_in_button"
+        android:layout_marginTop="25dp"
+        android:layout_above="@+id/password"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textColorHighlight="#ffffff"
-        android:textColor="#ffffff" />
+        android:ellipsize="start" />
 
     <TextView
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="25dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="25dp"
@@ -51,26 +41,6 @@
         android:layout_gravity="center_horizontal" />
 
     <EditText
-        android:id="@+id/enterOldPassword"
-        android:layout_width="289dp"
-        android:layout_height="@dimen/acc_settings_height"
-        android:hint="@string/prompt_old_password"
-        android:inputType="textPassword"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:background="@color/peacockBlue"
-        android:textColor="#ffffff"
-        android:textColorHighlight="#ffffff"
-        android:textColorHint="#ffffff"
-        android:textIsSelectable="true"
-        android:textAlignment="center"
-        android:layout_marginTop="15dp"
-        android:layout_above="@+id/password"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:ellipsize="start" />
-
-    <EditText
         android:id="@+id/enterNewPassword"
         android:layout_width="289dp"
         android:layout_height="@dimen/acc_settings_height"
@@ -80,7 +50,7 @@
         android:singleLine="true"
         android:background="@color/peacockBlue"
         android:textColorHint="#ffffff"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         android:textAlignment="center"
         android:layout_alignBaseline="@+id/email_sign_in_button"
         android:layout_alignBottom="@+id/email_sign_in_button"
@@ -108,6 +78,36 @@
         android:textColorHighlight="#ffffff"
         android:textColor="#ffffff" />
 
+    <TextView
+        android:layout_marginTop="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:textColor="@color/peacockBlue"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        android:text="Change Name"
+        android:layout_gravity="center_horizontal" />
+
+    <EditText
+        android:id="@+id/enterNewName"
+        android:layout_width="289dp"
+        android:layout_height="@dimen/acc_settings_height"
+        android:hint="@string/prompt_enter_new_name"
+        android:inputType="text"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:background="@color/peacockBlue"
+        android:textColorHint="#ffffff"
+        android:layout_marginTop="15dp"
+        android:textAlignment="center"
+        android:layout_alignBaseline="@+id/email_sign_in_button"
+        android:layout_alignBottom="@+id/email_sign_in_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textColorHighlight="#ffffff"
+        android:textColor="#ffffff" />
+
     <Button
         android:id="@+id/accountSettingsSaveChangesButton"
         style="?android:textAppearanceLarge"
@@ -115,7 +115,7 @@
         android:layout_height="wrap_content"
         android:text="Save Changes"
         android:textStyle="bold"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:allowUndo="true"

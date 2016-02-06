@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -140,12 +141,13 @@ public class AccSetActivity extends AppCompatPreferenceActivity {
 
     View focusView = null;
     boolean cancel = false;
+    boolean incorrect_old_pw = false;
+    EditText oldPasswordTextField, newNameTextField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_settings);
-        setupActionBar();
 
         Button saveChangesButton = (Button) findViewById(R.id.accountSettingsSaveChangesButton);
 
@@ -158,69 +160,127 @@ public class AccSetActivity extends AppCompatPreferenceActivity {
     }
 
     protected void saveChanges() {
-
         // get all use text inputs
-        EditText oldPasswordText = (EditText)findViewById(R.id.enterOldPassword);
-        String oldPasswordString = oldPasswordText.getText().toString();
+        boolean updatedPW = false, updatedName = false;
 
-        EditText newPasswordText = (EditText)findViewById(R.id.enterNewPassword);
-        String newPasswordString = newPasswordText.getText().toString();
+        oldPasswordTextField = (EditText) findViewById(R.id.enterOldPassword);
+        String oldPasswordString = oldPasswordTextField.getText().toString();
 
-        EditText confirmPasswordText = (EditText)findViewById(R.id.confirmNewPassword);
-        String confirmPasswordString = confirmPasswordText.getText().toString();
+        EditText newPasswordTextField = (EditText) findViewById(R.id.enterNewPassword);
+        String newPasswordString = newPasswordTextField.getText().toString();
 
-        EditText newNameText = (EditText)findViewById(R.id.enterNewName);
-        String newNameString = newNameText.getText().toString();
+        EditText confirmPasswordTextField = (EditText) findViewById(R.id.confirmNewPassword);
+        String confirmPasswordString = confirmPasswordTextField.getText().toString();
+
+        newNameTextField = (EditText) findViewById(R.id.enterNewName);
+        String newNameString = newNameTextField.getText().toString();
         // all user inputs acquired
+
+        // IMPORTANT: RESET CONTROL AND VARS TO DEFAULT STATE
+        focusView = null;
+        cancel = false;
+        incorrect_old_pw = false;
+        oldPasswordTextField.setError(null);
+        newPasswordTextField.setError(null);
+        confirmPasswordTextField.setError(null);
+        newNameTextField.setError(null);
 
         // Check for a validity of input
         if (TextUtils.isEmpty(oldPasswordString)) {
-            oldPasswordText.setError(getString(R.string.error_field_required));
-            focusView = oldPasswordText;
+            oldPasswordTextField.setError(getString(R.string.error_field_required));
+            focusView = oldPasswordTextField;
             cancel = true;
         }
-        else if (TextUtils.isEmpty(newPasswordString)) {
-            newPasswordText.setError(getString(R.string.error_field_required));
-            focusView = newPasswordText;
-            cancel = true;
-        }
-        else if (TextUtils.isEmpty(confirmPasswordString)) {
-            confirmPasswordText.setError(getString(R.string.error_field_required));
-            focusView = confirmPasswordText;
-            cancel = true;
-        }
-        else if (checkEqualsPasswords(newPasswordString,oldPasswordString))
-            validatePassword(newPasswordString, newPasswordText);
 
         if (cancel) {
-            // There was an error; don't attempt saving password
-            // form field with an error.
-            focusView.requestFocus();
-        } else
-            setNewPasswordOnParse(newPasswordString);
-
-        cancel = false;
-        if (TextUtils.isEmpty(newNameString)) {
-            newNameText.setError(getString(R.string.error_field_required));
-            focusView = newNameText;
-            cancel = true;
+            // user did not enter old password (empty input)
+        } else {
+            // check if user entered correct old password
+            // TODO CHECK PARSE FUNCTIONALITY
+            ParseUser.logInInBackground(ParseUser.getCurrentUser().getUsername(), oldPasswordString, new LogInCallback() {
+                public void done(ParseUser user, ParseException e) {
+                    if (user == null) {
+                        incorrect_old_pw = true;
+                        oldPasswordTextField.setError(getString(R.string.error_incorrect_password));
+                        focusView = oldPasswordTextField;
+                    } else {
+                        // The password was correct
+                        // continue to next step without any changes
+                    }
+                }
+            });
         }
-        else if (checkValidName(newNameString))
-            setNewNameOnParse(newNameString);
 
-        if (cancel) {
-            // There was an error; don't attempt saving password
-            // form field with an error.
+        if (incorrect_old_pw || cancel) {
             focusView.requestFocus();
-        } else
-            setNewNameOnParse(newPasswordString);
+        } else {
+            boolean new_empty = TextUtils.isEmpty(newPasswordString),
+                    confirm_empty = TextUtils.isEmpty(confirmPasswordString);
+            if ( new_empty || confirm_empty) {
+                cancel = true;
+                if (new_empty ^ confirm_empty) {
+                    if (new_empty) newPasswordTextField.setError(getString(R.string.error_field_required));
+                    if (confirm_empty) confirmPasswordTextField.setError(getString(R.string.error_field_required));
+                }
+            } else {
+                if (newPasswordString.equals(confirmPasswordString)) {
+                    if (validatePassword(newPasswordString, newPasswordTextField)) {
+                        // password is valid. continue to saving
+                    } else {
+                        focusView = newPasswordTextField;
+                        // error fields are set by validatePassword function
+                        focusView.requestFocus();
+                        cancel = true;
+                    }
+                } else {
+                    newPasswordTextField.setError(getString(R.string.error_field_not_matching));
+                    confirmPasswordTextField.setError(getString(R.string.error_field_not_matching));
+                    focusView = newPasswordTextField;
+                    focusView.requestFocus();
+                    cancel = true;
+                }
+            }
+
+            if (cancel) {
+
+            } else {
+                setNewPasswordOnParse(newPasswordString);
+                updatedPW = true;
+            }
+            // PASSWORD IS NOW SAVED IF ALL RELEVANT FIELDS WERE ENTERED AND VALID
+
+            if (TextUtils.isEmpty(newNameString)) {
+                cancel = true;
+            } else {
+                if (checkValidName(newNameString)){
+                    setNewNameOnParse(newNameString);
+                    updatedName = true;
+                }
+                else {
+                    cancel = true;
+                    newNameTextField.setError(getString(R.string.error_invalid_name));
+                    focusView = newNameTextField;
+                    focusView.requestFocus();
+                }
+            }
+        }
+
+        if (updatedName && updatedPW) {
+            Toast.makeText(AccSetActivity.this, "Saved new name and password!", Toast.LENGTH_SHORT).show();
+        }
+        else if (updatedName){
+            Toast.makeText(AccSetActivity.this, "Saved new name!", Toast.LENGTH_SHORT).show();
+        }
+        else if (updatedPW){
+            Toast.makeText(AccSetActivity.this, "Saved new password!", Toast.LENGTH_SHORT).show();
+        }
+        else
+            Toast.makeText(AccSetActivity.this, "Nothing saved!", Toast.LENGTH_SHORT).show();
+
     }
 
-    protected boolean checkEqualsPasswords(String s1, String s2) {
-        return (s1.equals(s2) && s1.length() != 0 && s2.length() != 0);
-    }
-
-    private void validatePassword(String password, EditText newPasswordText) {
+    // returns true if valid password
+    private boolean validatePassword(String password, EditText newPasswordText) {
         boolean hasCapLetter = !password.equals(password.toLowerCase());
         boolean haslowerCaseLetter = !password.equals(password.toUpperCase());
 
@@ -228,53 +288,50 @@ public class AccSetActivity extends AppCompatPreferenceActivity {
         if (password.length() < 8 || password.length() > 16) {
             newPasswordText.setError(getString(R.string.error_length_password));
             focusView = newPasswordText;
-            cancel = true;
+            return false;
         } else if (!hasCapLetter) {
             newPasswordText.setError(getString(R.string.error_CapCase));
             focusView = newPasswordText;
-            cancel = true;
+            return false;
         } else if (!haslowerCaseLetter) {
             newPasswordText.setError(getString(R.string.error_lowerCase));
             focusView = newPasswordText;
-            cancel = true;
+            return false;
         }
-    }
-
-    //Checks if name only contains letters
-    public boolean isAlpha(String name) {
-        return name.matches("[a-zA-Z]+");
+        return true;
     }
 
     //Checks if name is valid
-    public void checkValidName(String s, EditText newNameText) {
-        boolean onlyLetters = isAlpha(s);
-
+    public boolean checkValidName(String s) {
         //Checks if nothing has been enetered in name field
-        if (s.length() < 1) {
-            newNameText.setError(getString(R.string.error_invalid_name_1));
-            focusView = newNameText;
-            cancel = true;
-        //Checks if name is more than 70 characters
+        if (s.length() < 2) {
+            return false;
+            //Checks if name is more than 70 characters
         } else if (s.length() > 70) {
-            newNameText.setError(getString(R.string.error_invalid_name_2));
-            focusView = newNameText;
-            cancel = true;
-        //Checks if name only contains letters
-        } else if (!onlyLetters){
-            newNameText.setError(getString(R.string.error_invalid_name_3));
-            focusView = newNameText;
-            cancel = true;
+            return false;
+            //Checks if name only contains letters
+        } else if (!isAlpha(s)) {
+            return false;
         }
+        return true;
     }
 
-    protected void setNewNameOnParse(String s) {
-        // TODO
+    protected void setNewNameOnParse(String username) {
+        // TODO CHECK PARSE FUNCTIONALITY
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        currentUser.setUsername(username);
+        currentUser.saveInBackground();
     }
 
     protected void setNewPasswordOnParse(String new_password) {
+        // TODO CHECK PARSE FUNCTIONALITY
         ParseUser currentUser = ParseUser.getCurrentUser();
         currentUser.setPassword(new_password);
         currentUser.saveInBackground();
+    }
+
+    public boolean isAlpha(String name) {
+        return name.matches("[a-zA-Z]+");
     }
 
     /**
