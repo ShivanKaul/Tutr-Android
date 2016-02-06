@@ -240,9 +240,31 @@ public class AccSetActivity extends AppCompatPreferenceActivity {
         }
     }
 
-    protected boolean checkValidName(String s) {
-        // TODO
-        return false;
+    //Checks if name only contains letters
+    public boolean isAlpha(String name) {
+        return name.matches("[a-zA-Z]+");
+    }
+
+    //Checks if name is valid
+    public void checkValidName(String s, EditText newNameText) {
+        boolean onlyLetters = isAlpha(s);
+
+        //Checks if nothing has been enetered in name field
+        if (s.length() < 1) {
+            newNameText.setError(getString(R.string.error_invalid_name_1));
+            focusView = newNameText;
+            cancel = true;
+        //Checks if name is more than 70 characters
+        } else if (s.length() > 70) {
+            newNameText.setError(getString(R.string.error_invalid_name_2));
+            focusView = newNameText;
+            cancel = true;
+        //Checks if name only contains letters
+        } else if (!onlyLetters){
+            newNameText.setError(getString(R.string.error_invalid_name_3));
+            focusView = newNameText;
+            cancel = true;
+        }
     }
 
     protected void setNewNameOnParse(String s) {

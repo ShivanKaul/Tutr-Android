@@ -13,6 +13,9 @@
     <string name="error_length_password">The password has to be 8 to 16 characters long</string>
     <string name="error_CapCase">The password must have a capital letter</string>
     <string name="error_lowerCase">The password must have a lower case letter</string>
+    <string name="error_invalid_name_1">Name field is missing</string>
+    <string name="error_invalid_name_2">Name is too long (must be less than 70 characters)</string>
+    <string name="error_invalid_name_3">Name must only contain letters</string>
 
     <string name="prompt_old_password">Enter Old Password</string>
     <string name="prompt_new_password">Enter New Password</string>
