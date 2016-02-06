@@ -1,0 +1,101 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context="com.example.android.tutr.RegistrationActivity"
+    android:background="@color/aluminium">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:id="@+id/imageView"
+        android:src="@mipmap/ic_launcher"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="289dp"
+            android:layout_height="50dp"
+            android:hint="@string/prompt_email"
+            android:imeActionId="@+id/register"
+            android:imeOptions="actionSend"
+            android:imeActionLabel="@string/action_register"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:background="@color/peacockBlue"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
+            android:textAlignment="center"
+            android:focusable="true"
+            android:layout_marginTop="35dp"
+            android:layout_above="@+id/password"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="289dp"
+            android:layout_height="50dp"
+            android:hint="@string/name"
+            android:imeActionId="@+id/register"
+            android:imeActionLabel="@string/action_register"
+            android:imeOptions="actionSend"
+            android:inputType="textPersonName"
+            android:focusable="true"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:background="@color/peacockBlue"
+            android:textColor="#ffffff"
+            android:textColorHighlight="#ffffff"
+            android:textColorHint="#ffffff"
+            android:textAlignment="center"
+            android:layout_marginTop="25dp"
+            android:layout_above="@+id/password"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="289dp"
+            android:layout_height="50dp"
+            android:hint="@string/prompt_password"
+            android:imeActionId="@+id/register"
+            android:imeActionLabel="@string/action_register"
+            android:imeOptions="actionSend"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:background="@color/peacockBlue"
+            android:textColorHint="#ffffff"
+            android:layout_marginTop="25dp"
+            android:textAlignment="center"
+            android:focusable="true"
+            android:layout_alignBottom="@+id/name"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textColorHighlight="#ffffff"
+            android:textColor="#ffffff" />
+
+    <Button
+        android:id="@+id/email_sign_in_button"
+        style="?android:textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:textStyle="bold"
+        android:layout_marginTop="25dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:allowUndo="true"
+        android:layout_gravity="center_horizontal" />
+</LinearLayout>
+
