@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.ParseUser;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -35,6 +37,16 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View headerLayout = navigationView.getHeaderView(0);
+        TextView userName = (TextView) headerLayout.findViewById(R.id.userNameNav);
+
+        userName.setText(ParseUser.getCurrentUser().getUsername());
+
+        TextView userEmail = (TextView) headerLayout.findViewById(R.id.userEmailNav);
+        userEmail.setText(ParseUser.getCurrentUser().getEmail());
+//
+
     }
 
     @Override
@@ -81,8 +93,10 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
         }  else if (id == R.id.nav_account_mod) {
-            startActivity(new Intent(MainActivity.this, AccSetActivity.class));
-            finish();
+            Intent intent = new Intent(this, AccSetActivity.class);
+            startActivity(intent);
+            //startActivity(new Intent(MainActivity.this, AccSetActivity.class));
+
         } else if (id == R.id.nav_profile_mod) {
             //startActivity(new Intent(MainActivity.this, LoginActivity.class));
             //finish();
