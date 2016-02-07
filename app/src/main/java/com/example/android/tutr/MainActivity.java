@@ -81,8 +81,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
         }  else if (id == R.id.nav_account_mod) {
-            //startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            //finish();
+            startActivity(new Intent(MainActivity.this, AccSetActivity.class));
+            finish();
         } else if (id == R.id.nav_profile_mod) {
             //startActivity(new Intent(MainActivity.this, LoginActivity.class));
             //finish();
