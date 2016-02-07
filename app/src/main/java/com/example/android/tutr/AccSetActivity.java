@@ -88,7 +88,7 @@ public class AccSetActivity extends AppCompatActivity {
         } else {
             // check if user entered correct old password
             // TODO CHECK PARSE FUNCTIONALITY
-            ParseUser.logInInBackground(ParseUser.getCurrentUser().getUsername(), oldPasswordString, new LogInCallback() {
+            ParseUser.logInInBackground(ParseUser.getCurrentUser().getString("name"), oldPasswordString, new LogInCallback() {
                 public void done(ParseUser user, ParseException e) {
                     if (user == null) {
                         incorrect_old_pw = true;
@@ -210,7 +210,7 @@ public class AccSetActivity extends AppCompatActivity {
     protected void setNewNameOnParse(String username) {
         // TODO CHECK PARSE FUNCTIONALITY
         ParseUser currentUser = ParseUser.getCurrentUser();
-        currentUser.setUsername(username);
+        currentUser.put("name", username);
         currentUser.saveInBackground();
     }
 

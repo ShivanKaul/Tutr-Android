@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.Parse;
 import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity
@@ -41,7 +42,9 @@ public class MainActivity extends AppCompatActivity
         View headerLayout = navigationView.getHeaderView(0);
         TextView userName = (TextView) headerLayout.findViewById(R.id.userNameNav);
 
-        userName.setText(ParseUser.getCurrentUser().getUsername());
+        ParseUser user = ParseUser.getCurrentUser();
+        String mName = user.getString("name");
+        userName.setText(mName);
 
         TextView userEmail = (TextView) headerLayout.findViewById(R.id.userEmailNav);
         userEmail.setText(ParseUser.getCurrentUser().getEmail());
@@ -95,7 +98,6 @@ public class MainActivity extends AppCompatActivity
         }  else if (id == R.id.nav_account_mod) {
             Intent intent = new Intent(this, AccSetActivity.class);
             startActivity(intent);
-            //startActivity(new Intent(MainActivity.this, AccSetActivity.class));
 
         } else if (id == R.id.nav_profile_mod) {
             //startActivity(new Intent(MainActivity.this, LoginActivity.class));
