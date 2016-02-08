@@ -161,8 +161,9 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
 
     void register(final String mEmail, final String mPassword, final String mName) {
         ParseUser user = new ParseUser();
-        user.setUsername(mName);
+        user.put("name", mName);
         user.setPassword(mPassword);
+        user.setUsername(mEmail);
         user.setEmail(mEmail);
         user.signUpInBackground(new SignUpCallback() {
             public void done(ParseException e) {
