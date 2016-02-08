@@ -39,12 +39,15 @@
         <activity
             android:name=".RegistrationActivity"
             android:label="@string/title_activity_registration"
-            android:parentActivityName=".LoginActivity" >>
+            android:parentActivityName=".LoginActivity" >
         </activity>
 
         <activity
             android:name=".AccSetActivity"
-            android:label="@string/title_activity_acc_set"></activity>
+            android:label="@string/title_activity_acc_set"
+            android:parentActivityName=".MainActivity">
+
+        </activity>
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data

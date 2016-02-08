@@ -20,7 +20,6 @@
         android:textColor="#ffffff"
         android:textColorHighlight="#ffffff"
         android:textColorHint="#ffffff"
-        android:textIsSelectable="true"
         android:textAlignment="center"
         android:layout_marginTop="25dp"
         android:layout_above="@+id/password"
