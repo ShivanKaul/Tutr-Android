@@ -98,9 +98,14 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_logout) {
             ParseUser.logOut();
-            Toast.makeText(MainActivity.this, "Logout Successful!", Toast.LENGTH_LONG).show();
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
+            if(ParseUser.getCurrentUser() != null) {
+                Toast.makeText(MainActivity.this, "Logout Successful!", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
+            }
+            else{
+                Toast.makeText(MainActivity.this, "Logout Unsuccessful!", Toast.LENGTH_LONG).show();
+            }
 
         }  else if (id == R.id.nav_account_mod) {
             Intent intent = new Intent(this, AccSetActivity.class);
