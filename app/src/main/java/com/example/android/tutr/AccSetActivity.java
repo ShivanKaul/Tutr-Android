@@ -1,6 +1,7 @@
 package com.example.android.tutr;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
@@ -88,7 +89,7 @@ public class AccSetActivity extends AppCompatActivity {
         } else {
             // check if user entered correct old password
             // TODO CHECK PARSE FUNCTIONALITY
-            ParseUser.logInInBackground(ParseUser.getCurrentUser().getString("name"), oldPasswordString, new LogInCallback() {
+            ParseUser.logInInBackground(ParseUser.getCurrentUser().getString("username"), oldPasswordString, new LogInCallback() {
                 public void done(ParseUser user, ParseException e) {
                     if (user == null) {
                         incorrect_old_pw = true;
@@ -168,6 +169,8 @@ public class AccSetActivity extends AppCompatActivity {
         else
             Toast.makeText(AccSetActivity.this, "Nothing saved!", Toast.LENGTH_SHORT).show();
 
+        if (updatedName || updatedPW)
+            startActivity(new Intent(AccSetActivity.this, MainActivity.class));
     }
 
     // returns true if valid password
