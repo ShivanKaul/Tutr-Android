@@ -1,6 +1,7 @@
 package com.example.android.tutr;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
@@ -11,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -32,8 +34,7 @@ public class AccSetActivity extends AppCompatActivity {
 
     View focusView = null;
     boolean cancel = false;
-    boolean incorrect_old_pw = false;
-    EditText oldPasswordTextField, newNameTextField;
+    EditText newNameTextField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +55,6 @@ public class AccSetActivity extends AppCompatActivity {
         // get all use text inputs
         boolean updatedPW = false, updatedName = false;
 
-        oldPasswordTextField = (EditText) findViewById(R.id.enterOldPassword);
-        String oldPasswordString = oldPasswordTextField.getText().toString();
-
         EditText newPasswordTextField = (EditText) findViewById(R.id.enterNewPassword);
         String newPasswordString = newPasswordTextField.getText().toString();
 
@@ -70,104 +68,84 @@ public class AccSetActivity extends AppCompatActivity {
         // IMPORTANT: RESET CONTROL AND VARS TO DEFAULT STATE
         focusView = null;
         cancel = false;
-        incorrect_old_pw = false;
-        oldPasswordTextField.setError(null);
+
         newPasswordTextField.setError(null);
         confirmPasswordTextField.setError(null);
         newNameTextField.setError(null);
 
         // Check for a validity of input
-        if (TextUtils.isEmpty(oldPasswordString)) {
-            oldPasswordTextField.setError(getString(R.string.error_field_required));
-            focusView = oldPasswordTextField;
+
+        boolean new_empty = TextUtils.isEmpty(newPasswordString),
+                confirm_empty = TextUtils.isEmpty(confirmPasswordString);
+        if (new_empty || confirm_empty) {
             cancel = true;
+            if (new_empty ^ confirm_empty) {
+                if (new_empty)
+                    newPasswordTextField.setError(getString(R.string.error_field_required));
+                if (confirm_empty)
+                    confirmPasswordTextField.setError(getString(R.string.error_field_required));
+            }
+        } else {
+            if (newPasswordString.equals(confirmPasswordString)) {
+                if (validatePassword(newPasswordString, newPasswordTextField)) {
+                    // password is valid. continue to saving
+                } else {
+                    focusView = newPasswordTextField;
+                    // error fields are set by validatePassword function
+                    focusView.requestFocus();
+                    cancel = true;
+                }
+            } else {
+                newPasswordTextField.setError(getString(R.string.error_field_not_matching));
+                confirmPasswordTextField.setError(getString(R.string.error_field_not_matching));
+                focusView = newPasswordTextField;
+                focusView.requestFocus();
+                cancel = true;
+            }
         }
 
         if (cancel) {
-            // user did not enter old password (empty input)
+
         } else {
-            // check if user entered correct old password
-            // TODO CHECK PARSE FUNCTIONALITY
-            ParseUser.logInInBackground(ParseUser.getCurrentUser().getString("name"), oldPasswordString, new LogInCallback() {
-                public void done(ParseUser user, ParseException e) {
-                    if (user == null) {
-                        incorrect_old_pw = true;
-                        oldPasswordTextField.setError(getString(R.string.error_incorrect_password));
-                        focusView = oldPasswordTextField;
-                    } else {
-                        // The password was correct
-                        // continue to next step without any changes
-                    }
-                }
-            });
+//            setNewPasswordOnParse(newPasswordString);
+            updatedPW = true;
         }
+        // PASSWORD IS NOW SAVED IF ALL RELEVANT FIELDS WERE ENTERED AND VALID
 
-        if (incorrect_old_pw || cancel) {
-            focusView.requestFocus();
+        if (TextUtils.isEmpty(newNameString)) {
+            cancel = true;
         } else {
-            boolean new_empty = TextUtils.isEmpty(newPasswordString),
-                    confirm_empty = TextUtils.isEmpty(confirmPasswordString);
-            if ( new_empty || confirm_empty) {
+            if (checkValidName(newNameString)) {
+//                setNewNameOnParse(newNameString);
+                updatedName = true;
+            } else {
                 cancel = true;
-                if (new_empty ^ confirm_empty) {
-                    if (new_empty) newPasswordTextField.setError(getString(R.string.error_field_required));
-                    if (confirm_empty) confirmPasswordTextField.setError(getString(R.string.error_field_required));
-                }
-            } else {
-                if (newPasswordString.equals(confirmPasswordString)) {
-                    if (validatePassword(newPasswordString, newPasswordTextField)) {
-                        // password is valid. continue to saving
-                    } else {
-                        focusView = newPasswordTextField;
-                        // error fields are set by validatePassword function
-                        focusView.requestFocus();
-                        cancel = true;
-                    }
-                } else {
-                    newPasswordTextField.setError(getString(R.string.error_field_not_matching));
-                    confirmPasswordTextField.setError(getString(R.string.error_field_not_matching));
-                    focusView = newPasswordTextField;
-                    focusView.requestFocus();
-                    cancel = true;
-                }
-            }
-
-            if (cancel) {
-
-            } else {
-                setNewPasswordOnParse(newPasswordString);
-                updatedPW = true;
-            }
-            // PASSWORD IS NOW SAVED IF ALL RELEVANT FIELDS WERE ENTERED AND VALID
-
-            if (TextUtils.isEmpty(newNameString)) {
-                cancel = true;
-            } else {
-                if (checkValidName(newNameString)){
-                    setNewNameOnParse(newNameString);
-                    updatedName = true;
-                }
-                else {
-                    cancel = true;
-                    newNameTextField.setError(getString(R.string.error_invalid_name));
-                    focusView = newNameTextField;
-                    focusView.requestFocus();
-                }
+                newNameTextField.setError(getString(R.string.error_invalid_name));
+                focusView = newNameTextField;
+                focusView.requestFocus();
             }
         }
 
         if (updatedName && updatedPW) {
             Toast.makeText(AccSetActivity.this, "Saved new name and password!", Toast.LENGTH_SHORT).show();
-        }
-        else if (updatedName){
+            setNewCredentialsOnParse(newPasswordString, newNameString);
+        } else if (updatedName) {
             Toast.makeText(AccSetActivity.this, "Saved new name!", Toast.LENGTH_SHORT).show();
-        }
-        else if (updatedPW){
+            setNewNameOnParse(newNameString);
+        } else if (updatedPW) {
             Toast.makeText(AccSetActivity.this, "Saved new password!", Toast.LENGTH_SHORT).show();
-        }
-        else
+            setNewPasswordOnParse(newPasswordString);
+        } else
             Toast.makeText(AccSetActivity.this, "Nothing saved!", Toast.LENGTH_SHORT).show();
 
+        if (updatedPW)
+        {
+            ParseUser.logOutInBackground();
+            Toast.makeText(AccSetActivity.this, "Please login again!", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(AccSetActivity.this, LoginActivity.class));
+        }
+        else if (updatedName)
+            startActivity(new Intent(AccSetActivity.this, MainActivity.class));
     }
 
     // returns true if valid password
@@ -218,6 +196,14 @@ public class AccSetActivity extends AppCompatActivity {
         // TODO CHECK PARSE FUNCTIONALITY
         ParseUser currentUser = ParseUser.getCurrentUser();
         currentUser.setPassword(new_password);
+        currentUser.saveInBackground();
+    }
+
+    protected void setNewCredentialsOnParse(String new_password, String username) {
+        // TODO CHECK PARSE FUNCTIONALITY
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        currentUser.setPassword(new_password);
+        currentUser.put("name", username);
         currentUser.saveInBackground();
     }
 

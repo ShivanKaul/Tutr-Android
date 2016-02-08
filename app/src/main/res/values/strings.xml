@@ -16,6 +16,7 @@
 
     <string name="prompt_old_password">Enter Old Password (Required)</string>
     <string name="prompt_new_password">Enter New Password</string>
+    <string name="request_new_password">Enter Your Email</string>
     <string name="prompt_confirm_new_password">Confirm New Password</string>
     <string name="prompt_enter_new_name">Enter New Name</string>
 

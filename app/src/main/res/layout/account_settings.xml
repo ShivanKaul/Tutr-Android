@@ -28,7 +28,7 @@
         android:ellipsize="start" />
 
     <TextView
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="25dp"
@@ -49,7 +49,7 @@
         android:singleLine="true"
         android:background="@color/peacockBlue"
         android:textColorHint="#ffffff"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="30dp"
         android:textAlignment="center"
         android:layout_alignBaseline="@+id/email_sign_in_button"
         android:layout_alignBottom="@+id/email_sign_in_button"
@@ -68,7 +68,7 @@
         android:singleLine="true"
         android:background="@color/peacockBlue"
         android:textColorHint="#ffffff"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="30dp"
         android:textAlignment="center"
         android:layout_alignBaseline="@+id/email_sign_in_button"
         android:layout_alignBottom="@+id/email_sign_in_button"
@@ -78,7 +78,7 @@
         android:textColor="#ffffff" />
 
     <TextView
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="25dp"
@@ -98,7 +98,7 @@
         android:singleLine="true"
         android:background="@color/peacockBlue"
         android:textColorHint="#ffffff"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="30dp"
         android:textAlignment="center"
         android:layout_alignBaseline="@+id/email_sign_in_button"
         android:layout_alignBottom="@+id/email_sign_in_button"
@@ -114,7 +114,7 @@
         android:layout_height="wrap_content"
         android:text="Save Changes"
         android:textStyle="bold"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:allowUndo="true"
