@@ -117,6 +117,7 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
+            cancel = false;
             focusView.requestFocus();
         } else {
             register(mEmail, mPassword, mName);
