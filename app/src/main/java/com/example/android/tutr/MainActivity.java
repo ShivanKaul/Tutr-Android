@@ -24,6 +24,11 @@ public class MainActivity extends AppCompatActivity
 
         View headerLayout;
 
+    /**
+     * Initializes the activity and the view of the main page
+     * @param savedInstanceState
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -44,6 +49,9 @@ public class MainActivity extends AppCompatActivity
         headerLayout = navigationView.getHeaderView(0);
     }
 
+    /**
+     * Called when the activity has detected the user's press of the back key.
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -54,6 +62,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     *Execute code when activity is resumed
+     */
     @Override
     public void onResume(){
         super.onResume();
@@ -67,29 +78,11 @@ public class MainActivity extends AppCompatActivity
         userEmail.setText(user.getEmail());
 
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
+    /**
+     * Execute item code when it is pressed on navigation drawer
+     * @param item
+     * @return returns true
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
