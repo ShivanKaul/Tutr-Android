@@ -3,26 +3,24 @@ package com.example.android.tutr;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
-
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parse.LogInCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 /**
  * Used to update user password and name on the Parse database.
  */
-public class AccSetActivity extends AppCompatActivity {
+public class AccSetActivity extends AppCompatActivity implements TextView.OnEditorActionListener{
 
     View focusView = null;
     boolean cancel = false;
@@ -48,6 +46,7 @@ public class AccSetActivity extends AppCompatActivity {
                 });
     }
 
+
     /**
      * Acts on press of "Save Changes" button. Checks inputs and saves to Parse database if valid.
      */
@@ -63,6 +62,7 @@ public class AccSetActivity extends AppCompatActivity {
 
         newNameTextField = (EditText) findViewById(R.id.enterNewName);
         String newNameString = newNameTextField.getText().toString();
+        newNameTextField.setOnEditorActionListener(this);
         // all user inputs acquired
 
         // IMPORTANT: RESET CONTROL AND VARS TO DEFAULT STATE
@@ -153,6 +153,15 @@ public class AccSetActivity extends AppCompatActivity {
         else {
             // nothing to do; all errors are displayed or corrected
         }
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == R.id.change || actionId == EditorInfo.IME_ACTION_SEND) {
+            saveChanges();
+            return true;
+        }
+        return false;
     }
 
     /**

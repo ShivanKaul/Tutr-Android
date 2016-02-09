@@ -22,7 +22,7 @@
 
     <string name="error_invalid_name">Invalid name entered</string>
     <string name="error_field_required">This field is required</string>
-    <string name="error_name_numbers">Name can't have numbers</string>
+    <string name="error_name_numbers">Name can\'t have numbers</string>
     <string name="error_field_not_matching">Passwords must match.</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
@@ -55,6 +55,7 @@
     <string name="pref_description_social_recommendations">Recommendations for people to contact
         based on your message history
     </string>
+    <string name="save">SAVE</string>
 
     <string name="pref_title_display_name">Display name</string>
     <string name="pref_default_display_name">John Smith</string>
