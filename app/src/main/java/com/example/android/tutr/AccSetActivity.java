@@ -183,7 +183,6 @@ public class AccSetActivity extends AppCompatActivity {
     }
 
     protected void setNewNameOnParse(String username) {
-        // TODO CHECK PARSE FUNCTIONALITY
         ParseUser currentUser = ParseUser.getCurrentUser();
         currentUser.put("name", username);
         try {
@@ -194,7 +193,6 @@ public class AccSetActivity extends AppCompatActivity {
     }
 
     protected void setNewPasswordOnParse(String new_password) {
-        // TODO CHECK PARSE FUNCTIONALITY
         ParseUser currentUser = ParseUser.getCurrentUser();
         currentUser.setPassword(new_password);
         try {
@@ -205,7 +203,6 @@ public class AccSetActivity extends AppCompatActivity {
     }
 
     protected void setNewCredentialsOnParse(String new_password, String username) {
-        // TODO CHECK PARSE FUNCTIONALITY
         ParseUser currentUser = ParseUser.getCurrentUser();
         currentUser.setPassword(new_password);
         currentUser.put("name", username);

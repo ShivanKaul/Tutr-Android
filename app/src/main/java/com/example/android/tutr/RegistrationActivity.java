@@ -113,6 +113,11 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
             focusView = nameView;
             cancel = true;
         }
+        if (!mName.matches("[a-zA-Z]+")) { // no numbers
+            nameView.setError(getString(R.string.error_name_numbers));
+            focusView = nameView;
+            cancel = true;
+        }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first

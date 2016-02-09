@@ -22,6 +22,7 @@
 
     <string name="error_invalid_name">Invalid name entered</string>
     <string name="error_field_required">This field is required</string>
+    <string name="error_name_numbers">Name can't have numbers</string>
     <string name="error_field_not_matching">Passwords must match.</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
