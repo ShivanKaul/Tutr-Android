@@ -140,7 +140,7 @@ public class AccSetActivity extends AppCompatActivity {
 
         if (updatedPW)
         {
-            ParseUser.logOutInBackground();
+            ParseUser.logOut();
             Toast.makeText(AccSetActivity.this, "Please login again!", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(AccSetActivity.this, LoginActivity.class));
         }
@@ -173,10 +173,7 @@ public class AccSetActivity extends AppCompatActivity {
     //Checks if name is valid
     public boolean checkValidName(String s) {
         //Checks if nothing has been enetered in name field
-        if (s.length() < 2) {
-            return false;
-            //Checks if name is more than 70 characters
-        } else if (s.length() > 70) {
+        if (s.length() > 70) {
             return false;
             //Checks if name only contains letters
         } else if (!isAlpha(s)) {
@@ -189,14 +186,22 @@ public class AccSetActivity extends AppCompatActivity {
         // TODO CHECK PARSE FUNCTIONALITY
         ParseUser currentUser = ParseUser.getCurrentUser();
         currentUser.put("name", username);
-        currentUser.saveInBackground();
+        try {
+            currentUser.save();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void setNewPasswordOnParse(String new_password) {
         // TODO CHECK PARSE FUNCTIONALITY
         ParseUser currentUser = ParseUser.getCurrentUser();
         currentUser.setPassword(new_password);
-        currentUser.saveInBackground();
+        try {
+            currentUser.save();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     protected void setNewCredentialsOnParse(String new_password, String username) {
@@ -204,7 +209,11 @@ public class AccSetActivity extends AppCompatActivity {
         ParseUser currentUser = ParseUser.getCurrentUser();
         currentUser.setPassword(new_password);
         currentUser.put("name", username);
-        currentUser.saveInBackground();
+        try {
+            currentUser.save();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isAlpha(String name) {
