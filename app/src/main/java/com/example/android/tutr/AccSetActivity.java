@@ -20,15 +20,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 /**
- * A {@link PreferenceActivity} that presents a set of application account_settings. On
- * handset devices, account_settings are presented as a single list. On tablets,
- * account_settings are split by category, with category headers shown to the left of
- * the list of account_settings.
- * <p/>
- * See <a href="http://developer.android.com/design/patterns/settings.html">
- * Android Design: Settings</a> for design guidelines and the <a
- * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
- * API Guide</a> for more information on developing a Settings UI.
+ * Used to update user password and name on the Parse database.
  */
 public class AccSetActivity extends AppCompatActivity {
 
@@ -36,6 +28,11 @@ public class AccSetActivity extends AppCompatActivity {
     boolean cancel = false;
     EditText newNameTextField;
 
+    /**
+     * Overidden definition of the default onCreate method.
+     * Opens "edit account" window; listens to clicks on button to save changes to the user account.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +48,9 @@ public class AccSetActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Acts on press of "Save Changes" button. Checks inputs and saves to Parse database if valid.
+     */
     protected void saveChanges() {
         // get all use text inputs
         boolean updatedPW = false, updatedName = false;
@@ -68,12 +68,11 @@ public class AccSetActivity extends AppCompatActivity {
         // IMPORTANT: RESET CONTROL AND VARS TO DEFAULT STATE
         focusView = null;
         cancel = false;
-
         newPasswordTextField.setError(null);
         confirmPasswordTextField.setError(null);
         newNameTextField.setError(null);
 
-        // Check for a validity of input
+        // Check for validity of input
 
         boolean new_empty = TextUtils.isEmpty(newPasswordString),
                 confirm_empty = TextUtils.isEmpty(confirmPasswordString);
@@ -105,20 +104,20 @@ public class AccSetActivity extends AppCompatActivity {
         }
 
         if (cancel) {
-
+            // nothing to do
         } else {
-//            setNewPasswordOnParse(newPasswordString);
+            // set flag to update password
             updatedPW = true;
         }
-        // PASSWORD IS NOW SAVED IF ALL RELEVANT FIELDS WERE ENTERED AND VALID
 
         if (TextUtils.isEmpty(newNameString)) {
             cancel = true;
         } else {
             if (checkValidName(newNameString)) {
-//                setNewNameOnParse(newNameString);
+                // set flag to update name
                 updatedName = true;
             } else {
+                // incorrect input was entered; handle errors
                 cancel = true;
                 newNameTextField.setError(getString(R.string.error_invalid_name));
                 focusView = newNameTextField;
@@ -126,6 +125,7 @@ public class AccSetActivity extends AppCompatActivity {
             }
         }
 
+        // save appropriate fields to Parse; print UI feedback to user
         if (updatedName && updatedPW) {
             Toast.makeText(AccSetActivity.this, "Saved new name and password!", Toast.LENGTH_SHORT).show();
             setNewCredentialsOnParse(newPasswordString, newNameString);
@@ -138,17 +138,31 @@ public class AccSetActivity extends AppCompatActivity {
         } else
             Toast.makeText(AccSetActivity.this, "Nothing saved!", Toast.LENGTH_SHORT).show();
 
+        // appy activity changes to the app (change screen)
         if (updatedPW)
         {
             ParseUser.logOut();
             Toast.makeText(AccSetActivity.this, "Please login again!", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(AccSetActivity.this, LoginActivity.class));
+            finish();
         }
-        else if (updatedName)
+        else if (updatedName) {
             startActivity(new Intent(AccSetActivity.this, MainActivity.class));
+            finish();
+        }
+        else {
+            // nothing to do; all errors are displayed or corrected
+        }
     }
 
-    // returns true if valid password
+    /**
+     * returns true if valid password
+     * @param password
+     *              String input for password to validate
+     * @param newPasswordText
+     *              EditText field from the app UI for setting of errors related to input string
+     * @return true if password is valid
+     */
     private boolean validatePassword(String password, EditText newPasswordText) {
         boolean hasCapLetter = !password.equals(password.toLowerCase());
         boolean haslowerCaseLetter = !password.equals(password.toUpperCase());
@@ -170,7 +184,13 @@ public class AccSetActivity extends AppCompatActivity {
         return true;
     }
 
-    //Checks if name is valid
+    /**
+     * Checks if input string representing name is valid according to project specified criteria.
+     * @param s
+     *          String input for name to validate
+     * @return
+     *         true if input name is valid
+     */
     public boolean checkValidName(String s) {
         //Checks if nothing has been enetered in name field
         if (s.length() > 70) {
@@ -182,9 +202,14 @@ public class AccSetActivity extends AppCompatActivity {
         return true;
     }
 
-    protected void setNewNameOnParse(String username) {
+    /**
+     * Saves new "name" to Parse database
+     * @param name
+     *              String representing the "name" field of the user
+     */
+    protected void setNewNameOnParse(String name) {
         ParseUser currentUser = ParseUser.getCurrentUser();
-        currentUser.put("name", username);
+        currentUser.put("name", name);
         try {
             currentUser.save();
         } catch (ParseException e) {
@@ -192,6 +217,11 @@ public class AccSetActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Saves new "password" to Parse database
+     * @param new_password
+     *              String representing the "password" field of the user
+     */
     protected void setNewPasswordOnParse(String new_password) {
         ParseUser currentUser = ParseUser.getCurrentUser();
         currentUser.setPassword(new_password);
@@ -202,10 +232,19 @@ public class AccSetActivity extends AppCompatActivity {
         }
     }
 
-    protected void setNewCredentialsOnParse(String new_password, String username) {
+    /**
+     * Saves new "name" and "password" to Parse database together.
+     * This method is needed because password and name must be saved together,
+     * but not independently.
+     * @param new_password
+     *              String representing the new "password" field to be saved
+     * @param name
+     *              String representing the new "name" field to be saved
+     */
+    protected void setNewCredentialsOnParse(String new_password, String name) {
         ParseUser currentUser = ParseUser.getCurrentUser();
         currentUser.setPassword(new_password);
-        currentUser.put("name", username);
+        currentUser.put("name", name);
         try {
             currentUser.save();
         } catch (ParseException e) {
@@ -213,6 +252,11 @@ public class AccSetActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Checks if input string contains only letters.
+     * @param name
+     * @return true is input only contains letters
+     */
     public boolean isAlpha(String name) {
         return name.matches("[a-zA-Z]+");
     }
