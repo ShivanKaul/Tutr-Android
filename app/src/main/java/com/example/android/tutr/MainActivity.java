@@ -24,6 +24,11 @@ public class MainActivity extends AppCompatActivity
 
         View headerLayout;
 
+    /**
+     * Initializes the activity and the view of the main page
+     * @param savedInstanceState
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -44,6 +49,9 @@ public class MainActivity extends AppCompatActivity
         headerLayout = navigationView.getHeaderView(0);
     }
 
+    /**
+     * Called when the activity has detected the user's press of the back key.
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -54,6 +62,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     *Execute code when activity is resumed
+     */
     @Override
     public void onResume(){
         super.onResume();
@@ -69,9 +80,12 @@ public class MainActivity extends AppCompatActivity
         }
         catch (Exception e){}
 
-
     }
-
+    /**
+     * Execute item code when it is pressed on navigation drawer
+     * @param item
+     * @return returns true
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

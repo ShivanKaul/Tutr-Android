@@ -1,9 +1,8 @@
 package com.example.android.tutr;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,18 +23,18 @@ import java.util.regex.Pattern;
 
 
 /**
- * A login screen that offers login via email/password.
+ * A registration screen that offers registering via email/password.
  */
-public class RegistrationActivity extends ActionBarActivity implements EditText.OnEditorActionListener {
-
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
+public class RegistrationActivity extends AppCompatActivity implements EditText.OnEditorActionListener {
 
     // UI references.
     private EditText mEmailView;
     private EditText nameView;
     private EditText mPasswordView;
+
+    // Keep track of whether registering has been cancelled
+    private boolean cancel = false;
+    private View focusView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,34 +60,26 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                // On register button being clicked, start registration flow
                 attemptRegister();
             }
         });
     }
 
-
     /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
+     * Registration logic
      */
-    private boolean cancel = false;
-    private View focusView = null;
-
     private void attemptRegister() {
-        System.out.println("DEBUG: Entered attemptRegister method");
 
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
         nameView.setError(null);
 
-
         // Store values at the time of the login attempt.
         final String mEmail = mEmailView.getText().toString();
         final String mPassword = mPasswordView.getText().toString();
         final String mName = nameView.getText().toString();
-
 
         // Check for a valid password
         if (TextUtils.isEmpty(mPassword)) {
@@ -125,15 +116,25 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
             cancel = false;
             focusView.requestFocus();
         } else {
+            // Validity checks passed and everything was A-OK, register!
             register(mEmail, mPassword, mName);
         }
     }
 
+    /**
+     * Helper function to check if email valid
+     * @param email
+     * @return true/false
+     */
     private boolean isEmailValid(String email) {
         final String email_pattern = "[0-9a-z]+.?[0-9a-z]+@(mail.)?mcgill.ca";
         return Pattern.compile(email_pattern).matcher(email).matches();
     }
 
+    /**
+     * Validate the password, and if it doesn't conform report an error
+     * @param password
+     */
     private void validatePassword(String password) {
         boolean hasCapLetter = !password.equals(password.toLowerCase());
         boolean haslowerCaseLetter = !password.equals(password.toUpperCase());
@@ -154,7 +155,13 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
         }
     }
 
-    // attempt to register when clicking on Send in the pop up keyboard for email and password and name
+    /**
+     * Attempt to register when clicking on Send in the pop up keyboard for email and password and name
+     * @param v
+     * @param actionId
+     * @param event
+     * @return
+     */
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         boolean handled = false;
@@ -165,7 +172,13 @@ public class RegistrationActivity extends ActionBarActivity implements EditText.
         return handled;
     }
 
-    void register(final String mEmail, final String mPassword, final String mName) {
+    /**
+     * Register using the Parse API
+     * @param mEmail
+     * @param mPassword
+     * @param mName
+     */
+    public void register(final String mEmail, final String mPassword, final String mName) {
         ParseUser user = new ParseUser();
         user.put("name", mName);
         user.setPassword(mPassword);
