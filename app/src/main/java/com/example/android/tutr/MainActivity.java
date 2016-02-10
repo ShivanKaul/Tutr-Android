@@ -58,37 +58,19 @@ public class MainActivity extends AppCompatActivity
     public void onResume(){
         super.onResume();
 
-        ParseUser user = ParseUser.getCurrentUser();
+        try{
+            ParseUser user = ParseUser.getCurrentUser();
 
-        TextView userName = (TextView) headerLayout.findViewById(R.id.userNameNav);
-        userName.setText(user.getString("name"));
+            TextView userName = (TextView) headerLayout.findViewById(R.id.userNameNav);
+            userName.setText(user.getString("name"));
 
-        TextView userEmail = (TextView) headerLayout.findViewById(R.id.userEmailNav);
-        userEmail.setText(user.getEmail());
+            TextView userEmail = (TextView) headerLayout.findViewById(R.id.userEmailNav);
+            userEmail.setText(user.getEmail());
+        }
+        catch (Exception e){}
+
 
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
