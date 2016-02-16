@@ -48,8 +48,6 @@
     <!-- Strings related to Tutor Profile -->
     <string name="title_activity_view_tutor">Tutor Name</string>
 
-
-
     <!-- Strings related to Main Activity -->
     <string name="title_activity_main">Search</string>
 
@@ -58,7 +56,6 @@
     <string name="nav_logout_button">Logout</string>
     <string name="hourly_rate_text">Hourly Rate: $</string>
     <string name="rating_text">Rating:\u0020</string>Tong
-
 
     <!-- Strings related to Settings -->
 
