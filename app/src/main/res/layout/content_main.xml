@@ -12,4 +12,102 @@
     tools:context="com.example.android.tutr.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="3"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/searchLayout">
+
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/nameInput"
+            android:layout_weight="1.6"
+            android:hint="Tutor"
+            android:inputType="textCapSentences"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/classInput"
+            android:layout_weight="0.9"
+            android:hint="Class"
+            android:inputType="textCapSentences"/>
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchButton"
+            android:layout_weight="0.5"
+            android:src="@drawable/ic_info_black_24dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
+        android:id="@+id/searchResultLayout"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:id="@+id/searchResultTextView"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentEnd="false"
+            android:text="Search result - XX tutors found"
+            android:layout_alignParentRight="false"
+            android:textStyle="bold|normal"
+            android:textSize="18dp"
+            android:layout_weight="0.05"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:weightSum="2"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/buttonsLayout"
+            android:layout_weight="0.1">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Hourly Rate"
+                android:drawableRight="@drawable/ic_info_black_24dp"
+                android:id="@+id/hourly_button"
+                android:layout_weight="1" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Ratings"
+                android:drawableRight="@drawable/ic_info_black_24dp"
+                android:id="@+id/rating_button"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:id="@+id/search_result_list"
+            tools:listitem="@android:layout/simple_list_item_1"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentEnd="false"
+            android:layout_weight="0.85"/>
+
+    </LinearLayout>
+
 </RelativeLayout>

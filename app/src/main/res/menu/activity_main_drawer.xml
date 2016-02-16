@@ -6,13 +6,13 @@
         <menu>
             <item
                 android:id="@+id/nav_account_mod"
-                android:title="My Account" />
+                android:title="@string/nav_account_button" />
             <item
                 android:id="@+id/nav_profile_mod"
-                android:title="My Profile" />
+                android:title="@string/nav_profile_button" />
             <item
                 android:id="@+id/nav_logout"
-                android:title="Logout" />
+                android:title="@string/nav_logout_button" />
         </menu>
     </item>
 

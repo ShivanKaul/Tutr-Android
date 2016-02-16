@@ -181,7 +181,9 @@ public class RegistrationActivity extends AppCompatActivity implements EditText.
      * @param mName
      */
     public void register(final String mEmail, final String mPassword, final String mName) {
+
         final ParseUser user = new ParseUser();
+
         user.put("name", mName);
         user.setPassword(mPassword);
         user.setUsername(mEmail);
@@ -189,6 +191,7 @@ public class RegistrationActivity extends AppCompatActivity implements EditText.
         user.signUpInBackground(new SignUpCallback() {
             public void done(ParseException e) {
                 if (e == null) {
+
                     // If sign up was successful, populate Ratings table (just to be safe)
                     ParseObject userRating = new ParseObject("Ratings");
                     userRating.put("username", mEmail);
@@ -200,6 +203,7 @@ public class RegistrationActivity extends AppCompatActivity implements EditText.
                         // Shivan: I chose not to raise an exception or error message here,
                         // so as to not detract from the "UX"
                     } catch (ParseException p) {}
+
 
                     Toast.makeText(RegistrationActivity.this, "Registration Successful!", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
