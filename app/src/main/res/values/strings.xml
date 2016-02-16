@@ -37,7 +37,6 @@
 
     <string name="here"><u>here</u></string>
     <string name="title_activity_homepage">HomepageActivity</string>
-    <string name="title_activity_main">MainActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -46,6 +45,12 @@
     <string name="action_login">Sign In</string>
     <string name="title_activity_acc_set">Edit Account Settings</string>
 
+    <!-- Strings related to Main Activity -->
+    <string name="title_activity_main">Search</string>
+
+    <string name="nav_account_button">My Account</string>
+    <string name="nav_profile_button">My Profile</string>
+    <string name="nav_logout_button">Logout</string>
     <!-- Strings related to Settings -->
 
     <!-- Example General account_settings -->
