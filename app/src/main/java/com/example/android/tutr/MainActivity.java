@@ -19,16 +19,21 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    View headerLayout;
+        View headerLayout;
 
+    /**
+     * Initializes the activity and the view of the main page
+     * @param savedInstanceState
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -49,6 +54,9 @@ public class MainActivity extends AppCompatActivity
         addListenerToOrderingButtons();
     }
 
+    /**
+     * Called when the activity has detected the user's press of the back key.
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -58,15 +66,12 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
-
     /**
      *Execute code when activity is resumed
      */
     @Override
     public void onResume(){
         super.onResume();
-
         try{
             ParseUser user = ParseUser.getCurrentUser();
 
