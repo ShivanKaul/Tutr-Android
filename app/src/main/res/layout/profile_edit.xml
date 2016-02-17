@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.android.tutr.editProfileActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/aluminium"
@@ -12,7 +11,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:weightSum="1">
+    android:weightSum="1"
+    tools:context="com.example.android.tutr.profileEditActivity">
 
     <TextView
         android:layout_width="match_parent"
@@ -21,13 +21,13 @@
         android:text="Subjects"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/peacockBlue"
-        android:textStyle="bold"
-        android:textSize="22dp" />
+        android:textSize="22dp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/enter_subjects"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_gravity="center_vertical"
         android:layout_marginTop="5dp"
         android:background="@color/peacockBlue"
@@ -61,7 +61,7 @@
         <EditText
             android:id="@+id/enter_width"
             android:layout_width="220dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:background="@color/peacockBlue"
             android:hint="Enter phone"
             android:inputType="phone"
@@ -94,7 +94,7 @@
         <Spinner
             android:id="@+id/availability_spinner"
             android:layout_width="220dp"
-            android:layout_height="70dp"
+            android:layout_height="60dp"
             android:layout_centerHorizontal="true"
             android:background="@android:drawable/btn_dropdown"
             android:spinnerMode="dropdown" />
@@ -116,12 +116,12 @@
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/peacockBlue"
-            android:textSize="20dp" />
+            android:textSize="18dp" />
 
         <EditText
             android:id="@+id/enter_hourly_rate"
             android:layout_width="220dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:background="@color/peacockBlue"
             android:hint="Enter rate in $"
             android:inputType="numberDecimal"
@@ -135,16 +135,16 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
         android:gravity="right"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
             android:layout_marginRight="35dp"
+            android:gravity="center_vertical"
             android:text="Rating"
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -152,12 +152,12 @@
             android:textSize="20dp" />
 
         <RatingBar
-            style="?android:attr/ratingBarStyleIndicator"
-            android:backgroundTint="@color/peacockBlue"
             android:id="@+id/ratingBar"
-            android:layout_marginRight="20dp"
+            style="?android:attr/ratingBarStyleIndicator"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginRight="20dp"
+            android:backgroundTint="@color/peacockBlue"
             android:numStars="5"
             android:stepSize="1.0" />
 
@@ -166,29 +166,37 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_gravity="fill_horizontal"
         android:text="Description"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/peacockBlue"
-        android:textStyle="bold"
-        android:textSize="22dp" />
+        android:textSize="22dp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/enter_description"
         android:layout_width="match_parent"
-        android:layout_height="110dp"
+        android:layout_height="105dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginTop="5dp"
         android:background="@color/peacockBlue"
         android:hint="Enter Description"
         android:inputType="text"
-        android:maxLines="1"
-        android:singleLine="true"
         android:textAlignment="center"
         android:textColor="#ffffff"
         android:textColorHighlight="#ffffff"
-        android:textColorHint="#ffffff"
- />
+        android:textColorHint="#ffffff" />
 
+    <Button
+        android:id="@+id/profileEditSaveChangesButton"
+        style="?android:textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:allowUndo="true"
+        android:text="Save Changes"
+        android:textColor="@color/peacockBlue"
+        android:textStyle="bold" />
 </LinearLayout>
