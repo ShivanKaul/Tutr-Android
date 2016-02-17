@@ -45,7 +45,7 @@
     <string name="action_login">Sign In</string>
     <string name="title_activity_acc_set">Edit Account Settings</string>
 
-<<<<<<< HEAD
+
 
     <!-- Strings related to Main Activity -->
     <string name="title_activity_main">Search</string>
@@ -53,8 +53,7 @@
     <string name="nav_account_button">My Account</string>
     <string name="nav_profile_button">My Profile</string>
     <string name="nav_logout_button">Logout</string>
-=======
->>>>>>> ff716b0a1d74df6f6d362be0af7b8da0d3d8e148
+
     <!-- Strings related to Settings -->
 
     <!-- Example General account_settings -->
