@@ -126,17 +126,11 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private void addListenerToSearchButton(){
-        ImageButton searchButton = (ImageButton) findViewById(R.id.searchButton);
-        searchButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO
-                // FETCH STUFF FROM THE INTERNET
-                // UPDATE XX RESULTS FOUND
-                populateResultsList();
-            }
-        });
+    public void onSearch(View view){
+        //TODO
+        // FETCH STUFF FROM THE INTERNET
+        // UPDATE XX RESULTS FOUND
+        populateResultsList();
     }
 
     private void addListenerToOrderingButtons(){
