@@ -37,7 +37,7 @@
             android:id="@+id/classInput"
             android:layout_weight="0.9"
             android:hint="Class"
-            android:inputType="textCapSentences"/>
+            android:inputType="textCapSentences" />
 
         <ImageButton
             android:layout_width="0dp"
@@ -46,7 +46,8 @@
             android:layout_weight="0.5"
             android:src="@drawable/ic_search_black_24dp"
             android:onClick="onSearch"
-            android:nestedScrollingEnabled="false" />
+            android:nestedScrollingEnabled="false"
+            />
 
     </LinearLayout>
 
@@ -88,7 +89,10 @@
                 android:text="Hourly Rate"
                 android:drawableRight="@drawable/ic_remove_black_24dp"
                 android:id="@+id/hourly_button"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:enabled="true"
+                android:onClick="onHourlyClick"
+                android:allowUndo="false" />
 
             <Button
                 android:layout_width="0dp"
@@ -96,7 +100,8 @@
                 android:text="Ratings"
                 android:drawableRight="@drawable/ic_remove_black_24dp"
                 android:id="@+id/rating_button"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:onClick="onRatingClick"/>
 
         </LinearLayout>
 
