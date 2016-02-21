@@ -8,10 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 
-
-/**
- * Created by Jado on 21/02/2016.
- */
 public class TutorListAdapter extends ArrayAdapter<String>  {
     private final Context context;
     private final String[] values;
@@ -35,6 +31,7 @@ public class TutorListAdapter extends ArrayAdapter<String>  {
         TextView rating = (TextView) rowView.findViewById(R.id.rating);
         TextView rate = (TextView) rowView.findViewById(R.id.hourlyRate);
 
+        //TODO PARSE VALUES INTO APPROPRIATE TEXT FIELDS
         //Set values
         name.setText(values[position]);
         rating.setText(context.getString(R.string.hourly_rate_text) + "$10.50");
