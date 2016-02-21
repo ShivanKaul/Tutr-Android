@@ -1,7 +1,9 @@
 package com.example.android.tutr;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View.OnClickListener;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -13,9 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,6 +24,8 @@ import android.widget.Toast;
 import com.parse.Parse;
 
 import com.parse.ParseUser;
+
+import android.widget.AdapterView.OnItemLongClickListener;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -125,22 +127,32 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-
     public void onSearch(View view){
         //TODO
         // FETCH STUFF FROM THE INTERNET
         // UPDATE XX RESULTS FOUND
-        populateResultsList();
+
+        String[] values = {"test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3",
+                "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3",
+                "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3"};
+
+        populateResultsList(values);
     }
 
     private void addListenerToOrderingButtons(){
-        Button hourlyButton = (Button) findViewById(R.id.hourly_button);
-        Button ratingButton = (Button) findViewById(R.id.rating_button);
+        final Button hourlyButton = (Button) findViewById(R.id.hourly_button);
+        final Button ratingButton = (Button) findViewById(R.id.rating_button);
 
+        final Drawable downArrow = ContextCompat.getDrawable(this, R.drawable.ic_keyboard_arrow_down_black_24dp);
+        final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.ic_keyboard_arrow_up_black_24dp);
+        final Drawable noArrow = ContextCompat.getDrawable(this, R.drawable.ic_remove_black_24dp);
+
+        //TODO LOGIC ON CLICK
         hourlyButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO
+
+                hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, downArrow, null);
             }
         });
 
@@ -154,26 +166,26 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private void populateResultsList(){
+    private void populateResultsList(String[] values){
         LinearLayout searchResultLayout = (LinearLayout) findViewById(R.id.searchResultLayout);
         //searchResultLayout.setVisibility(View.GONE);
 
         //Populate list view test
-        String[] test = {"test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3",
-                "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3",
-                "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.search_result_item, test);
+        TutorListAdapter adapter = new TutorListAdapter(this, values);
+
+        //Get list and set adapter
         ListView list = (ListView) findViewById(R.id.search_result_list);
         list.setAdapter(adapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id){
-                TextView textView = (TextView) viewClicked;
-                String message = position + " " + textView.getText().toString();
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                //TODO LOGIC ON CLICK
+                TextView textView = (TextView) view.findViewById(R.id.tutorName);
+                String message = textView.getText().toString();
                 Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
             }
-
         });
     }
 }
