@@ -9,4 +9,9 @@
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="acc_settings_height">55dp</dimen>
+
+
+    <dimen name="tutorName">16dp</dimen>
+    <dimen name="rating">12dip</dimen>
+    <dimen name="hourlyRate">12dip</dimen>
 </resources>
