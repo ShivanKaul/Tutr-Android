@@ -1,10 +1,14 @@
 package com.example.android.tutr;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.view.View.OnClickListener;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,17 +29,25 @@ import com.parse.Parse;
 
 import com.parse.ParseUser;
 
-import android.widget.AdapterView.OnItemLongClickListener;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.parse.ParseUser;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-        View headerLayout;
+    View headerLayout;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     /**
      * Initializes the activity and the view of the main page
-     * @param savedInstanceState
      *
+     * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +67,10 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         headerLayout = navigationView.getHeaderView(0);
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     /**
@@ -71,10 +87,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     *Execute code when activity is resumed
+     * Execute code when activity is resumed
      */
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
         try{
@@ -85,13 +101,14 @@ public class MainActivity extends AppCompatActivity
 
             TextView userEmail = (TextView) headerLayout.findViewById(R.id.userEmailNav);
             userEmail.setText(user.getEmail());
+        } catch (Exception e) {
         }
-        catch (Exception e){}
 
     }
 
     /**
      * Execute item code when it is pressed on navigation drawer
+     *
      * @param item
      * @return returns true
      */
@@ -103,16 +120,15 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_logout) {
             ParseUser.logOut();
-            if(ParseUser.getCurrentUser() == null) {
+            if (ParseUser.getCurrentUser() == null) {
                 Toast.makeText(MainActivity.this, "Logout Successful!", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
-            }
-            else{
+            } else {
                 Toast.makeText(MainActivity.this, "Logout Unsuccessful!", Toast.LENGTH_LONG).show();
             }
 
-        }  else if (id == R.id.nav_account_mod) {
+        } else if (id == R.id.nav_account_mod) {
             Intent intent = new Intent(this, AccSetActivity.class);
             startActivity(intent);
 
@@ -127,7 +143,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void onSearch(View view){
+    public void onSearch(View view) {
         //TODO
         // FETCH STUFF FROM THE INTERNET
         // UPDATE XX RESULTS FOUND
@@ -139,34 +155,74 @@ public class MainActivity extends AppCompatActivity
         populateResultsList(values);
     }
 
-    private void addListenerToOrderingButtons(){
-        final Button hourlyButton = (Button) findViewById(R.id.hourly_button);
-        final Button ratingButton = (Button) findViewById(R.id.rating_button);
+    public void onHourlyClick(View view) {
+        Button hourlyButton = (Button) findViewById(R.id.hourly_button);
+        Button ratingButton = (Button) findViewById(R.id.rating_button);
 
-        final Drawable downArrow = ContextCompat.getDrawable(this, R.drawable.ic_keyboard_arrow_down_black_24dp);
-        final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.ic_keyboard_arrow_up_black_24dp);
-        final Drawable noArrow = ContextCompat.getDrawable(this, R.drawable.ic_remove_black_24dp);
+        Drawable downArrow = ContextCompat.getDrawable(this, R.drawable.ic_keyboard_arrow_down_black_24dp);
+        Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.ic_keyboard_arrow_up_black_24dp);
+        Drawable noArrow = ContextCompat.getDrawable(this, R.drawable.ic_remove_black_24dp);
 
-        //TODO LOGIC ON CLICK
-        hourlyButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        setButtonTint(hourlyButton, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorPrimary)));
+        setButtonTint(ratingButton, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.button_material_light)));
+        ratingButton.setCompoundDrawablesWithIntrinsicBounds(null, null, noArrow, null);
 
-                hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, downArrow, null);
-            }
-        });
+        //Get the image
+        Drawable currentOrdering = hourlyButton.getCompoundDrawables()[2];
 
-        ratingButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO
-            }
-        });
+        //From default to up
+        if (currentOrdering.getConstantState().equals(noArrow.getConstantState()))
+            hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, upArrow, null);
+
+        //From down to up
+        else if (currentOrdering.getConstantState().equals(downArrow.getConstantState()))
+            hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, upArrow, null);
+
+        //From up to down
+        else if (currentOrdering.getConstantState().equals(upArrow.getConstantState()))
+            hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, downArrow, null);
 
     }
 
+    public void onRatingClick(View view) {
+        Button hourlyButton = (Button) findViewById(R.id.hourly_button);
+        Button ratingButton = (Button) findViewById(R.id.rating_button);
 
-    private void populateResultsList(String[] values){
+        Drawable downArrow = ContextCompat.getDrawable(this, R.drawable.ic_keyboard_arrow_down_black_24dp);
+        Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.ic_keyboard_arrow_up_black_24dp);
+        Drawable noArrow = ContextCompat.getDrawable(this, R.drawable.ic_remove_black_24dp);
+
+        setButtonTint(ratingButton, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorPrimary)));
+        setButtonTint(hourlyButton, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.button_material_light)));
+        hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, noArrow, null);
+
+        //Get the image
+        Drawable currentOrdering = ratingButton.getCompoundDrawables()[2];
+
+        //From default to down
+        if (currentOrdering.getConstantState().equals(noArrow.getConstantState()))
+            ratingButton.setCompoundDrawablesWithIntrinsicBounds(null, null, downArrow, null);
+
+        //From down to up
+        else if (currentOrdering.getConstantState().equals(downArrow.getConstantState()))
+            ratingButton.setCompoundDrawablesWithIntrinsicBounds(null, null, upArrow, null);
+
+        //From up to down
+        else if (currentOrdering.getConstantState().equals(upArrow.getConstantState()))
+            ratingButton.setCompoundDrawablesWithIntrinsicBounds(null, null, downArrow, null);
+    }
+
+
+    private static void setButtonTint(Button button, ColorStateList tint) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP && button instanceof AppCompatButton) {
+            ((AppCompatButton) button).setSupportBackgroundTintList(tint);
+        } else {
+            ViewCompat.setBackgroundTintList(button, tint);
+        }
+    }
+
+
+    private void populateResultsList(String[] values) {
         LinearLayout searchResultLayout = (LinearLayout) findViewById(R.id.searchResultLayout);
         //searchResultLayout.setVisibility(View.GONE);
 
@@ -187,5 +243,45 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.android.tutr/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.android.tutr/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 }
