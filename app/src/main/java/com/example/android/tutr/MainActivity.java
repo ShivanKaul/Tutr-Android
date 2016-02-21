@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity
         Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.ic_keyboard_arrow_up_black_24dp);
         Drawable noArrow = ContextCompat.getDrawable(this, R.drawable.ic_remove_black_24dp);
 
-        setButtonTint(hourlyButton, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorPrimary)));
+        setButtonTint(hourlyButton, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.orderingButtonClicked)));
         setButtonTint(ratingButton, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.button_material_light)));
         ratingButton.setCompoundDrawablesWithIntrinsicBounds(null, null, noArrow, null);
 
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity
         Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.ic_keyboard_arrow_up_black_24dp);
         Drawable noArrow = ContextCompat.getDrawable(this, R.drawable.ic_remove_black_24dp);
 
-        setButtonTint(ratingButton, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorPrimary)));
+        setButtonTint(ratingButton, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.orderingButtonClicked)));
         setButtonTint(hourlyButton, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.button_material_light)));
         hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, noArrow, null);
 
