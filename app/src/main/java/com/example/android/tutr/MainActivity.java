@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -28,7 +29,15 @@ import android.widget.Toast;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import org.json.JSONObject;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -144,6 +153,42 @@ public class MainActivity extends AppCompatActivity
         // UPDATE XX RESULTS FOUND
         EditText inputName = (EditText) findViewById(R.id.nameInput);
         EditText inputCourse = (EditText) findViewById(R.id.classInput);
+        String name = inputName.getText().toString();
+        String course = inputCourse.getText().toString().replaceAll("\\s+", "").toLowerCase();
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+
+        int check = inputChecker(name, course);
+
+        if (check == 0) {
+            Toast.makeText(MainActivity.this, "Empty Search Parameters", Toast.LENGTH_LONG).show();
+        } else if (check == 1) {
+            Toast.makeText(MainActivity.this, "1", Toast.LENGTH_LONG).show();
+            query.whereEqualTo("name", name);
+            query.orderByDescending("rating");
+        } else if (check == 2) {
+            Toast.makeText(MainActivity.this, "2", Toast.LENGTH_LONG).show();
+            query.whereEqualTo("courses", course);
+            query.orderByDescending("rating");
+        } else if (check == 3) {
+            Toast.makeText(MainActivity.this, "3", Toast.LENGTH_LONG).show();
+            query.whereEqualTo("name", name);
+            query.whereEqualTo("courses", course);
+        } else {
+            Toast.makeText(MainActivity.this, "Names only contain standard alphabet", Toast.LENGTH_LONG).show();
+        }
+
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null) {
+                    /*for(int i = 0; i<objects.size(); i++){
+                        ParseObject user = objects.get(i); // Gets first object
+                        System.out.println(user.getString("username"));
+                    }*/
+                } else {
+                    //request has failed
+                }
+            }
+        });
 
 
         String[] values = {"test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3",
@@ -152,9 +197,9 @@ public class MainActivity extends AppCompatActivity
 
         populateResultsList(values);
     }
-    
+
     public static int inputChecker(String name, String course) {
-        if (!name.matches(".*\\d.*")) {
+        if (name.matches("[A-Za-z]+") || name.equals("")) {
             if (name.equals("") && course.equals("")) {
                 return 0;
             } else if (!name.equals("") && course.equals("")) {
