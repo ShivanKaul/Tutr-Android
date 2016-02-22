@@ -23,6 +23,7 @@ import android.view.MenuItem;
 
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -149,6 +150,9 @@ public class MainActivity extends AppCompatActivity
         //TODO
         // FETCH STUFF FROM THE INTERNET
         // UPDATE XX RESULTS FOUND
+        EditText inputName = (EditText) findViewById(R.id.nameInput);
+        EditText inputCourse = (EditText) findViewById(R.id.classInput);
+
 
         String[] values = {"test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3",
                 "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3",
@@ -156,7 +160,22 @@ public class MainActivity extends AppCompatActivity
 
         populateResultsList(values);
     }
-
+    
+    public static int inputChecker(String name, String course) {
+        if (!name.matches(".*\\d.*")) {
+            if (name.equals("") && course.equals("")) {
+                return 0;
+            } else if (!name.equals("") && course.equals("")) {
+                return 1;
+            } else if (name.equals("") && !course.equals("")) {
+                return 2;
+            } else {
+                return 3;
+            }
+        } else {
+            return 4;
+        }
+    }
     public void onHourlyClick(View view) {
         Button hourlyButton = (Button) findViewById(R.id.hourly_button);
         Button ratingButton = (Button) findViewById(R.id.rating_button);
