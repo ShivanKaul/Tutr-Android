@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -16,8 +17,13 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.parse.ParseException;
 import com.parse.ParseUser;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Used to update user password and name on the Parse database.
@@ -28,6 +34,8 @@ public class profileEditActivity extends AppCompatActivity {
     // UI references.
     private EditText wage;
     private EditText description;
+    private EditText phone;
+    private EditText subjects;
     private TextView desc;
     // Keep track of whether registering has been cancelled
     private boolean cancel = false;
@@ -93,26 +101,39 @@ public class profileEditActivity extends AppCompatActivity {
      * initialize and link all UI elements and fields
      */
     protected void setUpUIelements() {
-        // init button
         saveChangesButton = (Button) findViewById(R.id.profileEditSaveChangesButton);
-        // init the wage
         wage = (EditText) findViewById(R.id.enter_hourly_rate);
-
-        // init the description textview and editview
+        phone = (EditText) findViewById(R.id.enter_phone);
+        subjects = (EditText) findViewById(R.id.enter_subjects);
         desc = (TextView) findViewById(R.id.descTextView);
         description = (EditText) findViewById(R.id.enter_description);
 
+        if (currentUser.getList("courses") != null) {
+            List<String> courses = currentUser.getList("courses");
+            StringBuilder stringBuilder = new StringBuilder();
+            for (String course : courses) {
+                stringBuilder.append(",").append(course);
+            }
+            //remove the starting ','
+            stringBuilder.deleteCharAt(0);
+            subjects.setText(stringBuilder.toString());
+        }
+        if (currentUser.getString("phone") != null) {
+            phone.setText(currentUser.getString("phone"));
+        }
+        if (currentUser.getDouble("hourlyRate") != 0) {
+            wage.setText(String.valueOf(currentUser.getDouble("hourlyRate")));
+        }
+        if (currentUser.getString("description") != null) {
+            description.setText(currentUser.getString("description"));
+        }
         description.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                // desc.setText("Description: " + (400 - count) + "/400");
-
             }
 
             @Override
@@ -123,6 +144,7 @@ public class profileEditActivity extends AppCompatActivity {
         });
         // init rating bar
         rating_bar = (RatingBar) findViewById(R.id.ratingBar);
+        Log.w("rating", String.valueOf(currentUser.getDouble("rating")));
         rating_bar.setRating((float) currentUser.getDouble("rating"));
         rating_bar.setIsIndicator(true);
         // init text fields
@@ -140,7 +162,13 @@ public class profileEditActivity extends AppCompatActivity {
     protected void saveChanges() {
         final String wageStr = wage.getText().toString();
         double wageDouble = 0;
-
+        String[] courses = subjects.getText().toString().toLowerCase().split(",");
+        for (String c : courses) {
+            if (!CourseValidator.isValidCourse(c)) {
+                cancel = true;
+                focusView = subjects;
+            }
+        }
         // Reset errors.
         wage.setError(null);
         if (!TextUtils.isEmpty(wageStr)) {
@@ -153,12 +181,28 @@ public class profileEditActivity extends AppCompatActivity {
                 cancel = true;
             }
         }
-
+        if (availability_spinner.getSelectedItem().toString().equalsIgnoreCase("select")) {
+            focusView = availability_spinner;
+            cancel = true;
+        }
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             cancel = false;
             focusView.requestFocus();
         }
+        currentUser.addAllUnique("courses", Arrays.asList(courses));
+        currentUser.put("description", description.getText().toString());
+        currentUser.put("hourlyRate", Double.parseDouble(wage.getText().toString()));
+        currentUser.put("phone", phone.getText().toString());
+        currentUser.put("available", availability_spinner.getSelectedItem().toString());
+        try {
+            currentUser.save();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(profileEditActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+        Toast.makeText(profileEditActivity.this, "Changed profile successfully", Toast.LENGTH_LONG).show();
+        finish();
     }
 }

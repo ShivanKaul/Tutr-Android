@@ -31,7 +31,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginTop="5dp"
         android:background="@color/peacockBlue"
-        android:hint="Enter Subjects"
+        android:hint="ex)math100, ecse100, ..."
         android:inputType="text"
         android:textAlignment="center"
         android:textColor="#ffffff"
@@ -57,7 +57,7 @@
             android:textSize="18dp" />
 
         <EditText
-            android:id="@+id/enter_width"
+            android:id="@+id/enter_phone"
             android:layout_width="220dp"
             android:layout_height="match_parent"
             android:background="@color/peacockBlue"
