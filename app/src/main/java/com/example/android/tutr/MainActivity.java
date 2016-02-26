@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_profile_mod) {startActivity(new Intent(MainActivity.this, profileEditActivity.class));
             //finish();
+            startActivity(new Intent(this, profileEditActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

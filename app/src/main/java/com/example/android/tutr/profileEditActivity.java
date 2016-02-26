@@ -23,21 +23,15 @@ import com.parse.ParseUser;
  * Used to update user password and name on the Parse database.
  */
 public class profileEditActivity extends AppCompatActivity {
-
     ParseUser currentUser = ParseUser.getCurrentUser();
-
     Button saveChangesButton;
-
     // UI references.
     private EditText wage;
     private EditText description;
     private TextView desc;
-
     // Keep track of whether registering has been cancelled
     private boolean cancel = false;
     private View focusView = null;
-
-
     /**
      * drop down menu.
      * if user selects nothing. spinner.getValue is equal to String "Select"
@@ -58,12 +52,10 @@ public class profileEditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_edit);
-
         if (currentUser == null) {
             return;
         }
         setUpUIelements();
-
         saveChangesButton.setOnClickListener(
                 new OnClickListener() {
                     public void onClick(View view) {
@@ -106,7 +98,7 @@ public class profileEditActivity extends AppCompatActivity {
         // init the wage
         wage = (EditText) findViewById(R.id.enter_hourly_rate);
 
-       // init the description textview and editview
+        // init the description textview and editview
         desc = (TextView) findViewById(R.id.descTextView);
         description = (EditText) findViewById(R.id.enter_description);
 
@@ -119,7 +111,7 @@ public class profileEditActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-               // desc.setText("Description: " + (400 - count) + "/400");
+                // desc.setText("Description: " + (400 - count) + "/400");
 
             }
 
@@ -127,20 +119,15 @@ public class profileEditActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 // this will show characters remaining
                 desc.setText("Description " + (400 - s.toString().length()) + "/400");
-
-
             }
         });
-
         // init rating bar
         rating_bar = (RatingBar) findViewById(R.id.ratingBar);
         rating_bar.setRating((float) currentUser.getDouble("rating"));
         rating_bar.setIsIndicator(true);
-
         // init text fields
         availability_spinner = (Spinner) findViewById(R.id.availability_spinner);
         ArrayAdapter<String> availability_menu_adapter = new CustomArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, spinner_options);
-
         // link spinner and adapters
         availability_menu_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         availability_spinner.setAdapter(availability_menu_adapter);
