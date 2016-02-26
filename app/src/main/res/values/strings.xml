@@ -95,6 +95,8 @@
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
+    <string name="eProfile">Edit Profile</string>
+
     <!-- Example account_settings for Notifications -->
     <string name="pref_header_notifications">Notifications</string>
 

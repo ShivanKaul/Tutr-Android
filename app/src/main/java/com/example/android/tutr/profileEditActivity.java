@@ -36,7 +36,7 @@ public class profileEditActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.account_settings);
+        setContentView(R.layout.profile_edit);
 
         setUpUIelements();
 
