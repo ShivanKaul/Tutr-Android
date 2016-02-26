@@ -45,9 +45,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ratingBar"
-        android:layout_marginTop="21dp"
+        android:layout_marginTop="22dp"
         android:layout_below="@+id/view_ownRating"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignRight="@+id/display_counter"
+        android:layout_alignEnd="@+id/display_counter" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -160,5 +161,14 @@
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/display_description"
         android:layout_alignEnd="@+id/display_description" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="ratingCounter"
+        android:id="@+id/display_counter"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/view_phone" />
 
 </RelativeLayout>
