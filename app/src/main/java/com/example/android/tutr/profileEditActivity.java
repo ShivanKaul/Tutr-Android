@@ -4,19 +4,34 @@ package com.example.android.tutr;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 /**
  * Used to update user password and name on the Parse database.
  */
-public class profileEditActivity extends AppCompatActivity{
+public class profileEditActivity extends AppCompatActivity {
 
     Button saveChangesButton;
+
+    // UI references.
+    private EditText wage;
+    private EditText description;
+    private TextView desc;
+
+    // Keep track of whether registering has been cancelled
+    private boolean cancel = false;
+    private View focusView = null;
+
 
     /**
      * drop down menu.
@@ -74,13 +89,50 @@ public class profileEditActivity extends AppCompatActivity{
     protected void setUpUIelements() {
         // init button
         saveChangesButton = (Button) findViewById(R.id.profileEditSaveChangesButton);
+        // init the wage
+        wage = (EditText) findViewById(R.id.enter_hourly_rate);
+
+       // init the description textview and editview
+        desc = (TextView) findViewById(R.id.descTextView);
+        description = (EditText) findViewById(R.id.enter_description);
+
+        description.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+               // desc.setText("Description: " + (400 - count) + "/400");
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // this will show characters remaining
+                desc.setText("Description " + (400 - s.toString().length()) + "/400");
+
+
+            }
+        });
 
         // init rating bar
-        rating_bar = (RatingBar) findViewById(R.id.ratingBar);;
+        rating_bar = (RatingBar) findViewById(R.id.ratingBar);
+        rating_bar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+               ratingBar.setRating(rating);
+                rating_bar.setRating(rating);
+            }
+        });
+
 
         // init text fields
         availability_spinner  = (Spinner) findViewById(R.id.availability_spinner);
-        ArrayAdapter<String> availability_menu_adapter = new CustomArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, spinner_options);
+        ArrayAdapter<String> availability_menu_adapter = new CustomArrayAdapter(this,
+                android.R.layout.simple_spinner_dropdown_item, spinner_options);
 
         // link spinner and adapters
         availability_menu_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -92,7 +144,28 @@ public class profileEditActivity extends AppCompatActivity{
      * Acts on press of "Save Changes" button. Checks inputs and saves to Parse database if valid.
      */
     protected void saveChanges() {
-       // TODO
+        final String wageStr = wage.getText().toString();
+        double wageDouble = 0;
+
+        // Reset errors.
+        wage.setError(null);
+        if (!TextUtils.isEmpty(wageStr)) {
+            wageDouble = Double.parseDouble(wageStr);
+
+            // Check for a valid email address.
+            if (wageDouble < 10.35) {
+                wage.setError("The minimum wage is $10.35");
+                focusView = wage;
+                cancel = true;
+            }
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            cancel = false;
+            focusView.requestFocus();
+        }
     }
 
 

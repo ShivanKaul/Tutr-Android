@@ -21,20 +21,18 @@
         android:text="Subjects"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/peacockBlue"
-        android:textSize="22dp"
+        android:textSize="18dp"
         android:textStyle="bold" />
 
     <EditText
         android:id="@+id/enter_subjects"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
         android:layout_gravity="center_vertical"
         android:layout_marginTop="5dp"
         android:background="@color/peacockBlue"
         android:hint="Enter Subjects"
         android:inputType="text"
-        android:maxLines="1"
-        android:singleLine="true"
         android:textAlignment="center"
         android:textColor="#ffffff"
         android:textColorHighlight="#ffffff"
@@ -48,7 +46,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="70dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginRight="30dp"
@@ -56,17 +54,15 @@
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/peacockBlue"
-            android:textSize="20dp" />
+            android:textSize="18dp" />
 
         <EditText
             android:id="@+id/enter_width"
             android:layout_width="220dp"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:background="@color/peacockBlue"
             android:hint="Enter phone"
-            android:inputType="phone"
-            android:maxLines="1"
-            android:singleLine="true"
+            android:inputType="number"
             android:textAlignment="center"
             android:textColor="#ffffff"
             android:textColorHighlight="#ffffff"
@@ -89,12 +85,12 @@
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/peacockBlue"
-            android:textSize="20dp" />
+            android:textSize="18dp" />
 
         <Spinner
             android:id="@+id/availability_spinner"
             android:layout_width="220dp"
-            android:layout_height="60dp"
+            android:layout_height="40dp"
             android:layout_centerHorizontal="true"
             android:background="@android:drawable/btn_dropdown"
             android:spinnerMode="dropdown" />
@@ -103,14 +99,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         android:gravity="right"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="1">
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="74dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:layout_marginRight="15dp"
             android:text="Hourly\nRate"
             android:textAlignment="center"
@@ -121,12 +117,10 @@
         <EditText
             android:id="@+id/enter_hourly_rate"
             android:layout_width="220dp"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:background="@color/peacockBlue"
-            android:hint="Enter rate in $"
+            android:hint="Enter rate in $/hour"
             android:inputType="numberDecimal"
-            android:maxLines="1"
-            android:singleLine="true"
             android:textAlignment="center"
             android:textColor="#ffffff"
             android:textColorHighlight="#ffffff"
@@ -143,35 +137,35 @@
         <TextView
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="35dp"
             android:gravity="center_vertical"
             android:text="Rating"
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/peacockBlue"
-            android:textSize="20dp" />
+            android:textSize="18dp" />
 
         <RatingBar
             android:id="@+id/ratingBar"
-            style="?android:attr/ratingBarStyleIndicator"
+            style="?android:attr/ratingBarStyle"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
             android:backgroundTint="@color/peacockBlue"
             android:numStars="5"
             android:stepSize="1.0" />
-
     </LinearLayout>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="351dp"
         android:layout_height="wrap_content"
         android:layout_gravity="fill_horizontal"
-        android:text="Description"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Description 400/400"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_marginTop="15dp"
         android:textColor="@color/peacockBlue"
-        android:textSize="22dp"
-        android:textStyle="bold" />
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:id="@+id/descTextView" />
 
     <EditText
         android:id="@+id/enter_description"
@@ -179,7 +173,9 @@
         android:layout_height="105dp"
         android:layout_gravity="center_vertical"
         android:background="@color/peacockBlue"
+        android:textSize="12dp"
         android:hint="Enter Description"
+        android:maxLength="400"
         android:inputType="text"
         android:textAlignment="center"
         android:textColor="#ffffff"
@@ -195,6 +191,7 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="5dp"
+        android:layout_alignBottom="@+id/enter_description"
         android:allowUndo="true"
         android:text="Save Changes"
         android:textColor="@color/peacockBlue"
