@@ -2,6 +2,7 @@ package com.example.android.tutr;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -16,10 +17,14 @@ import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.parse.ParseUser;
+
 /**
  * Used to update user password and name on the Parse database.
  */
 public class profileEditActivity extends AppCompatActivity {
+
+    ParseUser currentUser = ParseUser.getCurrentUser();
 
     Button saveChangesButton;
 
@@ -46,6 +51,7 @@ public class profileEditActivity extends AppCompatActivity {
     /**
      * Overidden definition of the default onCreate method.
      * Opens "edit account" window; listens to clicks on button to save changes to the user account.
+     *
      * @param savedInstanceState
      */
     @Override
@@ -53,12 +59,19 @@ public class profileEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_edit);
 
+        if (currentUser == null) {
+            return;
+        }
         setUpUIelements();
 
         saveChangesButton.setOnClickListener(
                 new OnClickListener() {
                     public void onClick(View view) {
-                        saveChanges();
+                        try {
+                            saveChanges();
+                        } catch (Exception e) {
+                            startActivity(new Intent(profileEditActivity.this, LoginActivity.class));
+                        }
                     }
                 });
     }
@@ -69,6 +82,7 @@ public class profileEditActivity extends AppCompatActivity {
     class CustomArrayAdapter extends ArrayAdapter {
         /**
          * basic constructor
+         *
          * @param context
          * @param resource
          * @param objects
@@ -79,7 +93,7 @@ public class profileEditActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return super.getCount()-1; // you dont display last item. It is used as hint.
+            return super.getCount() - 1; // you dont display last item. It is used as hint.
         }
     }
 
@@ -120,11 +134,12 @@ public class profileEditActivity extends AppCompatActivity {
 
         // init rating bar
         rating_bar = (RatingBar) findViewById(R.id.ratingBar);
+        rating_bar.setRating((float) currentUser.getDouble("rating"));
+        rating_bar.setIsIndicator(true);
 
         // init text fields
-        availability_spinner  = (Spinner) findViewById(R.id.availability_spinner);
-        ArrayAdapter<String> availability_menu_adapter = new CustomArrayAdapter(this,
-                android.R.layout.simple_spinner_dropdown_item, spinner_options);
+        availability_spinner = (Spinner) findViewById(R.id.availability_spinner);
+        ArrayAdapter<String> availability_menu_adapter = new CustomArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, spinner_options);
 
         // link spinner and adapters
         availability_menu_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -159,6 +174,4 @@ public class profileEditActivity extends AppCompatActivity {
             focusView.requestFocus();
         }
     }
-
-
 }
