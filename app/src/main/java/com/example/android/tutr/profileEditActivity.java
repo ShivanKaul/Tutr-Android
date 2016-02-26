@@ -155,6 +155,12 @@ public class profileEditActivity extends AppCompatActivity {
      * initialize and link all UI elements and fields
      */
     protected void setUpUIelements() {
+        try {
+            currentUser.fetch();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(profileEditActivity.this, "Unable to access Parse Server", Toast.LENGTH_LONG).show();
+        }
         saveChangesButton = (Button) findViewById(R.id.profileEditSaveChangesButton);
         wage = (EditText) findViewById(R.id.enter_hourly_rate);
         phone = (EditText) findViewById(R.id.enter_phone);
