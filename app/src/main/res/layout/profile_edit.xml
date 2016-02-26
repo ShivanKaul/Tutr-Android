@@ -145,12 +145,12 @@
             android:textSize="18dp" />
 
         <RatingBar
-            android:id="@+id/ratingBar"
-            style="?android:attr/ratingBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="2dp"
+            style="?android:attr/ratingBarStyleIndicator"
             android:backgroundTint="@color/peacockBlue"
+            android:id="@+id/ratingBar"
+            android:layout_marginRight="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:numStars="5"
             android:stepSize="1.0" />
     </LinearLayout>

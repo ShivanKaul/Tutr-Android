@@ -120,14 +120,6 @@ public class profileEditActivity extends AppCompatActivity {
 
         // init rating bar
         rating_bar = (RatingBar) findViewById(R.id.ratingBar);
-        rating_bar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-               ratingBar.setRating(rating);
-                rating_bar.setRating(rating);
-            }
-        });
-
 
         // init text fields
         availability_spinner  = (Spinner) findViewById(R.id.availability_spinner);
