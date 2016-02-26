@@ -132,9 +132,11 @@
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
         android:gravity="right"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="1">
 
         <TextView
+            android:id="@+id/rating_title"
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -142,7 +144,8 @@
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/peacockBlue"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            android:layout_weight="0.74" />
 
         <RatingBar
             style="?android:attr/ratingBarStyleIndicator"

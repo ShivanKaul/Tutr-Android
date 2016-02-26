@@ -42,6 +42,7 @@ public class profileEditActivity extends AppCompatActivity {
     private EditText phone;
     private EditText subjects;
     private TextView desc;
+    private TextView rating_title;
     // Keep track of whether registering has been cancelled
     private boolean cancel = false;
     private View focusView = null;
@@ -198,6 +199,8 @@ public class profileEditActivity extends AppCompatActivity {
         // init rating bar
         rating_bar = (RatingBar) findViewById(R.id.ratingBar);
         Log.w("rating", String.valueOf(currentUser.getDouble("rating")));
+        rating_title = (TextView) findViewById(R.id.rating_title);
+        rating_title.setText("Rating (" + currentUser.getDouble("rating") + " / 5.0)");
         rating_bar.setRating((float) currentUser.getDouble("rating"));
         rating_bar.setIsIndicator(true);
         // init text fields
