@@ -3,6 +3,7 @@ package com.example.android.tutr;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -19,8 +20,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,6 +54,11 @@ public class profileEditActivity extends AppCompatActivity {
     final String[] spinner_options = new String[]{"Yes", "No", "Select"};
 
     RatingBar rating_bar;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     /**
      * Overidden definition of the default onCreate method.
@@ -74,6 +84,49 @@ public class profileEditActivity extends AppCompatActivity {
                         }
                     }
                 });
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "profileEdit Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.android.tutr/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "profileEdit Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.android.tutr/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 
     /**
@@ -190,19 +243,21 @@ public class profileEditActivity extends AppCompatActivity {
             // form field with an error.
             cancel = false;
             focusView.requestFocus();
+            return;
+        } else {
+            currentUser.addAllUnique("courses", Arrays.asList(courses));
+            currentUser.put("description", description.getText().toString());
+            currentUser.put("hourlyRate", Double.parseDouble(wage.getText().toString()));
+            currentUser.put("phone", phone.getText().toString());
+            currentUser.put("available", availability_spinner.getSelectedItem().toString());
+            Toast.makeText(profileEditActivity.this, "Changed profile successfully", Toast.LENGTH_LONG).show();
+            currentUser.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    startActivity(new Intent(profileEditActivity.this, MainActivity.class));
+                    finish();
+                }
+            });
         }
-        currentUser.addAllUnique("courses", Arrays.asList(courses));
-        currentUser.put("description", description.getText().toString());
-        currentUser.put("hourlyRate", Double.parseDouble(wage.getText().toString()));
-        currentUser.put("phone", phone.getText().toString());
-        currentUser.put("available", availability_spinner.getSelectedItem().toString());
-        try {
-            currentUser.save();
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Toast.makeText(profileEditActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-        Toast.makeText(profileEditActivity.this, "Changed profile successfully", Toast.LENGTH_LONG).show();
-        finish();
     }
 }
