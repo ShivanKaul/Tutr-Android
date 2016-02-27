@@ -216,6 +216,8 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+
+
     private void populateResultsList(String[] values) {
         LinearLayout searchResultLayout = (LinearLayout) findViewById(R.id.searchResultLayout);
         //searchResultLayout.setVisibility(View.GONE);
