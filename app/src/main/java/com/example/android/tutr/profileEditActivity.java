@@ -259,7 +259,7 @@ public class profileEditActivity extends AppCompatActivity {
             currentUser.put("description", description.getText().toString());
             currentUser.put("hourlyRate", Double.parseDouble(wage.getText().toString()));
             currentUser.put("phone", phone.getText().toString());
-            currentUser.put("available", availability_spinner.getSelectedItem().toString());
+            currentUser.put("available", availability_spinner.getSelectedItem().toString().toLowerCase());
             Toast.makeText(profileEditActivity.this, "Changed profile successfully", Toast.LENGTH_LONG).show();
             currentUser.saveInBackground(new SaveCallback() {
                 @Override
