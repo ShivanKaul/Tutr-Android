@@ -61,7 +61,7 @@ public class TutorListAdapter extends BaseAdapter {
         //Set fields
         name.setText(user.getString("name"));
         rating.setText(context.getString(R.string.hourly_rate_text) + String.format("%.2f", user.getDouble("hourlyRate") ));
-        rate.setText(context.getString(R.string.rating_text) + String.format("%.2f", user.getDouble("rating")));
+        rate.setText(context.getString(R.string.rating_text) + String.format("%.1f", user.getDouble("rating")));
 
 
         return rowView;

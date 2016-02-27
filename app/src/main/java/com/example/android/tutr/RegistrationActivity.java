@@ -122,7 +122,7 @@ public class RegistrationActivity extends AppCompatActivity implements EditText.
     }
 
     /**
-     * Helper function to check if email valid
+     * Helper function to searchInputCheck if email valid
      * @param email
      * @return true/false
      */
