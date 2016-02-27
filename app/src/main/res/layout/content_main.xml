@@ -66,7 +66,7 @@
             android:layout_alignParentTop="false"
             android:layout_alignParentLeft="true"
             android:layout_alignParentEnd="false"
-            android:text="Search result - XX tutors found"
+            android:text="Search result"
             android:layout_alignParentRight="false"
             android:textStyle="bold|normal"
             android:textSize="18dp"

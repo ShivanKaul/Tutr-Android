@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.AppCompatButton;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -34,8 +33,6 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -73,7 +70,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         headerLayout = navigationView.getHeaderView(0);
-
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -148,16 +144,20 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
     public void onSearch(View view) {
-        //TODO
-        // FETCH STUFF FROM THE INTERNET
-        // UPDATE XX RESULTS FOUND
         EditText inputName = (EditText) findViewById(R.id.nameInput);
         EditText inputCourse = (EditText) findViewById(R.id.classInput);
+
         String name = inputName.getText().toString();
         String course = inputCourse.getText().toString().replaceAll("\\s+", "").toLowerCase();
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
 
+        //Clear listView
+        ListView list = (ListView) findViewById(R.id.search_result_list);
+        list.setAdapter(null);
+
+        //Setup query
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
         check = inputChecker(name, course);
 
         if (check == 0) {
@@ -176,26 +176,24 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(MainActivity.this, "Names only contain standard alphabet", Toast.LENGTH_LONG).show();
         }
 
+        //Fetch list
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null) {
+
+                    TextView searchResultTextView = (TextView) findViewById(R.id.searchResultTextView);
+                    searchResultTextView.setText("Search result - " + objects.size() + " tutors found");
+
                     if (objects.size() == 0) {
                         if (check == 1) {
                             Toast.makeText(MainActivity.this, "No Results found for tutor name specified.", Toast.LENGTH_LONG).show();
                         } else if (check == 2) {
                             Toast.makeText(MainActivity.this, "No Results found for course specified.", Toast.LENGTH_LONG).show();
                         } else if (check == 3) {
-                            Toast.makeText(MainActivity.this, "No Results.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this, "No Results found.", Toast.LENGTH_LONG).show();
                         }
                     } else {
                         populateResultsList(objects);
-                    }
-
-
-                    for (int i = 0; i < objects.size(); i++) {
-                        ParseObject user = objects.get(i); // Gets first object
-
-                        System.out.println(user.getString("username"));
                     }
                 } else {
                     //request has failed
@@ -299,6 +297,7 @@ public class MainActivity extends AppCompatActivity
         ListView list = (ListView) findViewById(R.id.search_result_list);
         list.setAdapter(adapter);
 
+        //Set on item click listener
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
