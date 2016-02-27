@@ -37,7 +37,10 @@ public class TutorListAdapter extends ArrayAdapter<String>  {
         //Set fields
         name.setText(user.getString("name"));
         rating.setText(context.getString(R.string.hourly_rate_text) + String.format("%.2f", user.getDouble("hourlyRate") ));
-        rate.setText(context.getString(R.string.rating_text) + String.format("%.1f", user.getDouble("rating")));
+        if (user.getDouble("rating") == 0)
+            rate.setText(context.getString(R.string.rating_text) + "N/A");
+        else
+            rate.setText(context.getString(R.string.rating_text) + String.format("%.1f", user.getDouble("rating")));
 
         return rowView;
     }
