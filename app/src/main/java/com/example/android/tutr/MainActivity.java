@@ -172,6 +172,7 @@ public class MainActivity extends AppCompatActivity
 
         if (searchInputCheck == 0) {
             Toast.makeText(MainActivity.this, "Empty Search Parameters", Toast.LENGTH_LONG).show();
+            return;
         } else if (searchInputCheck == 1) {
             query.whereStartsWith("name", name);
         } else if (searchInputCheck == 2) {
