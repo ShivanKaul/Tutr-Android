@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,12 +29,21 @@ import android.widget.Toast;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import org.json.JSONObject;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    int check;
     View headerLayout;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -141,12 +152,73 @@ public class MainActivity extends AppCompatActivity
         //TODO
         // FETCH STUFF FROM THE INTERNET
         // UPDATE XX RESULTS FOUND
+        EditText inputName = (EditText) findViewById(R.id.nameInput);
+        EditText inputCourse = (EditText) findViewById(R.id.classInput);
+        String name = inputName.getText().toString();
+        String course = inputCourse.getText().toString().replaceAll("\\s+", "").toLowerCase();
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
 
-        String[] values = {"test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3",
-                "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3",
-                "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3", "test1", "test2", "test3"};
+        check = inputChecker(name, course);
 
-        populateResultsList(values);
+        if (check == 0) {
+            Toast.makeText(MainActivity.this, "Empty Search Parameters", Toast.LENGTH_LONG).show();
+        } else if (check == 1) {
+            query.whereStartsWith("name", name);
+            query.orderByDescending("rating");
+        } else if (check == 2) {
+            query.whereEqualTo("courses", course);
+            query.orderByDescending("rating");
+        } else if (check == 3) {
+            query.whereStartsWith("name", name);
+            query.whereEqualTo("courses", course);
+            query.orderByDescending("rating");
+        } else {
+            Toast.makeText(MainActivity.this, "Names only contain standard alphabet", Toast.LENGTH_LONG).show();
+        }
+
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null) {
+                    if (objects.size() == 0) {
+                        if (check == 1) {
+                            Toast.makeText(MainActivity.this, "No Results found for tutor name specified.", Toast.LENGTH_LONG).show();
+                        } else if (check == 2) {
+                            Toast.makeText(MainActivity.this, "No Results found for course specified.", Toast.LENGTH_LONG).show();
+                        } else if (check == 3) {
+                            Toast.makeText(MainActivity.this, "No Results.", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        populateResultsList(objects);
+                    }
+
+
+                    for (int i = 0; i < objects.size(); i++) {
+                        ParseObject user = objects.get(i); // Gets first object
+
+                        System.out.println(user.getString("username"));
+                    }
+                } else {
+                    //request has failed
+                    Toast.makeText(MainActivity.this, "Request failed, try again.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    public static int inputChecker(String name, String course) {
+        if (name.matches("[A-Za-z]+") || name.equals("")) {
+            if (name.equals("") && course.equals("")) {
+                return 0;
+            } else if (!name.equals("") && course.equals("")) {
+                return 1;
+            } else if (name.equals("") && !course.equals("")) {
+                return 2;
+            } else {
+                return 3;
+            }
+        } else {
+            return 4;
+        }
     }
 
     public void onHourlyClick(View view) {
@@ -168,11 +240,11 @@ public class MainActivity extends AppCompatActivity
         if (currentOrdering.getConstantState().equals(noArrow.getConstantState()))
             hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, upArrow, null);
 
-        //From down to up
+            //From down to up
         else if (currentOrdering.getConstantState().equals(downArrow.getConstantState()))
             hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, upArrow, null);
 
-        //From up to down
+            //From up to down
         else if (currentOrdering.getConstantState().equals(upArrow.getConstantState()))
             hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, downArrow, null);
 
@@ -197,11 +269,11 @@ public class MainActivity extends AppCompatActivity
         if (currentOrdering.getConstantState().equals(noArrow.getConstantState()))
             ratingButton.setCompoundDrawablesWithIntrinsicBounds(null, null, downArrow, null);
 
-        //From down to up
+            //From down to up
         else if (currentOrdering.getConstantState().equals(downArrow.getConstantState()))
             ratingButton.setCompoundDrawablesWithIntrinsicBounds(null, null, upArrow, null);
 
-        //From up to down
+            //From up to down
         else if (currentOrdering.getConstantState().equals(upArrow.getConstantState()))
             ratingButton.setCompoundDrawablesWithIntrinsicBounds(null, null, downArrow, null);
     }
@@ -216,9 +288,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-
-    private void populateResultsList(String[] values) {
+    private void populateResultsList(List<ParseObject> values) {
         LinearLayout searchResultLayout = (LinearLayout) findViewById(R.id.searchResultLayout);
         //searchResultLayout.setVisibility(View.GONE);
 
