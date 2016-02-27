@@ -167,18 +167,18 @@ public class MainActivity extends AppCompatActivity
         ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
         searchInputCheck = inputChecker(name, course);
 
+        query.whereEqualTo("available", "yes");
+        query.orderByAscending("name");
+
         if (searchInputCheck == 0) {
             Toast.makeText(MainActivity.this, "Empty Search Parameters", Toast.LENGTH_LONG).show();
         } else if (searchInputCheck == 1) {
             query.whereStartsWith("name", name);
-            query.orderByAscending("name");
         } else if (searchInputCheck == 2) {
             query.whereEqualTo("courses", course);
-            query.orderByAscending("name");
         } else if (searchInputCheck == 3) {
             query.whereStartsWith("name", name);
             query.whereEqualTo("courses", course);
-            query.orderByAscending("name");
         } else {
             Toast.makeText(MainActivity.this, "Names only contain standard alphabet", Toast.LENGTH_LONG).show();
         }
