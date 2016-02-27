@@ -31,11 +31,13 @@ public class TutorListAdapter extends ArrayAdapter<String>  {
         TextView rating = (TextView) rowView.findViewById(R.id.rating);
         TextView rate = (TextView) rowView.findViewById(R.id.hourlyRate);
 
-        //TODO PARSE VALUES INTO APPROPRIATE TEXT FIELDS
-        //Set values
-        name.setText(values[position]);
-        rating.setText(context.getString(R.string.hourly_rate_text) + "$10.50");
-        rate.setText(context.getString(R.string.rating_text) + "3.7");
+        //Get parse user
+        ParseObject user = users.get(position);
+
+        //Set fields
+        name.setText(user.getString("name"));
+        rating.setText(context.getString(R.string.hourly_rate_text) + String.format("%.2f", user.getDouble("hourlyRate") ));
+        rate.setText(context.getString(R.string.rating_text) + String.format("%.1f", user.getDouble("rating")));
 
         return rowView;
     }

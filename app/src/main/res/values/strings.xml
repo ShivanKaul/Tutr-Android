@@ -51,8 +51,8 @@
     <string name="nav_account_button">My Account</string>
     <string name="nav_profile_button">My Profile</string>
     <string name="nav_logout_button">Logout</string>
-    <string name="hourly_rate_text">Hourly Rate: </string>
-    <string name="rating_text">Rating: </string>
+    <string name="hourly_rate_text">Hourly Rate: $</string>
+    <string name="rating_text">Rating:\u0020</string>Tong
 
     <!-- Strings related to Settings -->
 

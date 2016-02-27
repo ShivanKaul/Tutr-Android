@@ -39,12 +39,16 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    int check;
-    View headerLayout;
+    
+    int searchInputCheck;
+    List<ParseObject> parseUsersList = null;
+    View navHeaderLayout;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -73,11 +77,12 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        headerLayout = navigationView.getHeaderView(0);
+        navHeaderLayout = navigationView.getHeaderView(0);
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
     }
 
     /**
@@ -103,10 +108,10 @@ public class MainActivity extends AppCompatActivity
         try{
             ParseUser user = ParseUser.getCurrentUser();
 
-            TextView userName = (TextView) headerLayout.findViewById(R.id.userNameNav);
+            TextView userName = (TextView) navHeaderLayout.findViewById(R.id.userNameNav);
             userName.setText(user.getString("name"));
 
-            TextView userEmail = (TextView) headerLayout.findViewById(R.id.userEmailNav);
+            TextView userEmail = (TextView) navHeaderLayout.findViewById(R.id.userEmailNav);
             userEmail.setText(user.getEmail());
         } catch (Exception e) {
         }
@@ -150,7 +155,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-
     public void onSearch(View view) {
         EditText inputName = (EditText) findViewById(R.id.nameInput);
         EditText inputCourse = (EditText) findViewById(R.id.classInput);
@@ -162,44 +166,48 @@ public class MainActivity extends AppCompatActivity
         ListView list = (ListView) findViewById(R.id.search_result_list);
         list.setAdapter(null);
 
+        //Reset ordering buttons
+        resetOrderingButtons();
+
         //Setup query
         ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
-        check = inputChecker(name, course);
+        searchInputCheck = inputChecker(name, course);
 
-        if (check == 0) {
+        if (searchInputCheck == 0) {
             Toast.makeText(MainActivity.this, "Empty Search Parameters", Toast.LENGTH_LONG).show();
-        } else if (check == 1) {
+        } else if (searchInputCheck == 1) {
             query.whereStartsWith("name", name);
-            query.orderByDescending("rating");
-        } else if (check == 2) {
+            query.orderByAscending("name");
+        } else if (searchInputCheck == 2) {
             query.whereEqualTo("courses", course);
-            query.orderByDescending("rating");
-        } else if (check == 3) {
+            query.orderByAscending("name");
+        } else if (searchInputCheck == 3) {
             query.whereStartsWith("name", name);
             query.whereEqualTo("courses", course);
-            query.orderByDescending("rating");
+            query.orderByAscending("name");
         } else {
             Toast.makeText(MainActivity.this, "Names only contain standard alphabet", Toast.LENGTH_LONG).show();
         }
 
         //Fetch list
         query.findInBackground(new FindCallback<ParseObject>() {
-            public void done(List<ParseObject> objects, ParseException e) {
+            public void done(List<ParseObject> parseUsers, ParseException e) {
                 if (e == null) {
 
+                    parseUsersList = parseUsers;
                     TextView searchResultTextView = (TextView) findViewById(R.id.searchResultTextView);
-                    searchResultTextView.setText("Search result - " + objects.size() + " tutors found");
+                    searchResultTextView.setText("Search result - " + parseUsers.size() + " tutors found");
 
-                    if (objects.size() == 0) {
-                        if (check == 1) {
-                            Toast.makeText(MainActivity.this, "No Results found for tutor name specified", Toast.LENGTH_LONG).show();
-                        } else if (check == 2) {
-                            Toast.makeText(MainActivity.this, "No Results found for course specified", Toast.LENGTH_LONG).show();
-                        } else if (check == 3) {
+                    if (parseUsers.size() == 0) {
+                        if (searchInputCheck == 1) {
+                            Toast.makeText(MainActivity.this, "No Results found for tutor name specified.", Toast.LENGTH_LONG).show();
+                        } else if (searchInputCheck == 2) {
+                            Toast.makeText(MainActivity.this, "No Results found for course specified.", Toast.LENGTH_LONG).show();
+                        } else if (searchInputCheck == 3) {
                             Toast.makeText(MainActivity.this, "No Results found.", Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        populateResultsList(objects);
+                        populateResultsList(parseUsersList);
                     }
 
                 } else {
@@ -225,6 +233,19 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void resetOrderingButtons(){
+        Button hourlyButton = (Button) findViewById(R.id.hourly_button);
+        Button ratingButton = (Button) findViewById(R.id.rating_button);
+
+        Drawable noArrow = ContextCompat.getDrawable(this, R.drawable.ic_remove_black_24dp);
+
+        hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, noArrow, null);
+        ratingButton.setCompoundDrawablesWithIntrinsicBounds(null, null, noArrow, null);
+
+        setButtonTint(hourlyButton, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.button_material_light)));
+        setButtonTint(ratingButton, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.button_material_light)));
+    }
+
     public void onHourlyClick(View view) {
         Button hourlyButton = (Button) findViewById(R.id.hourly_button);
         Button ratingButton = (Button) findViewById(R.id.rating_button);
@@ -241,17 +262,25 @@ public class MainActivity extends AppCompatActivity
         Drawable currentOrdering = hourlyButton.getCompoundDrawables()[2];
 
         //From default to up
-        if (currentOrdering.getConstantState().equals(noArrow.getConstantState()))
+        if (currentOrdering.getConstantState().equals(noArrow.getConstantState())){
             hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, upArrow, null);
+            parseUsersList = orderList(parseUsersList, "hourlyAscending");
+            if(parseUsersList != null) populateResultsList(parseUsersList);
+        }
 
             //From down to up
-        else if (currentOrdering.getConstantState().equals(downArrow.getConstantState()))
+        else if (currentOrdering.getConstantState().equals(downArrow.getConstantState())){
             hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, upArrow, null);
+            parseUsersList = orderList(parseUsersList, "hourlyAscending");
+            if(parseUsersList != null) populateResultsList(parseUsersList);
+        }
 
             //From up to down
-        else if (currentOrdering.getConstantState().equals(upArrow.getConstantState()))
+        else if (currentOrdering.getConstantState().equals(upArrow.getConstantState())){
             hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, downArrow, null);
-
+            parseUsersList = orderList(parseUsersList, "hourlyDescending");
+            if(parseUsersList != null) populateResultsList(parseUsersList);
+        }
     }
 
     public void onRatingClick(View view) {
@@ -270,18 +299,77 @@ public class MainActivity extends AppCompatActivity
         Drawable currentOrdering = ratingButton.getCompoundDrawables()[2];
 
         //From default to down
-        if (currentOrdering.getConstantState().equals(noArrow.getConstantState()))
+        if (currentOrdering.getConstantState().equals(noArrow.getConstantState())){
             ratingButton.setCompoundDrawablesWithIntrinsicBounds(null, null, downArrow, null);
+            parseUsersList = orderList(parseUsersList, "ratingDescending");
+            if(parseUsersList != null) populateResultsList(parseUsersList);
+        }
 
-            //From down to up
-        else if (currentOrdering.getConstantState().equals(downArrow.getConstantState()))
+        //From down to up
+        else if (currentOrdering.getConstantState().equals(downArrow.getConstantState())){
             ratingButton.setCompoundDrawablesWithIntrinsicBounds(null, null, upArrow, null);
+            parseUsersList = orderList(parseUsersList, "ratingAscending");
+            if(parseUsersList != null) populateResultsList(parseUsersList);
+        }
 
-            //From up to down
-        else if (currentOrdering.getConstantState().equals(upArrow.getConstantState()))
+
+        //From up to down
+        else if (currentOrdering.getConstantState().equals(upArrow.getConstantState())){
             ratingButton.setCompoundDrawablesWithIntrinsicBounds(null, null, downArrow, null);
+            parseUsersList = orderList(parseUsersList, "ratingDescending");
+            if(parseUsersList != null) populateResultsList(parseUsersList);
+        }
     }
 
+
+    private List<ParseObject> orderList(List<ParseObject> parseUsers, String orderingType){
+
+        if (parseUsers == null)
+            return null;
+
+        if(orderingType.equals("hourlyAscending")){
+            Collections.sort(parseUsers, new Comparator<ParseObject>() {
+                @Override
+                public int compare(final ParseObject user1, final ParseObject user2) {
+                    if (user1.getDouble("hourlyRate") < user2.getDouble("hourlyRate")) return -1;
+                    if (user1.getDouble("hourlyRate") > user2.getDouble("hourlyRate")) return 1;
+                    return 0;
+                }
+            });
+        }
+        else if(orderingType.equals("hourlyDescending")){
+            Collections.sort(parseUsers, new Comparator<ParseObject>() {
+                @Override
+                public int compare(final ParseObject user1, final ParseObject user2) {
+                    if (user1.getDouble("hourlyRate") < user2.getDouble("hourlyRate")) return 1;
+                    if (user1.getDouble("hourlyRate") > user2.getDouble("hourlyRate")) return -1;
+                    return 0;
+                }
+            });
+        }
+
+        else if(orderingType.equals("ratingAscending")){
+            Collections.sort(parseUsers, new Comparator<ParseObject>() {
+                @Override
+                public int compare(final ParseObject user1, final ParseObject user2) {
+                    if (user1.getDouble("rating") < user2.getDouble("rating")) return -1;
+                    if (user1.getDouble("rating") > user2.getDouble("rating")) return 1;
+                    return 0;
+                }
+            });
+        }
+        else if(orderingType.equals("ratingDescending")){
+            Collections.sort(parseUsers, new Comparator<ParseObject>() {
+                @Override
+                public int compare(final ParseObject user1, final ParseObject user2) {
+                    if (user1.getDouble("rating") < user2.getDouble("rating")) return 1;
+                    if (user1.getDouble("rating") > user2.getDouble("rating")) return -1;
+                    return 0;
+                }
+            });
+        }
+        return parseUsers;
+    }
 
     private static void setButtonTint(Button button, ColorStateList tint) {
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP && button instanceof AppCompatButton) {
