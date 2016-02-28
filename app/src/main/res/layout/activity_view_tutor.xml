@@ -45,10 +45,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ratingBar"
-        android:layout_marginTop="22dp"
         android:layout_below="@+id/view_ownRating"
-        android:layout_alignRight="@+id/display_counter"
-        android:layout_alignEnd="@+id/display_counter" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -100,9 +98,9 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Rating "
         android:id="@+id/display_rating"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/view_rating"
-        android:layout_toEndOf="@+id/view_rating" />
+        android:layout_above="@+id/view_ownRating"
+        android:layout_toRightOf="@+id/view_subjects"
+        android:layout_toEndOf="@+id/view_subjects" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -166,9 +164,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="ratingCounter"
+        android:text="rc"
         android:id="@+id/display_counter"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/view_phone" />
+        android:layout_above="@+id/view_ownRating"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
