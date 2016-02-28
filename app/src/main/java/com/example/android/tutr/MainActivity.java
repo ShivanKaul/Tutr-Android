@@ -181,6 +181,7 @@ public class MainActivity extends AppCompatActivity
             query.whereEqualTo("courses", course);
         } else {
             Toast.makeText(MainActivity.this, "Names only contain standard alphabet", Toast.LENGTH_LONG).show();
+            return;
         }
 
         //Fetch list
