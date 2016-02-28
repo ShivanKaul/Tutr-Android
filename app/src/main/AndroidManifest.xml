@@ -38,7 +38,6 @@
             android:label="@string/title_activity_main"
             android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
         <activity
             android:name=".RegistrationActivity"

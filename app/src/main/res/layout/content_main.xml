@@ -97,7 +97,7 @@
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Ratings"
+                android:text="Rating"
                 android:drawableRight="@drawable/ic_remove_black_24dp"
                 android:id="@+id/rating_button"
                 android:layout_weight="1"
