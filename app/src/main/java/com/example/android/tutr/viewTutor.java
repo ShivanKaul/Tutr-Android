@@ -50,9 +50,9 @@ public class ViewTutor extends AppCompatActivity {
         }
         setUpUIElements();
 
-        addListenerOnRatingBar("s.s@mail.mcgill.ca");
+        addListenerOnRatingBar("testtesttest@mcgill.ca");
 
-        getDataForTutor("s.s@mail.mcgill.ca");
+        getDataForTutor("testtesttest@mcgill.ca");
     }
 
     // Credits: http://www.mkyong.com/android/android-rating-bar-example/
@@ -65,12 +65,13 @@ public class ViewTutor extends AppCompatActivity {
                 rating_bar.setIsIndicator(true);
                 // Calculate new rating + update rating counter
                 int newCounter = (int)(rating_counter) + 1;
-                double average = ((rating * rating_counter) + old_rating) / (newCounter);
+                double average = (rating_counter == 0) ?
+                        rating : ((rating * rating_counter) + old_rating) / (newCounter);
 
                 userRating.put("rating", average);
                 userRating.put("username", username);
                 userRating.put("ratingCount", newCounter);
-                // Fire off parse event in background thread
+                // Fire off Parse event in background thread
                 userRating.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
@@ -148,7 +149,7 @@ public class ViewTutor extends AppCompatActivity {
                     } else description.setText("");
                     if (old_rating > 0) {
                         current_rating.setText(new DecimalFormat("##.#").format(old_rating));
-                    } else current_rating.setText("");
+                    } else current_rating.setText("Unrated");
                     if (rating_counter > 0) {
                         ratingCounter.setText("(" + String.valueOf((int)rating_counter) + ")");
                     } else ratingCounter.setText("");

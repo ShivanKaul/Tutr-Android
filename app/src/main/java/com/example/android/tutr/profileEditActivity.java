@@ -267,7 +267,7 @@ public class profileEditActivity extends AppCompatActivity {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             cancel = false;
-            Toast.makeText(profileEditActivity.this, "Changed not successful. Verify your input values again!!!!", Toast.LENGTH_LONG).show();
+            Toast.makeText(profileEditActivity.this, "Please verify your input values again", Toast.LENGTH_LONG).show();
             focusView.requestFocus();
             return;
         } else {
