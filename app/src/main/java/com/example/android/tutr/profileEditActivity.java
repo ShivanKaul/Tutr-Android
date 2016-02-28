@@ -24,6 +24,8 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -204,10 +206,24 @@ public class profileEditActivity extends AppCompatActivity {
         });
         // init rating bar
         rating_bar = (RatingBar) findViewById(R.id.ratingBar);
-        Log.w("rating", String.valueOf(currentUser.getDouble("rating")));
+
+        // Get rating from rating table
+        double rating = 0;
+        ParseObject userRating;
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Ratings");
+        query.whereEqualTo("username", currentUser.getUsername());
+        try {
+            Log.w("username is ", currentUser.getUsername());
+            userRating = query.find().get(0);
+            rating = userRating.getDouble("rating");
+        } catch (Exception p) {
+            Toast.makeText(profileEditActivity.this, "Problem fetching data from Ratings table" + p, Toast.LENGTH_LONG).show();
+        }
+
+        Log.w("rating", String.valueOf(rating));
         rating_title = (TextView) findViewById(R.id.rating_title);
-        rating_title.setText("Rating (" + currentUser.getDouble("rating") + " / 5.0)");
-        rating_bar.setRating((float) currentUser.getDouble("rating"));
+        rating_title.setText("Rating (" + rating + " / 5.0)");
+        rating_bar.setRating((float) rating);
         rating_bar.setIsIndicator(true);
         // init text fields
         availability_spinner = (Spinner) findViewById(R.id.availability_spinner);
