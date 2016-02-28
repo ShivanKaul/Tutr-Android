@@ -17,7 +17,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,10 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.parse.Parse;
-
-import com.parse.ParseUser;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -49,6 +44,7 @@ public class MainActivity extends AppCompatActivity
     int searchInputCheck;
     List<ParseObject> parseUsersList = null;
     View navHeaderLayout;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -104,8 +100,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-
-        try{
+        try {
             ParseUser user = ParseUser.getCurrentUser();
 
             TextView userName = (TextView) navHeaderLayout.findViewById(R.id.userNameNav);
@@ -143,7 +138,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_account_mod) {
             Intent intent = new Intent(this, AccSetActivity.class);
             startActivity(intent);
-
 
         } else if (id == R.id.nav_profile_mod) {
             //startActivity(new Intent(MainActivity.this, LoginActivity.class));
@@ -211,9 +205,9 @@ public class MainActivity extends AppCompatActivity
                     } else {
                         populateResultsList(parseUsersList);
                     }
-
                 } else {
                     //request has failed
+                    Toast.makeText(MainActivity.this, "Request failed, try again.", Toast.LENGTH_LONG).show();
                 }
             }
         });

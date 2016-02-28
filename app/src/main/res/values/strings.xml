@@ -45,6 +45,7 @@
     <string name="action_login">Sign In</string>
     <string name="title_activity_acc_set">Edit Account Settings</string>
 
+
     <!-- Strings related to Main Activity -->
     <string name="title_activity_main">Search</string>
 
