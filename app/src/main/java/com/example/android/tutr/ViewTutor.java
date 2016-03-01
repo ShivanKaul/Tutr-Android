@@ -19,8 +19,6 @@ import java.util.List;
 
 public class ViewTutor extends AppCompatActivity {
 
-    private static boolean PARSE_INITIALIZED = false;
-
     private TextView current_rating;
     private TextView ratingCounter;
     private TextView description;
@@ -41,18 +39,14 @@ public class ViewTutor extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_tutor);
-
-        if (!PARSE_INITIALIZED) {
-           // Parse.initialize(this);
-            PARSE_INITIALIZED = true;
-        }
         setUpUIElements();
         // get the intent
         Intent intent = getIntent();
+        String username = intent.getStringExtra("username");
 
-        addListenerOnRatingBar("testtesttest@mcgill.ca");
+        addListenerOnRatingBar(username);
 
-        getDataForTutor(intent.getStringExtra("username"));
+        getDataForTutor(username);
     }
 
     // Credits: http://www.mkyong.com/android/android-rating-bar-example/
@@ -75,7 +69,9 @@ public class ViewTutor extends AppCompatActivity {
                 userRating.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        if (e == null) {}
+                        if (e == null) {
+                            Toast.makeText(ViewTutor.this, "Rating is changed, Thank you!", Toast.LENGTH_LONG).show();
+                        }
                         else {
                             Toast.makeText(ViewTutor.this, "Problem storing rating" + e, Toast.LENGTH_LONG).show();
                         }
