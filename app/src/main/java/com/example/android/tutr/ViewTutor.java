@@ -1,15 +1,13 @@
 package com.example.android.tutr;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.EditText;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -45,14 +43,16 @@ public class ViewTutor extends AppCompatActivity {
         setContentView(R.layout.activity_view_tutor);
 
         if (!PARSE_INITIALIZED) {
-            Parse.initialize(this);
+           // Parse.initialize(this);
             PARSE_INITIALIZED = true;
         }
         setUpUIElements();
+        // get the intent
+        Intent intent = getIntent();
 
         addListenerOnRatingBar("testtesttest@mcgill.ca");
 
-        getDataForTutor("testtesttest@mcgill.ca");
+        getDataForTutor(intent.getStringExtra("username"));
     }
 
     // Credits: http://www.mkyong.com/android/android-rating-bar-example/

@@ -394,6 +394,9 @@ public class MainActivity extends AppCompatActivity
 
                 ParseObject clickedUser = (ParseObject) parent.getItemAtPosition(position);
                 String username = clickedUser.getString("username");
+                Intent intent = new Intent(MainActivity.this, ViewTutor.class);
+                intent.putExtra("username", username);
+                startActivity(intent);
 
             }
         });
