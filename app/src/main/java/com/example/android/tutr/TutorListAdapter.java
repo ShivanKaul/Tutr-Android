@@ -33,7 +33,7 @@ public class TutorListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public ParseObject getItem(int position) {
         return users.get(position);
     }
 
@@ -56,7 +56,7 @@ public class TutorListAdapter extends BaseAdapter {
         TextView rate = (TextView) rowView.findViewById(R.id.hourlyRate);
 
         //Get parse user
-        ParseObject user = users.get(position);
+        ParseObject user = getItem(position);
 
         //Set fields
         name.setText(user.getString("name"));

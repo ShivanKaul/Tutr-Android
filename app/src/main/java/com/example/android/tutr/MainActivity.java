@@ -392,10 +392,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                //TODO LOGIC ON CLICK
-                TextView textView = (TextView) view.findViewById(R.id.tutorName);
-                String message = textView.getText().toString();
-                Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+                ParseObject clickedUser = (ParseObject) parent.getItemAtPosition(position);
+                String username = clickedUser.getString("username");
+
             }
         });
     }
