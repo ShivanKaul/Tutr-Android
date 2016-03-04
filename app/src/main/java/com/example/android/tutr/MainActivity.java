@@ -29,20 +29,26 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     
     int searchInputCheck;
-    List<ParseObject> parseUsersList = null;
+//    List<UserToRating> parseUsersList = null;
+    List<UserToRating> usersToRatings = null;
     View navHeaderLayout;
 
     /**
@@ -164,7 +170,7 @@ public class MainActivity extends AppCompatActivity
         resetOrderingButtons();
 
         //Setup query
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
         searchInputCheck = inputChecker(name, course);
 
         query.whereEqualTo("available", "yes");
@@ -190,7 +196,7 @@ public class MainActivity extends AppCompatActivity
             public void done(List<ParseObject> parseUsers, ParseException e) {
                 if (e == null) {
 
-                    parseUsersList = parseUsers;
+                    List<ParseObject> parseUsersList = parseUsers;
                     TextView searchResultTextView = (TextView) findViewById(R.id.searchResultTextView);
                     searchResultTextView.setText("Search result - " + parseUsers.size() + " tutors found");
 
@@ -203,7 +209,23 @@ public class MainActivity extends AppCompatActivity
                             Toast.makeText(MainActivity.this, "No Results found.", Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        populateResultsList(parseUsersList);
+                        List<ParseQuery<ParseObject>> queries = new ArrayList<ParseQuery<ParseObject>>();
+                        for (ParseObject user : parseUsersList) {
+                            // Get rating from rating table
+                            ParseQuery<ParseObject> query = ParseQuery.getQuery("Ratings");
+                            query.whereEqualTo("username", user.get("username"));
+                            queries.add(query);
+                        }
+                        List<ParseObject> ratings = null;
+                        try {
+                            ratings =  ParseQuery.or(queries).find();
+                        } catch (ParseException p) {
+                            Toast.makeText(MainActivity.this, "Problem fetching data from Ratings table" + p, Toast.LENGTH_LONG).show();
+                            // What is even happening, just die
+                            finish();
+                        }
+                        usersToRatings = zipLists(parseUsersList, ratings);
+                        populateResults((ArrayList)usersToRatings);
                     }
                 } else {
                     //request has failed
@@ -211,6 +233,24 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
+    }
+
+    private List<UserToRating> zipLists(List<ParseObject> users, List<ParseObject> ratings) {
+        if (users.size() != ratings.size()) complainAboutSizes(users.size(), ratings.size());
+        List<UserToRating> usersToRatings = new ArrayList<UserToRating>();
+        Iterator<ParseObject> i1 = users.iterator();
+        Iterator<ParseObject> i2 = ratings.iterator();
+        while (i1.hasNext() && i2.hasNext()) {
+            usersToRatings.add(new UserToRating(i1.next(), i2.next()));
+        }
+
+        return usersToRatings;
+    }
+
+    private void complainAboutSizes(int u, int r) {
+        Toast.makeText(MainActivity.this, "Incompatible sizes of users: " + u + " and fetched ratings: " + r, Toast.LENGTH_LONG).show();
+        // What is even happening, just die
+        finish();
     }
 
     public static int inputChecker(String name, String course) {
@@ -260,22 +300,22 @@ public class MainActivity extends AppCompatActivity
         //From default to up
         if (currentOrdering.getConstantState().equals(noArrow.getConstantState())){
             hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, upArrow, null);
-            parseUsersList = orderList(parseUsersList, "hourlyAscending");
-            if(parseUsersList != null) populateResultsList(parseUsersList);
+            usersToRatings = orderList(usersToRatings, "hourlyAscending");
+            if(usersToRatings != null) populateResults((ArrayList)usersToRatings);
         }
 
             //From down to up
         else if (currentOrdering.getConstantState().equals(downArrow.getConstantState())){
             hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, upArrow, null);
-            parseUsersList = orderList(parseUsersList, "hourlyAscending");
-            if(parseUsersList != null) populateResultsList(parseUsersList);
+            usersToRatings = orderList(usersToRatings, "hourlyAscending");
+            if(usersToRatings != null) populateResults((ArrayList)usersToRatings);
         }
 
             //From up to down
         else if (currentOrdering.getConstantState().equals(upArrow.getConstantState())){
             hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, downArrow, null);
-            parseUsersList = orderList(parseUsersList, "hourlyDescending");
-            if(parseUsersList != null) populateResultsList(parseUsersList);
+            usersToRatings = orderList(usersToRatings, "hourlyDescending");
+            if(usersToRatings != null) populateResults((ArrayList)usersToRatings);
         }
     }
 
@@ -297,74 +337,74 @@ public class MainActivity extends AppCompatActivity
         //From default to down
         if (currentOrdering.getConstantState().equals(noArrow.getConstantState())){
             ratingButton.setCompoundDrawablesWithIntrinsicBounds(null, null, downArrow, null);
-            parseUsersList = orderList(parseUsersList, "ratingDescending");
-            if(parseUsersList != null) populateResultsList(parseUsersList);
+            usersToRatings = orderList(usersToRatings, "ratingDescending");
+            if(usersToRatings != null) populateResults((ArrayList)usersToRatings);
         }
 
         //From down to up
         else if (currentOrdering.getConstantState().equals(downArrow.getConstantState())){
             ratingButton.setCompoundDrawablesWithIntrinsicBounds(null, null, upArrow, null);
-            parseUsersList = orderList(parseUsersList, "ratingAscending");
-            if(parseUsersList != null) populateResultsList(parseUsersList);
+            usersToRatings = orderList(usersToRatings, "ratingAscending");
+            if(usersToRatings != null) populateResults((ArrayList)usersToRatings);
         }
 
 
         //From up to down
         else if (currentOrdering.getConstantState().equals(upArrow.getConstantState())){
             ratingButton.setCompoundDrawablesWithIntrinsicBounds(null, null, downArrow, null);
-            parseUsersList = orderList(parseUsersList, "ratingDescending");
-            if(parseUsersList != null) populateResultsList(parseUsersList);
+            usersToRatings = orderList(usersToRatings, "ratingDescending");
+            if(usersToRatings != null) populateResults((ArrayList)usersToRatings);
         }
     }
 
 
-    private List<ParseObject> orderList(List<ParseObject> parseUsers, String orderingType){
+    private List<UserToRating> orderList(List<UserToRating> usersToRatings, String orderingType){
 
-        if (parseUsers == null)
+        if (usersToRatings == null)
             return null;
 
         if(orderingType.equals("hourlyAscending")){
-            Collections.sort(parseUsers, new Comparator<ParseObject>() {
+            Collections.sort(usersToRatings, new Comparator<UserToRating>() {
                 @Override
-                public int compare(final ParseObject user1, final ParseObject user2) {
-                    if (user1.getDouble("hourlyRate") < user2.getDouble("hourlyRate")) return -1;
-                    if (user1.getDouble("hourlyRate") > user2.getDouble("hourlyRate")) return 1;
+                public int compare(final UserToRating user1, final UserToRating user2) {
+                    if (user1.getUser().getDouble("hourlyRate") < user2.getUser().getDouble("hourlyRate")) return -1;
+                    if (user1.getUser().getDouble("hourlyRate") > user2.getUser().getDouble("hourlyRate")) return 1;
                     return 0;
                 }
             });
         }
         else if(orderingType.equals("hourlyDescending")){
-            Collections.sort(parseUsers, new Comparator<ParseObject>() {
+            Collections.sort(usersToRatings, new Comparator<UserToRating>() {
                 @Override
-                public int compare(final ParseObject user1, final ParseObject user2) {
-                    if (user1.getDouble("hourlyRate") < user2.getDouble("hourlyRate")) return 1;
-                    if (user1.getDouble("hourlyRate") > user2.getDouble("hourlyRate")) return -1;
+                public int compare(final UserToRating user1, final UserToRating user2) {
+                    if (user1.getUser().getDouble("hourlyRate") < user2.getUser().getDouble("hourlyRate")) return 1;
+                    if (user1.getUser().getDouble("hourlyRate") > user2.getUser().getDouble("hourlyRate")) return -1;
                     return 0;
                 }
             });
         }
 
         else if(orderingType.equals("ratingAscending")){
-            Collections.sort(parseUsers, new Comparator<ParseObject>() {
+            Collections.sort(usersToRatings, new Comparator<UserToRating>() {
                 @Override
-                public int compare(final ParseObject user1, final ParseObject user2) {
-                    if (user1.getDouble("rating") < user2.getDouble("rating")) return -1;
-                    if (user1.getDouble("rating") > user2.getDouble("rating")) return 1;
+                public int compare(final UserToRating user1, final UserToRating user2) {
+                    if (user1.getRating().getDouble("rating") < user2.getRating().getDouble("rating")) return -1;
+                    if (user1.getRating().getDouble("rating") > user2.getRating().getDouble("rating")) return 1;
                     return 0;
                 }
             });
         }
         else if(orderingType.equals("ratingDescending")){
-            Collections.sort(parseUsers, new Comparator<ParseObject>() {
+            Collections.sort(usersToRatings, new Comparator<UserToRating>() {
                 @Override
-                public int compare(final ParseObject user1, final ParseObject user2) {
-                    if (user1.getDouble("rating") < user2.getDouble("rating")) return 1;
-                    if (user1.getDouble("rating") > user2.getDouble("rating")) return -1;
+                public int compare(final UserToRating user1, final UserToRating user2) {
+                    if (user1.getRating().getDouble("rating") < user2.getRating().getDouble("rating")) return 1;
+                    if (user1.getRating().getDouble("rating") > user2.getRating().getDouble("rating")) return -1;
                     return 0;
                 }
             });
         }
-        return parseUsers;
+        return usersToRatings;
     }
 
     private static void setButtonTint(Button button, ColorStateList tint) {
@@ -376,12 +416,12 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private void populateResultsList(List<ParseObject> values) {
+    private void populateResults(ArrayList<UserToRating> userToRatings) {
         LinearLayout searchResultLayout = (LinearLayout) findViewById(R.id.searchResultLayout);
         //searchResultLayout.setVisibility(View.GONE);
 
         //Populate list view test
-        TutorListAdapter adapter = new TutorListAdapter(this, values);
+        TutorListAdapter adapter = new TutorListAdapter(this, userToRatings);
 
         //Get list and set adapter
         ListView list = (ListView) findViewById(R.id.search_result_list);
@@ -392,8 +432,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                ParseObject clickedUser = (ParseObject) parent.getItemAtPosition(position);
-                String username = clickedUser.getString("username");
+                UserToRating clickedUser = (UserToRating) parent.getItemAtPosition(position);
+                String username = clickedUser.getUser().getString("username");
                 Intent intent = new Intent(MainActivity.this, ViewTutor.class);
                 intent.putExtra("username", username);
                 startActivity(intent);
@@ -441,4 +481,6 @@ public class MainActivity extends AppCompatActivity
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
+
+
 }

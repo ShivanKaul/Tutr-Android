@@ -39,10 +39,11 @@ public class ViewTutor extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_tutor);
-        setUpUIElements();
         // get the intent
         Intent intent = getIntent();
         String username = intent.getStringExtra("username");
+        setUpUIElements();
+
 
         addListenerOnRatingBar(username);
 
@@ -70,7 +71,7 @@ public class ViewTutor extends AppCompatActivity {
                     @Override
                     public void done(ParseException e) {
                         if (e == null) {
-                            Toast.makeText(ViewTutor.this, "Rating is changed, Thank you!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(ViewTutor.this, "Rated, thank you!", Toast.LENGTH_LONG).show();
                         }
                         else {
                             Toast.makeText(ViewTutor.this, "Problem storing rating" + e, Toast.LENGTH_LONG).show();
@@ -110,7 +111,17 @@ public class ViewTutor extends AppCompatActivity {
         query.findInBackground(new FindCallback<ParseUser>() {
             public void done(List<ParseUser> users, ParseException e) {
                 if (e == null) {
-                    ParseUser user = users.get(0);
+                    ParseUser user = null;
+                    // This should not fail, because we're querying for something already found
+                    // in main activity
+                    try {
+                        user = users.get(0);
+                    } catch (Exception exp) {
+                        Toast.makeText(ViewTutor.this, "Could not fetch item from Ratings, which" +
+                                "is really weird because we were able to just a second back" + exp, Toast.LENGTH_LONG).show();
+                        // What is even happening, just die
+                        finish();
+                    }
 
                     // Get rating from rating table
                     ParseQuery<ParseObject> query = ParseQuery.getQuery("Ratings");
