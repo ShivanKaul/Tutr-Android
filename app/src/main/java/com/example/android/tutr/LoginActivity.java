@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -57,6 +58,7 @@ public class LoginActivity extends AppCompatActivity implements TextView.OnEdito
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Firebase.setAndroidContext(this);
         if (!PARSE_INITIALIZED) {
             Parse.initialize(this);
             PARSE_INITIALIZED = true;

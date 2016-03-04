@@ -14,11 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 
@@ -26,6 +29,9 @@ import java.util.regex.Pattern;
  * A registration screen that offers registering via email/password.
  */
 public class RegistrationActivity extends AppCompatActivity implements EditText.OnEditorActionListener {
+
+
+    Firebase ref = new Firebase("https://tutr.firebaseio.com");
 
     // UI references.
     private EditText mEmailView;
@@ -40,6 +46,8 @@ public class RegistrationActivity extends AppCompatActivity implements EditText.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+
+        Firebase.setAndroidContext(this);
 
         // load an image to the image view
         ImageView imageView = (ImageView) findViewById(R.id.imageView);
@@ -172,6 +180,7 @@ public class RegistrationActivity extends AppCompatActivity implements EditText.
         return handled;
     }
 
+
     /**
      * Register using the Parse API
      * @param mEmail
@@ -179,28 +188,45 @@ public class RegistrationActivity extends AppCompatActivity implements EditText.
      * @param mName
      */
     public void register(final String mEmail, final String mPassword, final String mName) {
-        ParseUser user = new ParseUser();
-        user.put("name", mName);
-        user.setPassword(mPassword);
-        user.setUsername(mEmail);
-        user.setEmail(mEmail);
-        user.signUpInBackground(new SignUpCallback() {
-            public void done(ParseException e) {
-                if (e == null) {
-                    // Hooray! Let them use the app now.
-                    Toast.makeText(RegistrationActivity.this, "Registration Successful!", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
-                    finish();
-                } else {
-                    // Sign up didn't succeed. Look at the ParseException
-                    // to figure out what went wrong
-                    Toast.makeText(RegistrationActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                    Intent intent = getIntent();
-                    finish();
-                    startActivity(intent);
-                }
-            }
-        });
+
+
+
+
+        Firebase infoRef = ref.child("Members");
+
+        Map<String, String> info = new HashMap< String ,String>();
+        info.put("Name", mName);
+        info.put("Email", mEmail);
+        info.put("Password", mPassword);
+        infoRef.push().setValue(info);
+        Toast.makeText(RegistrationActivity.this, "Registration Successful!", Toast.LENGTH_LONG).show();
+        startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
+
+//        ref2.push().setValue(mPassword);
+//        ref3.push().setValue(mEmail);
+
+//        ParseUser user = new ParseUser();
+//        user.put("name", mName);
+//        user.setPassword(mPassword);
+//        user.setUsername(mEmail);
+//        user.setEmail(mEmail);
+//        user.signUpInBackground(new SignUpCallback() {
+//            public void done(ParseException e) {
+//                if (e == null) {
+//                    // Hooray! Let them use the app now.
+//                    Toast.makeText(RegistrationActivity.this, "Registration Successful!", Toast.LENGTH_LONG).show();
+//                    startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
+//                    finish();
+//                } else {
+//                    // Sign up didn't succeed. Look at the ParseException
+//                    // to figure out what went wrong
+//                    Toast.makeText(RegistrationActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+//                    Intent intent = getIntent();
+//                    finish();
+//                    startActivity(intent);
+//                }
+//            }
+//        });
     }
 }
 
