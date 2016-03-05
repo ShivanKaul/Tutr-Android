@@ -269,6 +269,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Reset the ordering buttons to their default state
+     */
     private void resetOrderingButtons(){
         Button hourlyButton = (Button) findViewById(R.id.hourly_button);
         Button ratingButton = (Button) findViewById(R.id.rating_button);
@@ -282,6 +285,10 @@ public class MainActivity extends AppCompatActivity
         setButtonTint(ratingButton, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.button_material_light)));
     }
 
+    /**
+     * Repopulate the search result list displayed to the user according to the specified ordering by hourly rate
+     * @param view
+     */
     public void onHourlyClick(View view) {
         Button hourlyButton = (Button) findViewById(R.id.hourly_button);
         Button ratingButton = (Button) findViewById(R.id.rating_button);
@@ -319,6 +326,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Repopulate the search result list displayed to the user according to the specified ordering by rating
+     * @param view
+     */
     public void onRatingClick(View view) {
         Button hourlyButton = (Button) findViewById(R.id.hourly_button);
         Button ratingButton = (Button) findViewById(R.id.rating_button);
@@ -357,8 +368,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
-    private List<UserToRating> orderList(List<UserToRating> usersToRatings, String orderingType){
+    /**
+     * Reorder the search result list according to one of the 4 available ordering type.
+     * @param usersToRatings
+     * @param orderingType
+     * @return
+     */
+    private List<UserToRating> orderList(List<UserToRating> usersToRatings, String orderingType) {
 
         if (usersToRatings == null)
             return null;
@@ -407,6 +423,11 @@ public class MainActivity extends AppCompatActivity
         return usersToRatings;
     }
 
+    /**
+     * Set the tint of the ordering button.
+     * @param button
+     * @param tint
+     */
     private static void setButtonTint(Button button, ColorStateList tint) {
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP && button instanceof AppCompatButton) {
             ((AppCompatButton) button).setSupportBackgroundTintList(tint);
@@ -416,6 +437,10 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Populates the search results list to be displayed to the user
+     * @param userToRatings
+     */
     private void populateResults(ArrayList<UserToRating> userToRatings) {
         LinearLayout searchResultLayout = (LinearLayout) findViewById(R.id.searchResultLayout);
         //searchResultLayout.setVisibility(View.GONE);
@@ -432,6 +457,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                //Redirects to the tutor's profile page
                 UserToRating clickedUser = (UserToRating) parent.getItemAtPosition(position);
                 String username = clickedUser.getUser().getString("username");
                 Intent intent = new Intent(MainActivity.this, ViewTutor.class);
