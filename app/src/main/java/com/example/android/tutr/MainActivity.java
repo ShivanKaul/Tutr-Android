@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     
     int searchInputCheck;
-//    List<UserToRating> parseUsersList = null;
     List<UserToRating> usersToRatings = null;
     View navHeaderLayout;
 
@@ -155,6 +154,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Fetch and parse the search results according to the user input.
+     * @param view
+     */
     public void onSearch(View view) {
         EditText inputName = (EditText) findViewById(R.id.nameInput);
         EditText inputCourse = (EditText) findViewById(R.id.classInput);
@@ -235,6 +238,12 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * Return a list of UserToRating objects consisting of 2 parse objects, one for the rating and one for the tutor
+     * @param users
+     * @param ratings
+     * @return
+     */
     private List<UserToRating> zipLists(List<ParseObject> users, List<ParseObject> ratings) {
         if (users.size() != ratings.size()) complainAboutSizes(users.size(), ratings.size());
         List<UserToRating> usersToRatings = new ArrayList<UserToRating>();
@@ -247,12 +256,23 @@ public class MainActivity extends AppCompatActivity
         return usersToRatings;
     }
 
+    /**
+     * Notify user that the rating query and tutor query sizes didn't match
+     * @param u
+     * @param r
+     */
     private void complainAboutSizes(int u, int r) {
         Toast.makeText(MainActivity.this, "Incompatible sizes of users: " + u + " and fetched ratings: " + r, Toast.LENGTH_LONG).show();
         // What is even happening, just die
         finish();
     }
 
+    /**
+     * Check the search input and assign in to one of 5 categories.
+     * @param name
+     * @param course
+     * @return
+     */
     public static int inputChecker(String name, String course) {
         if (name.matches("[A-Za-z]+") || name.equals("")) {
             if (name.equals("") && course.equals("")) {
@@ -289,7 +309,7 @@ public class MainActivity extends AppCompatActivity
      * Repopulate the search result list displayed to the user according to the specified ordering by hourly rate
      * @param view
      */
-    public void onHourlyClick(View view) {
+    private void onHourlyClick(View view) {
         Button hourlyButton = (Button) findViewById(R.id.hourly_button);
         Button ratingButton = (Button) findViewById(R.id.rating_button);
 
@@ -330,7 +350,7 @@ public class MainActivity extends AppCompatActivity
      * Repopulate the search result list displayed to the user according to the specified ordering by rating
      * @param view
      */
-    public void onRatingClick(View view) {
+    private void onRatingClick(View view) {
         Button hourlyButton = (Button) findViewById(R.id.hourly_button);
         Button ratingButton = (Button) findViewById(R.id.rating_button);
 
