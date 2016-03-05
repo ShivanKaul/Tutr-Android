@@ -61,7 +61,7 @@ public class ViewTutor extends AppCompatActivity {
                 // Calculate new rating + update rating counter
                 int newCounter = (int)(rating_counter) + 1;
                 double average = (rating_counter == 0) ?
-                        rating : ((rating * rating_counter) + old_rating) / (newCounter);
+                        rating : ((old_rating * rating_counter) + rating) / (newCounter);
 
                 userRating.put("rating", average);
                 userRating.put("username", username);
