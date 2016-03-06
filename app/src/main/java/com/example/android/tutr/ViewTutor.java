@@ -17,6 +17,10 @@ import com.parse.SaveCallback;
 import java.text.DecimalFormat;
 import java.util.List;
 
+/** View Tutor class. Handles the view of the tutor's profile - what is diplayed when
+ * the user clicks on a Tutor while searching.
+ */
+
 public class ViewTutor extends AppCompatActivity {
 
     private TextView current_rating;
@@ -50,7 +54,13 @@ public class ViewTutor extends AppCompatActivity {
         getDataForTutor(username);
     }
 
-    // Credits: http://www.mkyong.com/android/android-rating-bar-example/
+
+    /** Adds listener on the Rating bar, so that when a rating is done the ratings are persisted.
+     * The user cannot rate twice.
+     * Credits: http://www.mkyong.com/android/android-rating-bar-example/
+     *
+     * @param username  Username for Ratings table
+     */
     public void addListenerOnRatingBar(final String username) {
 
         rating_bar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
@@ -84,6 +94,8 @@ public class ViewTutor extends AppCompatActivity {
         });
     }
 
+    /** Set up UI elements
+     */
     private void setUpUIElements() {
         // need to assign default value to fields in case
         // no ratings
@@ -99,6 +111,9 @@ public class ViewTutor extends AppCompatActivity {
         rating_bar = (RatingBar) findViewById(R.id.ratingBar);
     }
 
+    /** Get the data to display for a tutor
+     * @param username  Username for Ratings table
+     */
     private void getDataForTutor(final String username) {
         // get courses, description, current rating, rating counter,
         // hourly rate, phone number

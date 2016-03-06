@@ -3,6 +3,7 @@ package com.example.android.tutr;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,13 +30,14 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * Used to update user password and name on the Parse database.
  */
-public class profileEditActivity extends AppCompatActivity {
+public class ProfileEditActivity extends AppCompatActivity {
     ParseUser currentUser = ParseUser.getCurrentUser();
     Button saveChangesButton;
     // UI references.
@@ -83,7 +85,7 @@ public class profileEditActivity extends AppCompatActivity {
                         try {
                             saveChanges();
                         } catch (Exception e) {
-                            startActivity(new Intent(profileEditActivity.this, LoginActivity.class));
+                            startActivity(new Intent(ProfileEditActivity.this, LoginActivity.class));
                         }
                     }
                 });
@@ -101,7 +103,7 @@ public class profileEditActivity extends AppCompatActivity {
         client.connect();
         Action viewAction = Action.newAction(
                 Action.TYPE_VIEW, // TODO: choose an action type.
-                "profileEdit Page", // TODO: Define a title for the content shown.
+                "ProfileEdit Page", // TODO: Define a title for the content shown.
                 // TODO: If you have web page content that matches this app activity's content,
                 // make sure this auto-generated web page URL is correct.
                 // Otherwise, set the URL to null.
@@ -120,7 +122,7 @@ public class profileEditActivity extends AppCompatActivity {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         Action viewAction = Action.newAction(
                 Action.TYPE_VIEW, // TODO: choose an action type.
-                "profileEdit Page", // TODO: Define a title for the content shown.
+                "ProfileEdit Page", // TODO: Define a title for the content shown.
                 // TODO: If you have web page content that matches this app activity's content,
                 // make sure this auto-generated web page URL is correct.
                 // Otherwise, set the URL to null.
@@ -161,7 +163,7 @@ public class profileEditActivity extends AppCompatActivity {
             currentUser.fetch();
         } catch (ParseException e) {
             e.printStackTrace();
-            Toast.makeText(profileEditActivity.this, "Unable to access Parse Server", Toast.LENGTH_LONG).show();
+            Toast.makeText(ProfileEditActivity.this, "Unable to access Parse Server", Toast.LENGTH_LONG).show();
         }
         saveChangesButton = (Button) findViewById(R.id.profileEditSaveChangesButton);
         wage = (EditText) findViewById(R.id.enter_hourly_rate);
@@ -217,12 +219,12 @@ public class profileEditActivity extends AppCompatActivity {
             userRating = query.find().get(0);
             rating = userRating.getDouble("rating");
         } catch (Exception p) {
-            Toast.makeText(profileEditActivity.this, "Problem fetching data from Ratings table" + p, Toast.LENGTH_LONG).show();
+            Toast.makeText(ProfileEditActivity.this, "Problem fetching data from Ratings table" + p, Toast.LENGTH_LONG).show();
         }
 
         Log.w("rating", String.valueOf(rating));
         rating_title = (TextView) findViewById(R.id.rating_title);
-        rating_title.setText("Rating (" + rating + " / 5.0)");
+        rating_title.setText("Rating (" + new DecimalFormat("##.#").format(rating) + " / 5.0)");
         rating_bar.setRating((float) rating);
         rating_bar.setIsIndicator(true);
         // init text fields
@@ -260,6 +262,10 @@ public class profileEditActivity extends AppCompatActivity {
             }
         }
         if (availability_spinner.getSelectedItem().toString().equalsIgnoreCase("select")) {
+            TextView errorText = (TextView)availability_spinner.getSelectedView();
+            errorText.setError("");
+            errorText.setTextColor(Color.RED);//just to highlight that this is an error
+            errorText.setText("Please select your availability!");
             focusView = availability_spinner;
             cancel = true;
         }
@@ -267,7 +273,7 @@ public class profileEditActivity extends AppCompatActivity {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             cancel = false;
-            Toast.makeText(profileEditActivity.this, "Please verify your input values again", Toast.LENGTH_LONG).show();
+            Toast.makeText(ProfileEditActivity.this, "Please verify your input values again", Toast.LENGTH_LONG).show();
             focusView.requestFocus();
             return;
         } else {
@@ -276,7 +282,7 @@ public class profileEditActivity extends AppCompatActivity {
             currentUser.put("hourlyRate", Double.parseDouble(wage.getText().toString()));
             currentUser.put("phone", phone.getText().toString());
             currentUser.put("available", availability_spinner.getSelectedItem().toString().toLowerCase());
-            Toast.makeText(profileEditActivity.this, "Changed profile successfully", Toast.LENGTH_LONG).show();
+            Toast.makeText(ProfileEditActivity.this, "Changed profile successfully", Toast.LENGTH_LONG).show();
             currentUser.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {

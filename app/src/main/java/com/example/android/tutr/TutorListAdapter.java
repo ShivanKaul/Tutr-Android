@@ -10,9 +10,7 @@ import android.widget.TextView;
 
 import com.parse.ParseObject;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class TutorListAdapter extends BaseAdapter {
@@ -61,7 +59,7 @@ public class TutorListAdapter extends BaseAdapter {
 
         //Set fields
         name.setText(userObj.getString("name"));
-        rating.setText(context.getString(R.string.hourly_rate_text) + String.format("%.2f", userObj.getDouble("hourlyRate") ));
+        rating.setText(context.getString(R.string.hourly_rate_text) + String.format("%.2f", userObj.getDouble("hourlyRate")));
         if (ratingObj.getDouble("rating") == 0)
             rate.setText(context.getString(R.string.rating_text) + "N/A");
         else

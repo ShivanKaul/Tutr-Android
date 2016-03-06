@@ -12,7 +12,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:weightSum="1"
-    tools:context="com.example.android.tutr.profileEditActivity">
+    tools:context="com.example.android.tutr.ProfileEditActivity">
 
     <TextView
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginTop="5dp"
         android:background="@color/peacockBlue"
-        android:hint="ex)math100, ecse100, ..."
+        android:hint="Math 100, ECSE 322..."
         android:inputType="text"
         android:textAlignment="center"
         android:textColor="#ffffff"
