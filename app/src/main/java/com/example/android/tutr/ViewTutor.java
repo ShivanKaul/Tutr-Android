@@ -15,6 +15,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.List;
 
 /** View Tutor class. Handles the view of the tutor's profile - what is diplayed when
@@ -74,6 +75,7 @@ public class ViewTutor extends AppCompatActivity {
                         rating : ((old_rating * rating_counter) + rating) / (newCounter);
 
                 userRating.put("rating", average);
+                userRating.add("ratedBy", ParseUser.getCurrentUser().getUsername());
                 userRating.put("username", username);
                 userRating.put("ratingCount", newCounter);
                 // Fire off Parse event in background thread
@@ -148,6 +150,13 @@ public class ViewTutor extends AppCompatActivity {
                     } catch (ParseException p) {
                         Toast.makeText(ViewTutor.this, "Problem fetching data from Ratings table" + p, Toast.LENGTH_LONG).show();
                     }
+
+                    // Check if user has already rated tutor and if yes set ratings bar to be non editable
+                    try {
+                        if (userRating.getList("ratedBy").contains(ParseUser.getCurrentUser().getUsername())) {
+                            rating_bar.setIsIndicator(true);
+                        }
+                    } catch (NullPointerException npe) {}
 
                     if (user.getList("courses") != null) {
                         List<String> subjects = user.getList("courses");
