@@ -477,8 +477,10 @@ public class MainActivity extends AppCompatActivity
                 //Redirects to the tutor's profile page
                 UserToRating clickedUser = (UserToRating) parent.getItemAtPosition(position);
                 String username = clickedUser.getUser().getString("username");
+                String name = clickedUser.getUser().getString("name");
                 Intent intent = new Intent(MainActivity.this, ViewTutor.class);
                 intent.putExtra("username", username);
+                intent.putExtra("name", name);
                 startActivity(intent);
 
             }

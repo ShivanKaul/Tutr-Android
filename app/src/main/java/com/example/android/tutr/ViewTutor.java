@@ -47,7 +47,8 @@ public class ViewTutor extends AppCompatActivity {
         // get the intent
         Intent intent = getIntent();
         String username = intent.getStringExtra("username");
-        setUpUIElements();
+        String name = intent.getStringExtra("name");
+        setUpUIElements(name);
 
 
         addListenerOnRatingBar(username);
@@ -98,9 +99,10 @@ public class ViewTutor extends AppCompatActivity {
 
     /** Set up UI elements
      */
-    private void setUpUIElements() {
+    private void setUpUIElements(String name) {
         // need to assign default value to fields in case
         // no ratings
+        setTitle(name);
         current_rating = (TextView) findViewById(R.id.display_rating);
         ratingCounter = (TextView) findViewById(R.id.display_counter);
         description = (TextView) findViewById(R.id.display_description);
