@@ -306,7 +306,7 @@ public class MainActivity extends AppCompatActivity
      * Repopulate the search result list displayed to the user according to the specified ordering by hourly rate
      * @param view
      */
-    private void onHourlyClick(View view) {
+    public void onHourlyClick(View view) {
         Button hourlyButton = (Button) findViewById(R.id.hourly_button);
         Button ratingButton = (Button) findViewById(R.id.rating_button);
 
@@ -325,21 +325,21 @@ public class MainActivity extends AppCompatActivity
         if (currentOrdering.getConstantState().equals(noArrow.getConstantState())){
             hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, upArrow, null);
             usersToRatings = orderList(usersToRatings, "hourlyAscending");
-            if(usersToRatings != null) populateResults((ArrayList)usersToRatings);
+            if(usersToRatings != null) populateResults((ArrayList) usersToRatings);
         }
 
             //From down to up
         else if (currentOrdering.getConstantState().equals(downArrow.getConstantState())){
             hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, upArrow, null);
             usersToRatings = orderList(usersToRatings, "hourlyAscending");
-            if(usersToRatings != null) populateResults((ArrayList)usersToRatings);
+            if(usersToRatings != null) populateResults((ArrayList) usersToRatings);
         }
 
             //From up to down
         else if (currentOrdering.getConstantState().equals(upArrow.getConstantState())){
             hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, downArrow, null);
             usersToRatings = orderList(usersToRatings, "hourlyDescending");
-            if(usersToRatings != null) populateResults((ArrayList)usersToRatings);
+            if(usersToRatings != null) populateResults((ArrayList) usersToRatings);
         }
     }
 
@@ -347,7 +347,7 @@ public class MainActivity extends AppCompatActivity
      * Repopulate the search result list displayed to the user according to the specified ordering by rating
      * @param view
      */
-    private void onRatingClick(View view) {
+    public void onRatingClick(View view) {
         Button hourlyButton = (Button) findViewById(R.id.hourly_button);
         Button ratingButton = (Button) findViewById(R.id.rating_button);
 
@@ -366,14 +366,14 @@ public class MainActivity extends AppCompatActivity
         if (currentOrdering.getConstantState().equals(noArrow.getConstantState())){
             ratingButton.setCompoundDrawablesWithIntrinsicBounds(null, null, downArrow, null);
             usersToRatings = orderList(usersToRatings, "ratingDescending");
-            if(usersToRatings != null) populateResults((ArrayList)usersToRatings);
+            if(usersToRatings != null) populateResults((ArrayList) usersToRatings);
         }
 
         //From down to up
         else if (currentOrdering.getConstantState().equals(downArrow.getConstantState())){
             ratingButton.setCompoundDrawablesWithIntrinsicBounds(null, null, upArrow, null);
             usersToRatings = orderList(usersToRatings, "ratingAscending");
-            if(usersToRatings != null) populateResults((ArrayList)usersToRatings);
+            if(usersToRatings != null) populateResults((ArrayList) usersToRatings);
         }
 
 
@@ -381,7 +381,7 @@ public class MainActivity extends AppCompatActivity
         else if (currentOrdering.getConstantState().equals(upArrow.getConstantState())){
             ratingButton.setCompoundDrawablesWithIntrinsicBounds(null, null, downArrow, null);
             usersToRatings = orderList(usersToRatings, "ratingDescending");
-            if(usersToRatings != null) populateResults((ArrayList)usersToRatings);
+            if(usersToRatings != null) populateResults((ArrayList) usersToRatings);
         }
     }
 
