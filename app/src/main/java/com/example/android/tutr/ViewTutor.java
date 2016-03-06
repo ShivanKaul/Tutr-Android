@@ -15,7 +15,6 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.text.DecimalFormat;
-import java.util.Arrays;
 import java.util.List;
 
 /** View Tutor class. Handles the view of the tutor's profile - what is diplayed when
@@ -39,6 +38,7 @@ public class ViewTutor extends AppCompatActivity {
     private double rating_counter;
 
     private ParseObject userRating;
+    private boolean notRatedYet = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,31 +67,31 @@ public class ViewTutor extends AppCompatActivity {
         rating_bar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             public void onRatingChanged(RatingBar ratingBar, float rating,
                                         boolean fromUser) {
-                // Make read-only
-                rating_bar.setIsIndicator(true);
-                // Calculate new rating + update rating counter
-                int newCounter = (int)(rating_counter) + 1;
-                double average = (rating_counter == 0) ?
-                        rating : ((old_rating * rating_counter) + rating) / (newCounter);
+                if (notRatedYet) {
+                    System.out.println("DEBUG: Entered rating bar handler");
+                    // Make read-only
+                    rating_bar.setIsIndicator(true);
+                    // Calculate new rating + update rating counter
+                    int newCounter = (int) (rating_counter) + 1;
+                    double average = (rating_counter == 0) ?
+                            rating : ((old_rating * rating_counter) + rating) / (newCounter);
 
-                userRating.put("rating", average);
-                userRating.add("ratedBy", ParseUser.getCurrentUser().getUsername());
-                userRating.put("username", username);
-                userRating.put("ratingCount", newCounter);
-                // Fire off Parse event in background thread
-                userRating.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e == null) {
-                            Toast.makeText(ViewTutor.this, "Rated, thank you!", Toast.LENGTH_LONG).show();
+                    userRating.put("rating", average);
+                    userRating.add("ratedBy", ParseUser.getCurrentUser().getUsername() + "," + average);
+                    userRating.put("username", username);
+                    userRating.put("ratingCount", newCounter);
+                    // Fire off Parse event in background thread
+                    userRating.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                Toast.makeText(ViewTutor.this, "Rated, thank you!", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(ViewTutor.this, "Problem storing rating" + e, Toast.LENGTH_LONG).show();
+                            }
                         }
-                        else {
-                            Toast.makeText(ViewTutor.this, "Problem storing rating" + e, Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-
-
+                    });
+                }
             }
         });
     }
@@ -153,8 +153,14 @@ public class ViewTutor extends AppCompatActivity {
 
                     // Check if user has already rated tutor and if yes set ratings bar to be non editable
                     try {
-                        if (userRating.getList("ratedBy").contains(ParseUser.getCurrentUser().getUsername())) {
-                            rating_bar.setIsIndicator(true);
+                        for (Object usernameAndRating : userRating.getList("ratedBy")) {
+                            if (usernameAndRating.toString().contains(ParseUser.getCurrentUser().getUsername())) {
+                                notRatedYet = false;
+                                System.out.println("DEBUG: " + usernameAndRating.toString());
+                                float stars = Float.parseFloat(usernameAndRating.toString().split(",")[1]);
+                                rating_bar.setRating(stars);
+                                rating_bar.setIsIndicator(true);
+                            }
                         }
                     } catch (NullPointerException npe) {}
 
