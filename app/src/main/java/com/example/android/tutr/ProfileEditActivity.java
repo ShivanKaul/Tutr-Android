@@ -243,8 +243,10 @@ public class ProfileEditActivity extends AppCompatActivity {
         final String wageStr = wage.getText().toString();
         double wageDouble = 0;
         String[] courses = subjects.getText().toString().toLowerCase().split(",");
+        subjects.setError(null);
         for (String c : courses) {
             if (!CourseValidator.isValidCourse(c)) {
+                subjects.setError("At least one of the subjects is not valid ");
                 cancel = true;
                 focusView = subjects;
             }
@@ -254,7 +256,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(wageStr)) {
             wageDouble = Double.parseDouble(wageStr);
 
-            // Check for a valid email address.
+            // Check for the wage.
             if (wageDouble < 10.35) {
                 wage.setError("The minimum wage is $10.35");
                 focusView = wage;
