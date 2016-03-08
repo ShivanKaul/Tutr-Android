@@ -145,17 +145,27 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/peacockBlue"
             android:textSize="18dp"
-            android:layout_weight="0.74" />
+            android:layout_weight="1.01" />
 
         <RatingBar
             style="?android:attr/ratingBarStyleIndicator"
             android:backgroundTint="@color/peacockBlue"
             android:id="@+id/ratingBar"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="5dp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:numStars="5"
             android:stepSize="1.0" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textAlignment="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="rc"
+            android:textColor="@color/peacockBlue"
+            android:id="@+id/rate_count" />
     </LinearLayout>
 
     <TextView
@@ -164,7 +174,7 @@
         android:layout_gravity="fill_horizontal"
         android:text="Description 400/400"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="7dp"
         android:textColor="@color/peacockBlue"
         android:textSize="18dp"
         android:textStyle="bold"
