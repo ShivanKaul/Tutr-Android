@@ -2,13 +2,15 @@ package com.example.android.tutr;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
+
 /**
  * Created by yito on 2/28/16.
  */
 public class MainActivityTest extends TestCase {
-    
-    MainActivity main = new MainActivity();
 
+    MainActivity main = new MainActivity();
+    @Test
     public void testInputChecker(){
         String nameAlphabet = "Jhonny";
         String nameNumber = "John123";
