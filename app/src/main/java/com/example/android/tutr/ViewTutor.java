@@ -74,8 +74,7 @@ public class ViewTutor extends AppCompatActivity {
                     rating_bar.setIsIndicator(true);
                     // Calculate new rating + update rating counter
                     int newCounter = (int) (rating_counter) + 1;
-                    double average = (rating_counter == 0) ?
-                            rating : ((old_rating * rating_counter) + rating) / (newCounter);
+                    double average =  averageRating(newCounter, rating, old_rating, rating_counter);
 
                     userRating.put("rating", average);
                     userRating.add("ratedBy", ParseUser.getCurrentUser().getUsername() + "," + average);
@@ -95,6 +94,12 @@ public class ViewTutor extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public static double averageRating(int newCounter, float rating, double old_rating, double rating_counter)  {
+        double average = (rating_counter == 0) ?
+                rating : ((old_rating * rating_counter) + rating) / (newCounter);
+        return average;
     }
 
     /** Set up UI elements
