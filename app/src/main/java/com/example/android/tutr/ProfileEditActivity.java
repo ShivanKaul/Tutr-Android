@@ -186,9 +186,9 @@ public class ProfileEditActivity extends AppCompatActivity {
         if (currentUser.getString("phone") != null) {
             phone.setText(currentUser.getString("phone"));
         }
-        if (currentUser.getDouble("hourlyRate") != 0) {
-            wage.setText(String.valueOf(currentUser.getDouble("hourlyRate")));
-        }
+        wage.setText(String.valueOf(currentUser.getDouble("hourlyRate")));
+        if (wage.getText().toString().isEmpty())
+            wage.setText(0 + "." + 0);
         if (currentUser.getString("description") != null) {
             description.setText(currentUser.getString("description"));
         }
@@ -238,19 +238,21 @@ public class ProfileEditActivity extends AppCompatActivity {
         // link spinner and adapters
         availability_menu_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         availability_spinner.setAdapter(availability_menu_adapter);
-        availability_spinner.setSelection(availability_menu_adapter.getCount()); //display hint
-    }
+        availability_spinner.setSelection(availability_menu_adapter.getPosition("No"));
+        if (currentUser.getString("available").equalsIgnoreCase("Yes"))
+            availability_spinner.setSelection(availability_menu_adapter.getPosition("Yes"));
+        }
 
     /**
-     * Acts on press of "Save Changes" button. Checks inputs and saves to Parse database if valid.
+     * Acts on press of "Save Changes" button. Checks inputs and saves to Parse database if valid. 
      */
     protected void saveChanges() {
         final String wageStr = wage.getText().toString();
         double wageDouble = 0;
-        String[] courses = subjects.getText().toString().toLowerCase().split(",");
+        String[] courses = subjects.getText().toString().toLowerCase().replaceAll("\\s+", "").split(",");
         subjects.setError(null);
         for (String c : courses) {
-            if (!CourseValidator.isValidCourse(c)) {
+            if (!CourseValidator.isValidCourse(c) && !c.isEmpty()) {
                 subjects.setError("At least one of the subjects is not valid ");
                 cancel = true;
                 focusView = subjects;
@@ -262,7 +264,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             wageDouble = Double.parseDouble(wageStr);
 
             // Check for the wage.
-            if (wageDouble < 10.35) {
+            if (wageDouble < 10.35 && wageDouble != 0) {
                 wage.setError("The minimum wage is $10.35");
                 focusView = wage;
                 cancel = true;
@@ -284,9 +286,9 @@ public class ProfileEditActivity extends AppCompatActivity {
             focusView.requestFocus();
             return;
         } else {
-            currentUser.addAllUnique("courses", Arrays.asList(courses));
+            currentUser.put("courses", Arrays.asList(courses));
             currentUser.put("description", description.getText().toString());
-            currentUser.put("hourlyRate", Double.parseDouble(wage.getText().toString()));
+            currentUser.put("hourlyRate", wageDouble);
             currentUser.put("phone", phone.getText().toString());
             currentUser.put("available", availability_spinner.getSelectedItem().toString().toLowerCase());
             Toast.makeText(ProfileEditActivity.this, "Changed profile successfully", Toast.LENGTH_LONG).show();
