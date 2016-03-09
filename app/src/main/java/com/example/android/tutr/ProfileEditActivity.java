@@ -262,7 +262,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             wageDouble = Double.parseDouble(wageStr);
 
             // Check for the wage.
-            if (wageDouble < 10.35) {
+            if (wageDouble < 10.35 && wageDouble != 0) {
                 wage.setError("The minimum wage is $10.35");
                 focusView = wage;
                 cancel = true;
@@ -284,7 +284,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             focusView.requestFocus();
             return;
         } else {
-            currentUser.addAllUnique("courses", Arrays.asList(courses));
+            currentUser.put("courses", Arrays.asList(courses));
             currentUser.put("description", description.getText().toString());
             currentUser.put("hourlyRate", Double.parseDouble(wage.getText().toString()));
             currentUser.put("phone", phone.getText().toString());
