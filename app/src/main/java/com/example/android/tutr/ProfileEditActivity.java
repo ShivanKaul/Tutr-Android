@@ -47,6 +47,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     private EditText subjects;
     private TextView desc;
     private TextView rating_title;
+    private TextView rating_count;
     // Keep track of whether registering has been cancelled
     private boolean cancel = false;
     private View focusView = null;
@@ -211,7 +212,7 @@ public class ProfileEditActivity extends AppCompatActivity {
 
         // Get rating from rating table
         double rating = 0;
-//        double rateCount = 0;
+        int rateCount = 0;
         ParseObject userRating;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Ratings");
         query.whereEqualTo("username", currentUser.getUsername());
@@ -219,16 +220,16 @@ public class ProfileEditActivity extends AppCompatActivity {
             Log.w("username is ", currentUser.getUsername());
             userRating = query.find().get(0);
             rating = userRating.getDouble("rating");
-//            rateCount = userRating.getDouble("ratingCount");
+            rateCount = userRating.getInt("ratingCount");
         } catch (Exception p) {
             Toast.makeText(ProfileEditActivity.this, "Problem fetching data from Ratings table" + p, Toast.LENGTH_LONG).show();
         }
 
         Log.w("rating", String.valueOf(rating));
         rating_title = (TextView) findViewById(R.id.rating_title);
-//        rating_count = (TextView) findViewById(R.id.rating_count);
+        rating_count = (TextView) findViewById(R.id.rate_count);
         rating_title.setText("Rating (" + new DecimalFormat("##.#").format(rating) + " / 5.0)");
-//        rating_count.setText("(" + rateCount + ")");
+        rating_count.setText("(" + rateCount + ")");
         rating_bar.setRating((float) rating);
         rating_bar.setIsIndicator(true);
         // init text fields
