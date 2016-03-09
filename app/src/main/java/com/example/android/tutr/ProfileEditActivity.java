@@ -186,9 +186,9 @@ public class ProfileEditActivity extends AppCompatActivity {
         if (currentUser.getString("phone") != null) {
             phone.setText(currentUser.getString("phone"));
         }
-        if (currentUser.getDouble("hourlyRate") != 0) {
-            wage.setText(String.valueOf(currentUser.getDouble("hourlyRate")));
-        }
+        wage.setText(String.valueOf(currentUser.getDouble("hourlyRate")));
+        if (wage.getText().toString().isEmpty())
+            wage.setText(0 + "." + 0);
         if (currentUser.getString("description") != null) {
             description.setText(currentUser.getString("description"));
         }
@@ -250,7 +250,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         String[] courses = subjects.getText().toString().toLowerCase().split(",");
         subjects.setError(null);
         for (String c : courses) {
-            if (!CourseValidator.isValidCourse(c)) {
+            if (!CourseValidator.isValidCourse(c) && !c.isEmpty()) {
                 subjects.setError("At least one of the subjects is not valid ");
                 cancel = true;
                 focusView = subjects;
@@ -286,7 +286,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         } else {
             currentUser.put("courses", Arrays.asList(courses));
             currentUser.put("description", description.getText().toString());
-            currentUser.put("hourlyRate", Double.parseDouble(wage.getText().toString()));
+            currentUser.put("hourlyRate", wageDouble);
             currentUser.put("phone", phone.getText().toString());
             currentUser.put("available", availability_spinner.getSelectedItem().toString().toLowerCase());
             Toast.makeText(ProfileEditActivity.this, "Changed profile successfully", Toast.LENGTH_LONG).show();
