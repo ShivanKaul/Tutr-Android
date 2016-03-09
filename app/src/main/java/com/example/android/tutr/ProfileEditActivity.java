@@ -244,12 +244,12 @@ public class ProfileEditActivity extends AppCompatActivity {
         }
 
     /**
-     * Acts on press of "Save Changes" button. Checks inputs and saves to Parse database if valid.
+     * Acts on press of "Save Changes" button. Checks inputs and saves to Parse database if valid. 
      */
     protected void saveChanges() {
         final String wageStr = wage.getText().toString();
         double wageDouble = 0;
-        String[] courses = subjects.getText().toString().toLowerCase().split(",");
+        String[] courses = subjects.getText().toString().toLowerCase().replaceAll("\\s+", "").split(",");
         subjects.setError(null);
         for (String c : courses) {
             if (!CourseValidator.isValidCourse(c) && !c.isEmpty()) {
