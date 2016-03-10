@@ -12,7 +12,7 @@ public class CourseVAlidatorTest {
     public void validCourses() {
         assertTrue(CourseValidator.isValidCourse("ecse123"));
         assertTrue(CourseValidator.isValidCourse("math111"));
-        //assertTrue(CourseValidator.isValidCourse("abc23"));
+        assertTrue(CourseValidator.isValidCourse("comp 202"));
         //assertTrue(CourseValidator.isValidCourse("oao3"));
     }
 
