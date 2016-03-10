@@ -239,10 +239,13 @@ public class ProfileEditActivity extends AppCompatActivity {
         availability_menu_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         availability_spinner.setAdapter(availability_menu_adapter);
         availability_spinner.setSelection(availability_menu_adapter.getPosition("No"));
+
         if (currentUser.getString("available") != null &&
-                currentUser.getString("available").equalsIgnoreCase("Yes")){}
+                currentUser.getString("available").equalsIgnoreCase("Yes")){
             availability_spinner.setSelection(availability_menu_adapter.getPosition("Yes"));
         }
+
+    }
 
     /**
      * Acts on press of "Save Changes" button. Checks inputs and saves to Parse database if valid. 
