@@ -19,7 +19,6 @@
         android:layout_height="wrap_content">
 
 
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,6 +36,7 @@
                 android:layout_margin="10dp"
                 android:layout_alignParentTop="true"
                 />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -117,7 +117,6 @@
                 android:text="Rating "
                 android:textSize="20sp"
                 android:id="@+id/display_rating"
-
                 android:layout_above="@+id/view_ownRating"
                 android:layout_toRightOf="@+id/view_subjects"
                 android:layout_toEndOf="@+id/view_subjects" />
@@ -275,5 +274,4 @@
 
         </RelativeLayout>
     </ScrollView>
-
 </RelativeLayout>

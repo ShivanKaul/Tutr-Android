@@ -102,7 +102,6 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
         upload_image.setOnClickListener(this);
         pro_pic.setOnClickListener(this);
 
-
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -380,7 +379,7 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
     }
 
     /**
-     * Acts on press of "Save Changes" button. Checks inputs and saves to Parse database if valid.
+     * Acts on press of "Save Changes" button. Checks inputs and saves to Parse database if valid. 
      */
     protected void saveChanges() {
         final String wageStr = wage.getText().toString();
@@ -434,8 +433,8 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
             currentUser.put("hourlyRate", wageDouble);
             currentUser.put("phone", phone.getText().toString());
             currentUser.put("available", availability_spinner.getSelectedItem().toString().toLowerCase());
-            Log.e("SSSPPIINNERRR",availability_spinner.getSelectedItem().toString() );
 
+            Log.e("SSSPPIINNERRR",availability_spinner.getSelectedItem().toString() );
 
             Toast.makeText(ProfileEditActivity.this, "Changed profile successfully", Toast.LENGTH_LONG).show();
             currentUser.saveInBackground(new SaveCallback() {
