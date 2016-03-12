@@ -72,4 +72,7 @@
             android:value="@integer/google_play_services_version" />
     </application>
 
+    <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
+    <uses-permission android:name="android.permission.SEND_SMS"></uses-permission>
+
 </manifest>
