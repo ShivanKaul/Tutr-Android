@@ -29,8 +29,14 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * View Tutor class. Handles the view of the tutor's profile - what is diplayed when
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
+import android.view.View;
+import android.widget.*;
+
+/** View Tutor class. Handles the view of the tutor's profile - what is diplayed when
  * the user clicks on a Tutor while searching.
  */
 
@@ -59,14 +65,21 @@ public class ViewTutor extends AppCompatActivity {
     private ParseObject userReviews;
     private boolean notRatedYet = true;
 
+    Button c;
+    Button m;
+    String phoneNumber;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_tutor);
+
         // get the intent
         Intent intent = getIntent();
         String username = intent.getStringExtra("username");
         String name = intent.getStringExtra("name");
+
+        addListenerOnRatingBar(username);
 
         setUpUIElements(name, username);
 
@@ -75,7 +88,43 @@ public class ViewTutor extends AppCompatActivity {
         getDataForTutor(username);
 
         setUpReviews(username, name);
+
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        phoneNumber=currentUser.getString("phone");
+        c = (Button) this.findViewById(R.id.call);
+        m = (Button) this.findViewById(R.id.msg);
+        c.setVisibility(View.GONE);
+        m.setVisibility(View.GONE);
+        if(phoneNumber.length()!=0) {
+            c.setVisibility(View.VISIBLE);
+            m.setVisibility(View.VISIBLE);
+            c.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (ActivityCompat.checkSelfPermission(getApplicationContext(),
+                            Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                        Intent callIntent = new Intent(Intent.ACTION_CALL);
+                        callIntent.setData(Uri.parse("tel:" + phoneNumber));
+                        startActivity(callIntent);
+                    }
+                }
+            });
+
+            m.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (ActivityCompat.checkSelfPermission(getApplicationContext(),
+                            Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+                        Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
+                        smsIntent.setData(Uri.parse("sms:" + phoneNumber));
+                        startActivity(smsIntent);
+                    }
+                }
+            });
+        }
     }
+
+
 
     /**
      * Adds listener on the Rating bar, so that when a rating is done the ratings are persisted.
@@ -422,7 +471,6 @@ public class ViewTutor extends AppCompatActivity {
         // hourly rate, phone number
         // allow users to rate a tutor
         // rating transmits data to parse in background thread
-
         email.setText(username);
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereEqualTo("username", username);
