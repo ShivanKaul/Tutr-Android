@@ -40,7 +40,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     
@@ -144,11 +143,6 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_profile_mod) {
             Intent intent = new Intent(this, ProfileEditActivity.class);
-            startActivity(intent);
-        }
-
-        else if (id == R.id.nav_favorites) {
-            Intent intent = new Intent(this, FavoritesActivity.class);
             startActivity(intent);
         }
 
@@ -406,10 +400,8 @@ public class MainActivity extends AppCompatActivity
             Collections.sort(usersToRatings, new Comparator<UserToRating>() {
                 @Override
                 public int compare(final UserToRating user1, final UserToRating user2) {
-                    if (user1.getUser().getDouble("hourlyRate") < user2.getUser().getDouble("hourlyRate"))
-                        return -1;
-                    if (user1.getUser().getDouble("hourlyRate") > user2.getUser().getDouble("hourlyRate"))
-                        return 1;
+                    if (user1.getUser().getDouble("hourlyRate") < user2.getUser().getDouble("hourlyRate")) return -1;
+                    if (user1.getUser().getDouble("hourlyRate") > user2.getUser().getDouble("hourlyRate")) return 1;
                     return 0;
                 }
             });
@@ -461,15 +453,17 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
     /**
      * Populates the search results list to be displayed to the user
      * @param userToRatings
      */
     private void populateResults(ArrayList<UserToRating> userToRatings) {
         LinearLayout searchResultLayout = (LinearLayout) findViewById(R.id.searchResultLayout);
+        //searchResultLayout.setVisibility(View.GONE);
 
         //Populate list view test
-        TutorListAdapter adapter = new TutorListAdapter(this, userToRatings, false);
+        TutorListAdapter adapter = new TutorListAdapter(this, userToRatings);
 
         //Get list and set adapter
         ListView list = (ListView) findViewById(R.id.search_result_list);
@@ -532,5 +526,6 @@ public class MainActivity extends AppCompatActivity
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
+
 
 }
