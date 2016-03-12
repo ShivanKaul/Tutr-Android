@@ -5,36 +5,38 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.parse.ParseObject;
 
 import java.util.List;
 
-import static java.lang.Float.parseFloat;
-
 
 public class TutorListAdapter extends BaseAdapter {
     private final Context context;
     private Activity activity;
     private LayoutInflater inflater;
-    private final List<ParseObject> users;
+    private final List<UserToRating> usersToRatings;
+    private boolean showCustomButton;
+    customButtonListener customListner;
 
-    public TutorListAdapter(Context context, List<ParseObject> users) {
+    public TutorListAdapter(Context context, List<UserToRating> usersToRatings, boolean showCustomButton) {
         this.context = context;
-        this.users = users;
+        this.usersToRatings = usersToRatings;
+        this.showCustomButton = showCustomButton;
     }
 
     @Override
     public int getCount() {
-        return users.size();
+        return usersToRatings.size();
     }
 
     @Override
-    public ParseObject getItem(int position) {
-        return users.get(position);
+    public UserToRating getItem(int position) {
+        return usersToRatings.get(position);
     }
 
     @Override
@@ -42,29 +44,62 @@ public class TutorListAdapter extends BaseAdapter {
         return position;
     }
 
+    public void removeAt(int position) {
+         usersToRatings.remove(position);
+    }
+
+    public void setCustomButtonListner(customButtonListener listener) {
+        this.customListner = listener;
+    }
+
+
+    public interface customButtonListener {
+        public void onButtonClickListner(int position, UserToRating value);
+    }
+
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View rowView = inflater.inflate(R.layout.search_result_item, parent, false);
+        View rowView = inflater.inflate(R.layout.list_item, parent, false);
 
         //Get the textviews
         TextView name = (TextView) rowView.findViewById(R.id.tutorName);
         TextView rating = (TextView) rowView.findViewById(R.id.rating);
         TextView rate = (TextView) rowView.findViewById(R.id.hourlyRate);
 
-        //Get parse user
-        ParseObject user = getItem(position);
+        //Get parse user + rating
+        final UserToRating utr = getItem(position);
+        final ParseObject userObj = utr.getUser();
+        final ParseObject ratingObj = utr.getRating();
 
         //Set fields
-        name.setText(user.getString("name"));
-        rating.setText(context.getString(R.string.hourly_rate_text) + String.format("%.2f", user.getDouble("hourlyRate") ));
-        if (user.getDouble("rating") == 0)
+        name.setText(userObj.getString("name"));
+        rating.setText(context.getString(R.string.hourly_rate_text) + String.format("%.2f", userObj.getDouble("hourlyRate")));
+        if (ratingObj.getDouble("rating") == 0)
             rate.setText(context.getString(R.string.rating_text) + "N/A");
         else
-            rate.setText(context.getString(R.string.rating_text) + String.format("%.1f", user.getDouble("rating")));
+            rate.setText(context.getString(R.string.rating_text) + String.format("%.1f", ratingObj.getDouble("rating")) + " (" + ratingObj.getInt("ratingCount") + ")");
+
+
+        //Add remove button if enabled
+        if (showCustomButton){
+            ImageButton removeFav = (ImageButton) rowView.findViewById(R.id.removeFavorite);
+            removeFav.setVisibility(View.VISIBLE);
+
+            removeFav.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    if (customListner != null) {
+                        customListner.onButtonClickListner(position, utr);
+                    }
+                }
+            });
+        }
+
 
 
         return rowView;

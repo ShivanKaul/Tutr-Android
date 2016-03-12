@@ -12,7 +12,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:weightSum="1"
-    tools:context="com.example.android.tutr.profileEditActivity">
+    tools:context="com.example.android.tutr.ProfileEditActivity">
 
     <TextView
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginTop="5dp"
         android:background="@color/peacockBlue"
-        android:hint="ex)math100, ecse100, ..."
+        android:hint="Math 100, ECSE 322..."
         android:inputType="text"
         android:textAlignment="center"
         android:textColor="#ffffff"
@@ -145,17 +145,27 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/peacockBlue"
             android:textSize="18dp"
-            android:layout_weight="0.74" />
+            android:layout_weight="1.01" />
 
         <RatingBar
             style="?android:attr/ratingBarStyleIndicator"
             android:backgroundTint="@color/peacockBlue"
             android:id="@+id/ratingBar"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="5dp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:numStars="5"
             android:stepSize="1.0" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textAlignment="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="rc"
+            android:textColor="@color/peacockBlue"
+            android:id="@+id/rate_count" />
     </LinearLayout>
 
     <TextView
@@ -164,7 +174,7 @@
         android:layout_gravity="fill_horizontal"
         android:text="Description 400/400"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="7dp"
         android:textColor="@color/peacockBlue"
         android:textSize="18dp"
         android:textStyle="bold"
@@ -174,13 +184,17 @@
         android:id="@+id/enter_description"
         android:layout_width="match_parent"
         android:layout_height="105dp"
-        android:layout_gravity="center_vertical"
+        android:layout_gravity="left"
+        android:gravity="top"
         android:background="@color/peacockBlue"
-        android:textSize="12dp"
+        android:textSize="14dp"
         android:hint="Enter Description"
         android:maxLength="400"
-        android:inputType="text"
-        android:textAlignment="center"
+        android:inputType="textMultiLine"
+        android:layout_weight="1"
+        android:ellipsize="none"
+        android:maxLines="100"
+        android:scrollHorizontally="false"
         android:textColor="#ffffff"
         android:textColorHighlight="#ffffff"
         android:textColorHint="#ffffff" />
