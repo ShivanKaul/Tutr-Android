@@ -53,9 +53,13 @@
 
     <string name="nav_account_button">My Account</string>
     <string name="nav_profile_button">My Profile</string>
+    <string name="nav_favorite_button">My Favorites</string>
     <string name="nav_logout_button">Logout</string>
     <string name="hourly_rate_text">Hourly Rate: $</string>
     <string name="rating_text">Rating:\u0020</string>
+
+    <!-- Strings related to Favorite Activity -->
+    <string name="title_activity_favorites">Favorites</string>
 
     <!-- Strings related to Settings -->
 
@@ -118,4 +122,6 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+
+
 </resources>
