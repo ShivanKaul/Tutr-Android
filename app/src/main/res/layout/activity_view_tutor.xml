@@ -17,7 +17,7 @@
         android:id="@+id/scrollbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
-        
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -83,16 +83,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Phone Number:"
-                android:id="@+id/view_phone"
-                android:layout_marginTop="20dp"
-                android:layout_below="@+id/display_email"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -159,20 +150,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="phone"
-                android:textSize="20sp"
-                android:id="@+id/display_phone"
-                android:layout_below="@+id/view_phone"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignRight="@+id/view_email"
-                android:layout_alignEnd="@+id/view_email" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Subjects"
                 android:textSize="20sp"
                 android:id="@+id/display_subjects"
@@ -191,6 +168,54 @@
                 android:id="@+id/display_counter"
                 android:layout_above="@+id/view_ownRating"
                 android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Phone Number:"
+                android:id="@+id/view_phone"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/display_email"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="phone"
+                android:textSize="20sp"
+                android:id="@+id/display_phone"
+                android:layout_below="@+id/view_phone"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Reviews:"
+                android:id="@+id/reviews_title"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/display_phone"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <LinearLayout
+                android:id="@+id/reviews"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/reviews_title"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:orientation="vertical">
+            </LinearLayout>
+
+
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

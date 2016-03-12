@@ -3,6 +3,10 @@ package com.example.android.tutr;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,7 +21,8 @@ import com.parse.SaveCallback;
 import java.text.DecimalFormat;
 import java.util.List;
 
-/** View Tutor class. Handles the view of the tutor's profile - what is diplayed when
+/**
+ * View Tutor class. Handles the view of the tutor's profile - what is diplayed when
  * the user clicks on a Tutor while searching.
  */
 
@@ -48,20 +53,22 @@ public class ViewTutor extends AppCompatActivity {
         Intent intent = getIntent();
         String username = intent.getStringExtra("username");
         String name = intent.getStringExtra("name");
-        setUpUIElements(name);
 
+        setUpUIElements(name);
 
         addListenerOnRatingBar(username);
 
         getDataForTutor(username);
+
+        setUpReviews();
     }
 
-
-    /** Adds listener on the Rating bar, so that when a rating is done the ratings are persisted.
+    /**
+     * Adds listener on the Rating bar, so that when a rating is done the ratings are persisted.
      * The user cannot rate twice.
      * Credits: http://www.mkyong.com/android/android-rating-bar-example/
      *
-     * @param username  Username for Ratings table
+     * @param username Username for Ratings table
      */
     public void addListenerOnRatingBar(final String username) {
 
@@ -74,7 +81,7 @@ public class ViewTutor extends AppCompatActivity {
                     rating_bar.setIsIndicator(true);
                     // Calculate new rating + update rating counter
                     int newCounter = (int) (rating_counter) + 1;
-                    double average =  averageRating(newCounter, rating, old_rating, rating_counter);
+                    double average = averageRating(newCounter, rating, old_rating, rating_counter);
 
                     userRating.put("rating", average);
                     userRating.add("ratedBy", ParseUser.getCurrentUser().getUsername() + "," + average);
@@ -96,13 +103,14 @@ public class ViewTutor extends AppCompatActivity {
         });
     }
 
-    public static double averageRating(int newCounter, float rating, double old_rating, double rating_counter)  {
+    public static double averageRating(int newCounter, float rating, double old_rating, double rating_counter) {
         double average = (rating_counter == 0) ?
                 rating : ((old_rating * rating_counter) + rating) / (newCounter);
         return average;
     }
 
-    /** Set up UI elements
+    /**
+     * Set up UI elements
      */
     private void setUpUIElements(String name) {
         // need to assign default value to fields in case
@@ -120,8 +128,132 @@ public class ViewTutor extends AppCompatActivity {
         rating_bar = (RatingBar) findViewById(R.id.ratingBar);
     }
 
-    /** Get the data to display for a tutor
-     * @param username  Username for Ratings table
+    /**
+     * lists all available reviews for a tutor
+     */
+    private void setUpReviews(){
+        // list reviews
+
+        // TODO: get number of reviews from Parse database
+        int number_of_reviews = 5;
+
+        LinearLayout ReviewsLinearLayout = (LinearLayout) findViewById(R.id.reviews);
+
+        EditText review_text;
+        Button editReviewButton = null, saveReviewButton = null;
+        LinearLayout ButtonsLinearLayout = null;
+
+        // j is needed for creating id
+        int j = 0;
+        for (int i = 0; i < number_of_reviews; i++) {
+
+            // TODO: get each individual review from Parse
+            String review_str = "TODO: get reviews from parse! long long long long long long long long long long long long long long long long long long long long long long";
+
+            // TODO check if user created review
+            boolean user_owns_current_review = false;
+
+            // if user owns, make review editable
+            review_text = new EditText(this);
+            review_text.setFocusableInTouchMode(false);
+            review_text.setFocusable(false);
+            review_text.setClickable(false);
+
+            if (user_owns_current_review) {
+                final int id_padding = 100000; // need to have a unique id -> 100000+ will almost fully certainly be unique
+
+                review_text.setText(i + ". " + review_str);
+                review_text.setId(id_padding + j);
+
+                ButtonsLinearLayout = new LinearLayout(this);
+                ButtonsLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+                editReviewButton = new Button(this);
+                editReviewButton.setId(id_padding + j + 1); // need to have a unique id
+                editReviewButton.setText("Edit");
+                editReviewButton.setOnClickListener(
+                        new View.OnClickListener() {
+                            public void onClick(View view) {
+                                try {
+                                    editReview(view.getId());
+                                } catch (Exception e) {
+                                }
+                            }
+                        });
+
+                saveReviewButton = new Button(this);
+                saveReviewButton.setId(id_padding + j + 2); // need to have a unique id
+                saveReviewButton.setText("Save");
+                saveReviewButton.setOnClickListener(
+                        new View.OnClickListener() {
+                            public void onClick(View view) {
+                                try {
+                                    saveReview(view.getId());
+                                } catch (Exception e) {
+                                }
+                            }
+                        });
+
+                ButtonsLinearLayout.addView(editReviewButton);
+                ButtonsLinearLayout.addView(saveReviewButton);
+
+                j += 3;
+            } else {
+                review_text.setText(i + ". " + review_str); //arbitrary task
+            }
+
+            // add the views to the linearlayout
+            ReviewsLinearLayout.addView(review_text);
+
+            if (user_owns_current_review)
+                ReviewsLinearLayout.addView(ButtonsLinearLayout);
+        }
+    }
+
+    /**
+     * makes a review field editable
+     * @param id
+     */
+    private void editReview(int id) {
+        // edit review button id is 1 item ahead of the text view
+        EditText review_text = (EditText) findViewById(id-1);
+
+        // enable editing
+        review_text.setFocusable(true);
+        review_text.setFocusableInTouchMode(true);
+        review_text.setClickable(true);
+
+        // request focus to the text field
+        review_text.requestFocus();
+
+        Toast.makeText(ViewTutor.this, "Editing review", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * saves an editable review to database
+     * @param id
+     */
+    private void saveReview(int id) {
+        // edit review button id is 2 items ahead of the text view
+        EditText review_text = (EditText) findViewById(id-2);
+
+        // disable editing
+        review_text.setFocusable(false);
+        review_text.setFocusableInTouchMode(false);
+        review_text.setClickable(false);
+
+        // get review text
+        String review = review_text.getText().toString();
+
+        // TODO save to parse!
+
+        Toast.makeText(ViewTutor.this, "Saving review", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Get the data to display for a tutor
+     *
+     * @param username Username for Ratings table
      */
     private void getDataForTutor(final String username) {
         // get courses, description, current rating, rating counter,
@@ -169,7 +301,8 @@ public class ViewTutor extends AppCompatActivity {
                                 rating_bar.setIsIndicator(true);
                             }
                         }
-                    } catch (NullPointerException npe) {}
+                    } catch (NullPointerException npe) {
+                    }
 
                     if (user.getList("courses") != null) {
                         List<String> subjects = user.getList("courses");
@@ -195,15 +328,12 @@ public class ViewTutor extends AppCompatActivity {
                         current_rating.setText(new DecimalFormat("##.#").format(old_rating));
                     } else current_rating.setText("Unrated");
                     if (rating_counter > 0) {
-                        ratingCounter.setText("(" + String.valueOf((int)rating_counter) + ")");
+                        ratingCounter.setText("(" + String.valueOf((int) rating_counter) + ")");
                     } else ratingCounter.setText("");
                 } else {
                     Toast.makeText(ViewTutor.this, "Problem fetching user from database" + e, Toast.LENGTH_LONG).show();
                 }
             }
         });
-
     }
-
-
 }
