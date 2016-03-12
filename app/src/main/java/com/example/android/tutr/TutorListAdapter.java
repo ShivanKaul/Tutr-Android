@@ -87,7 +87,7 @@ public class TutorListAdapter extends BaseAdapter {
 
 
 
-        //Add remove button if enabled
+        //Add "remove" button if enabled
         if (showCustomButton){
             ImageButton removeFav = (ImageButton) rowView.findViewById(R.id.removeFavorite);
             removeFav.setVisibility(View.VISIBLE);

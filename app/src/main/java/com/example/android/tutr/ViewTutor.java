@@ -11,12 +11,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -28,6 +26,7 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.RefreshCallback;
 import com.parse.SaveCallback;
 import com.squareup.picasso.Picasso;
 
@@ -73,6 +72,9 @@ public class ViewTutor extends AppCompatActivity {
 
     private  ImageView tutor_pic;
 
+    private String tutorUsername;
+    private CheckBox favoriteButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +84,7 @@ public class ViewTutor extends AppCompatActivity {
         Intent intent = getIntent();
         String username = intent.getStringExtra("username");
         String name = intent.getStringExtra("name");
+        tutorUsername = intent.getStringExtra("username");
 
         setUpUIElements(name, username);
 
@@ -89,9 +92,14 @@ public class ViewTutor extends AppCompatActivity {
 
         getDataForTutor(username);
 
+        initializeFavoritesButton(username);
+
         setUpReviews(username, name);
+
+
         callButton = (Button) this.findViewById(R.id.call);
         msgButton = (Button) this.findViewById(R.id.msg);
+
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,6 +179,7 @@ public class ViewTutor extends AppCompatActivity {
     }
 
 
+
     /**
      * Set up UI elements
      */
@@ -188,6 +197,8 @@ public class ViewTutor extends AppCompatActivity {
         rate = (TextView) findViewById(R.id.display_rate);
         email = (TextView) findViewById(R.id.display_email);
         phone = (TextView) findViewById(R.id.display_phone);
+
+        favoriteButton = (CheckBox) findViewById(R.id.favoriteButton);
 
         rating_bar = (RatingBar) findViewById(R.id.ratingBar);
 
@@ -579,6 +590,48 @@ public class ViewTutor extends AppCompatActivity {
             }
 
         });
+    }
+
+    public void onFavorite(View view) {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        List<String> favoritesList =  (List<String>) currentUser.get("favorites");
+        if (favoriteButton.isChecked()){
+            favoritesList.add(tutorUsername);
+            currentUser.put("favorites", favoritesList);
+            currentUser.saveInBackground();
+            Toast.makeText(ViewTutor.this, "Added to favorites", Toast.LENGTH_LONG).show();
+        }
+        else{
+            favoritesList.remove(tutorUsername);
+            currentUser.put("favorites", favoritesList);
+            currentUser.saveInBackground();
+            Toast.makeText(ViewTutor.this, "Removed from favorites", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void initializeFavoritesButton(String username){
+
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        ParseUser.getCurrentUser().refreshInBackground(new RefreshCallback() {
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    // Success!
+                } else {
+                    Toast.makeText(ViewTutor.this, "Could not refresh current user", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        List<String> favoritesList =  (List<String>) currentUser.get("favorites");
+
+
+        for (int i = 0; i < favoritesList.size(); i++) {
+            if (favoritesList.get(i).equals(username)) {
+                favoriteButton.setChecked(true);
+                break;
+            } else {
+                favoriteButton.setChecked(false);
+            }
+        }
     }
 
     /* HELPER METHODS */
