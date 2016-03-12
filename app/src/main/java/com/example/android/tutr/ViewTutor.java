@@ -3,6 +3,8 @@ package com.example.android.tutr;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +33,8 @@ public class ViewTutor extends AppCompatActivity {
     private TextView rate;
     private TextView email;
     private TextView phone;
+
+    private CheckBox favoriteButton;
 
     private RatingBar rating_bar;
 
@@ -118,6 +122,8 @@ public class ViewTutor extends AppCompatActivity {
         phone = (TextView) findViewById(R.id.display_phone);
 
         rating_bar = (RatingBar) findViewById(R.id.ratingBar);
+
+        favoriteButton = (CheckBox) findViewById(R.id.favoriteButton);
     }
 
     /** Get the data to display for a tutor
@@ -203,6 +209,15 @@ public class ViewTutor extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void onFavorite(View view) {
+        if (favoriteButton.isChecked()){
+            Toast.makeText(ViewTutor.this, "Added to favorites", Toast.LENGTH_LONG).show();
+        }
+        else{
+            Toast.makeText(ViewTutor.this, "Removed from favorites", Toast.LENGTH_LONG).show();
+        }
     }
 
 

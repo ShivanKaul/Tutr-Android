@@ -191,6 +191,17 @@
                 android:id="@+id/display_counter"
                 android:layout_above="@+id/view_ownRating"
                 android:layout_centerHorizontal="true" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/favoriteButton"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:checked="false"
+                android:onClick="onFavorite"
+                android:button="@drawable/favorite_button" />/>
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>
