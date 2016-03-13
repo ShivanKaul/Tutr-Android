@@ -2,8 +2,10 @@ package com.example.android.tutr;
 
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -36,6 +38,11 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -107,9 +114,22 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
+        loadProfilePicFromStorage();
     }
 
+    private void loadProfilePicFromStorage() {
+        try {
+            ContextWrapper cw = new ContextWrapper(getApplicationContext());
+            // path to /data/data/yourapp/app_data/imageDir
+            File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+            File f = new File(directory.getAbsolutePath(), "profile.jpg");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            pro_pic.setImageBitmap(b);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     //Select and upload image from gallery
     @Override
@@ -123,10 +143,6 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
                 //Parse Code to actually save image to database
                 if (pro_pic.getDrawable() != null) {
                     Bitmap bitmap = ((BitmapDrawable) pro_pic.getDrawable()).getBitmap();
-//                    if (bitmap == null) {
-//                        Toast.makeText(ProfileEditActivity.this, "No Profile Picture to upload", Toast.LENGTH_LONG).show();
-//                        return;
-//                    }
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
                     byte[] image = stream.toByteArray();
@@ -135,11 +151,33 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
                     currentUser.put("profilePicture", file);
                     currentUser.saveInBackground();
                     Toast.makeText(ProfileEditActivity.this, "Profile Picture uploaded", Toast.LENGTH_LONG).show();
+                    try {
+                        saveToInternalStorage(bitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     Toast.makeText(ProfileEditActivity.this, "No Profile Picture to upload", Toast.LENGTH_LONG).show();
                 }
                 break;
+        }
+    }
 
+    private void saveToInternalStorage(Bitmap bitmap) throws IOException {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        File myPath = new File(directory, "profile.jpg");
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(myPath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 10, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            fos.close();
         }
     }
 
