@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -16,6 +17,7 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -37,7 +39,7 @@ import java.util.List;
 /**
  * Used to update user password and name on the Parse database.
  */
-public class ProfileEditActivity extends AppCompatActivity {
+public class ProfileEditActivity extends AppCompatActivity implements View.OnClickListener{
     ParseUser currentUser = ParseUser.getCurrentUser();
     Button saveChangesButton;
     // UI references.
@@ -51,6 +53,10 @@ public class ProfileEditActivity extends AppCompatActivity {
     // Keep track of whether registering has been cancelled
     private boolean cancel = false;
     private View focusView = null;
+
+    private ImageView pro_pic;
+    Button upload_image;
+    private static final int RESULT_LOAD_IMAGE = 1;
     /**
      * drop down menu.
      * if user selects nothing. spinner.getValue is equal to String "Select"
@@ -80,6 +86,10 @@ public class ProfileEditActivity extends AppCompatActivity {
             return;
         }
         setUpUIelements();
+
+        pro_pic.setOnClickListener(this);
+        upload_image.setOnClickListener(this);
+
         saveChangesButton.setOnClickListener(
                 new OnClickListener() {
                     public void onClick(View view) {
@@ -93,6 +103,32 @@ public class ProfileEditActivity extends AppCompatActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+    }
+
+
+    //Select and upload image from gallery
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.pro_pic:
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+                break;
+            case R.id.upload_image:
+                //Parse Code to actually save image to database
+                break;
+
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
+            Uri selectedImage = data.getData();
+            pro_pic.setImageURI(selectedImage);
+        }
     }
 
     @Override
@@ -172,6 +208,11 @@ public class ProfileEditActivity extends AppCompatActivity {
         subjects = (EditText) findViewById(R.id.enter_subjects);
         desc = (TextView) findViewById(R.id.descTextView);
         description = (EditText) findViewById(R.id.enter_description);
+
+        pro_pic = (ImageView) findViewById(R.id.pro_pic);
+        upload_image = (Button) findViewById(R.id.upload_image);
+
+
 
         if (currentUser.getList("courses") != null) {
             List<String> courses = currentUser.getList("courses");

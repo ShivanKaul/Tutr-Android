@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="@color/aluminium"
     android:gravity="right"
     android:label="Edit Profile"
@@ -183,7 +185,7 @@
     <EditText
         android:id="@+id/enter_description"
         android:layout_width="match_parent"
-        android:layout_height="105dp"
+        android:layout_height="match_parent"
         android:layout_gravity="left"
         android:gravity="top"
         android:background="@color/peacockBlue"
@@ -198,6 +200,38 @@
         android:textColor="#ffffff"
         android:textColorHighlight="#ffffff"
         android:textColorHint="#ffffff" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_horizontal"
+        android:text="Profile Picture"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/peacockBlue"
+        android:textSize="18dp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/pro_pic"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:src="#246971" />
+
+    <Button
+        android:id="@+id/upload_image"
+        style="?android:textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:allowUndo="true"
+        android:text="Upload Image"
+        android:textColor="@color/peacockBlue"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/profileEditSaveChangesButton"
