@@ -49,7 +49,8 @@ public class ViewTutor extends AppCompatActivity {
 
     Button c;
     Button m;
-    String phoneNumber;
+    private int num;
+    //String phoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,39 +67,30 @@ public class ViewTutor extends AppCompatActivity {
 
         getDataForTutor(username);
 
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        phoneNumber=currentUser.getString("phone");
         c = (Button) this.findViewById(R.id.call);
         m = (Button) this.findViewById(R.id.msg);
-        c.setVisibility(View.GONE);
-        m.setVisibility(View.GONE);
-        if(phoneNumber.length()!=0) {
-            c.setVisibility(View.VISIBLE);
-            m.setVisibility(View.VISIBLE);
-            c.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                        Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:" + phoneNumber));
-                        startActivity(callIntent);
-                    }
+        c.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:" + phone.getText()));
+                    startActivity(callIntent);
                 }
-            });
+            }
+        });
 
-            m.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
-                        Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
-                        smsIntent.setData(Uri.parse("sms:" + phoneNumber));
-                        startActivity(smsIntent);
-                    }
+        m.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+                    Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
+                    smsIntent.setData(Uri.parse("sms:" + phone.getText()));
+                    startActivity(smsIntent);
                 }
-            });
-        }
+            }
+        });
     }
-
 
     /** Adds listener on the Rating bar, so that when a rating is done the ratings are persisted.
      * The user cannot rate twice.
@@ -176,6 +168,7 @@ public class ViewTutor extends AppCompatActivity {
         query.whereEqualTo("username", username);
         query.findInBackground(new FindCallback<ParseUser>() {
             public void done(List<ParseUser> users, ParseException e) {
+
                 if (e == null) {
                     ParseUser user = null;
                     // This should not fail, because we're querying for something already found
@@ -224,9 +217,12 @@ public class ViewTutor extends AppCompatActivity {
                         stringBuilder.deleteCharAt(0);
                         courses.setText(stringBuilder.toString());
                     } else courses.setText("");
-                    if (user.getString("phone") != null) {
-                        phone.setText(user.getString("phone"));
-                    } else phone.setText("");
+
+                    phone.setText(user.getString("phone"));
+                    if ((phone.getText()).equals("")) {
+                        c.setVisibility(View.GONE);
+                        m.setVisibility(View.GONE);
+                    }
                     if (user.getDouble("hourlyRate") != 0) {
                         rate.setText(String.valueOf(user.getDouble("hourlyRate")));
                     } else rate.setText("");
