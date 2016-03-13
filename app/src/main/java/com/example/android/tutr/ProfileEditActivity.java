@@ -3,7 +3,9 @@ package com.example.android.tutr;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -27,11 +29,13 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +43,7 @@ import java.util.List;
 /**
  * Used to update user password and name on the Parse database.
  */
-public class ProfileEditActivity extends AppCompatActivity implements View.OnClickListener{
+public class ProfileEditActivity extends AppCompatActivity implements View.OnClickListener {
     ParseUser currentUser = ParseUser.getCurrentUser();
     Button saveChangesButton;
     // UI references.
@@ -110,13 +114,30 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
     //Select and upload image from gallery
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.pro_pic:
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
                 break;
             case R.id.upload_image:
                 //Parse Code to actually save image to database
+                if (pro_pic.getDrawable() != null) {
+                    Bitmap bitmap = ((BitmapDrawable) pro_pic.getDrawable()).getBitmap();
+//                    if (bitmap == null) {
+//                        Toast.makeText(ProfileEditActivity.this, "No Profile Picture to upload", Toast.LENGTH_LONG).show();
+//                        return;
+//                    }
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 7, stream);
+                    byte[] image = stream.toByteArray();
+                    ParseFile file = new ParseFile(currentUser.getObjectId() + currentUser.getUsername() + "PROFILE.jpeg", image);
+                    file.saveInBackground();
+                    currentUser.put("profilePicture", file);
+                    currentUser.saveInBackground();
+                    Toast.makeText(ProfileEditActivity.this, "Profile Picture uploaded", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(ProfileEditActivity.this, "No Profile Picture to upload", Toast.LENGTH_LONG).show();
+                }
                 break;
 
         }
@@ -125,7 +146,7 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
             pro_pic.setImageURI(selectedImage);
         }
@@ -213,7 +234,6 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
         upload_image = (Button) findViewById(R.id.upload_image);
 
 
-
         if (currentUser.getList("courses") != null) {
             List<String> courses = currentUser.getList("courses");
             StringBuilder stringBuilder = new StringBuilder();
@@ -282,14 +302,14 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
         availability_spinner.setSelection(availability_menu_adapter.getPosition("No"));
 
         if (currentUser.getString("available") != null &&
-                currentUser.getString("available").equalsIgnoreCase("Yes")){
+                currentUser.getString("available").equalsIgnoreCase("Yes")) {
             availability_spinner.setSelection(availability_menu_adapter.getPosition("Yes"));
         }
 
     }
 
     /**
-     * Acts on press of "Save Changes" button. Checks inputs and saves to Parse database if valid. 
+     * Acts on press of "Save Changes" button. Checks inputs and saves to Parse database if valid.
      */
     protected void saveChanges() {
         final String wageStr = wage.getText().toString();
@@ -316,7 +336,7 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
             }
         }
         if (availability_spinner.getSelectedItem().toString().equalsIgnoreCase("select")) {
-            TextView errorText = (TextView)availability_spinner.getSelectedView();
+            TextView errorText = (TextView) availability_spinner.getSelectedView();
             errorText.setError("");
             errorText.setTextColor(Color.RED);//just to highlight that this is an error
             errorText.setText("Please select your availability!");
