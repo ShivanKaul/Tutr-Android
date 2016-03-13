@@ -65,10 +65,8 @@ public class ViewTutor extends AppCompatActivity {
     private ParseObject userReviews;
     private boolean notRatedYet = true;
 
-    Button c;
-    Button m;
-    private int num;
-    //String phoneNumber;
+    private Button callButton;
+    private Button msgButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,9 +88,9 @@ public class ViewTutor extends AppCompatActivity {
 
         setUpReviews(username, name);
 
-        c = (Button) this.findViewById(R.id.call);
-        m = (Button) this.findViewById(R.id.msg);
-        c.setOnClickListener(new View.OnClickListener() {
+        callButton = (Button) this.findViewById(R.id.call);
+        msgButton = (Button) this.findViewById(R.id.msg);
+        callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
@@ -103,7 +101,7 @@ public class ViewTutor extends AppCompatActivity {
             }
         });
 
-        m.setOnClickListener(new View.OnClickListener() {
+        msgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
@@ -518,8 +516,8 @@ public class ViewTutor extends AppCompatActivity {
 
                     phone.setText(user.getString("phone"));
                     if ((phone.getText()).equals("")) {
-                        c.setVisibility(View.GONE);
-                        m.setVisibility(View.GONE);
+                        callButton.setVisibility(View.GONE);
+                        msgButton.setVisibility(View.GONE);
                     }
                     if (user.getDouble("hourlyRate") != 0) {
                         rate.setText(String.valueOf(user.getDouble("hourlyRate")));

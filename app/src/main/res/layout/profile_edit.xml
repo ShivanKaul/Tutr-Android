@@ -112,7 +112,7 @@
 
         <TextView
             android:layout_width="74dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginRight="15dp"
             android:text="Hourly\nRate"
             android:textAlignment="center"
