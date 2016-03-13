@@ -128,7 +128,7 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
 //                        return;
 //                    }
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 7, stream);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
                     byte[] image = stream.toByteArray();
                     ParseFile file = new ParseFile(currentUser.getObjectId() + currentUser.getUsername() + "PROFILE.jpeg", image);
                     file.saveInBackground();
