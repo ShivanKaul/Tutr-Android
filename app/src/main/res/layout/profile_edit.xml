@@ -221,7 +221,7 @@
         android:id="@+id/pro_pic"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:src="#246971" />
+        android:background="#246971" />
 
     <Button
         android:id="@+id/upload_image"
