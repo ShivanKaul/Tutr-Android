@@ -83,8 +83,6 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
 
-
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -213,8 +211,28 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:orientation="vertical">
-            </LinearLayout>
 
+                <EditText
+                    android:layout_marginTop="7sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:hint="Add a new review"
+                    android:id="@+id/add_new_review"
+                    android:layout_below="@+id/display_phone"
+                    android:background="@android:drawable/edit_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+
+                <Button
+                    android:id="@+id/save_new_review_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:allowUndo="true"
+                    android:text="Save Review" />
+            </LinearLayout>
 
         </RelativeLayout>
     </ScrollView>

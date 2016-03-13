@@ -41,6 +41,9 @@ public class ViewTutor extends AppCompatActivity {
 
     private RatingBar rating_bar;
 
+    private EditText enter_new_review_field;
+    private Button save_new_review_button;
+
     private double old_rating;
     private double rating_counter;
 
@@ -129,17 +132,39 @@ public class ViewTutor extends AppCompatActivity {
         phone = (TextView) findViewById(R.id.display_phone);
 
         rating_bar = (RatingBar) findViewById(R.id.ratingBar);
+
+        enter_new_review_field = (EditText) findViewById(R.id.add_new_review);
+        save_new_review_button = (Button) findViewById(R.id.save_new_review_button);
+        save_new_review_button.setOnClickListener(
+                new View.OnClickListener() {
+                    public void onClick(View view) {
+                        try {
+                            saveNewReview();
+                        } catch (Exception e) {
+                        }
+                    }
+                });
+    }
+
+    private void saveNewReview() {
+        String new_review = enter_new_review_field.getText().toString();
+
+        // TODO save new_review to parse
+
+        // TODO reload the page with the added new review
+
+        Toast.makeText(ViewTutor.this, "Saving new review", Toast.LENGTH_SHORT).show();
     }
 
     /**
      * lists all available reviews for a tutor
      */
     private void setUpReviews(final String username) {
-
         // UI elements
         LinearLayout ReviewsLinearLayout = (LinearLayout) findViewById(R.id.reviews);
+
         EditText reviewText;
-        Button editReviewButton = null, saveReviewButton = null;
+        Button editReviewButton = null, saveReviewButton = null, deleteReviewButton = null;
         LinearLayout ButtonsLinearLayout = null;
 
         Map<String, String> usernameReview = new HashMap<String, String>();
@@ -159,8 +184,8 @@ public class ViewTutor extends AppCompatActivity {
 
         // Collect reviews from Parse Object
         for (Object usernameAndReviewFromParse : userReviews.getList("reviews")) {
-            String user =  usernameAndReviewFromParse.toString().split(":::")[0];
-            String review =  usernameAndReviewFromParse.toString().split(":::")[1];
+            String user = usernameAndReviewFromParse.toString().split(":::")[0];
+            String review = usernameAndReviewFromParse.toString().split(":::")[1];
             usernameReview.put(user, review);
         }
 
@@ -170,62 +195,86 @@ public class ViewTutor extends AppCompatActivity {
         // Display all reviews
         final int id_padding = 100000; // need to have a unique id. TODO: this is too ugly
         for (Map.Entry<String, String> cursor : usernameReview.entrySet()) {
-             // Display review
-             reviewText = new EditText(this);
-             reviewText.setText(reviewCounter + ". " + cursor.getValue());
-             // check if logged in user owns review
-             if (cursor.getKey().equals(ParseUser.getCurrentUser().getUsername())) {
-                 // let them edit
-                 ButtonsLinearLayout = new LinearLayout(this);
-                 ButtonsLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-                 editReviewButton = new Button(this);
-                 editReviewButton.setId(id_padding + uniqueCounter + 1); // need to have a unique id
-                 editReviewButton.setText("Edit");
-                 editReviewButton.setOnClickListener(
-                         new View.OnClickListener() {
-                             public void onClick(View view) {
-                                 try {
-                                     editReview(view.getId());
-                                 } catch (Exception e) {
-                                 }
-                             }
-                         });
+            // Display review
+            reviewText = new EditText(this);
+            reviewText.setText(reviewCounter + ". " + cursor.getValue());
+            reviewText.setFocusableInTouchMode(false);
+            reviewText.setFocusable(false);
+            reviewText.setClickable(false);
 
-                 saveReviewButton = new Button(this);
-                 saveReviewButton.setId(id_padding + uniqueCounter + 2);
-                 saveReviewButton.setText("Save");
-                 saveReviewButton.setOnClickListener(
-                         new View.OnClickListener() {
-                             public void onClick(View view) {
-                                 try {
-                                     saveReview(view.getId(), username);
-                                 } catch (Exception e) {
-                                 }
-                             }
-                         });
+            // check if logged in user owns review
+            boolean user_owns_review = cursor.getKey().equals(ParseUser.getCurrentUser().getUsername());
+            if (user_owns_review) {
+                // let them edit
+                ButtonsLinearLayout = new LinearLayout(this);
+                ButtonsLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-                 ButtonsLinearLayout.addView(editReviewButton);
-                 ButtonsLinearLayout.addView(saveReviewButton);
+                editReviewButton = new Button(this);
+                editReviewButton.setId(id_padding + uniqueCounter + 1); // need to have a unique id
+                editReviewButton.setText("Edit");
+                editReviewButton.setOnClickListener(
+                        new View.OnClickListener() {
+                            public void onClick(View view) {
+                                try {
+                                    editReview(view.getId());
+                                } catch (Exception e) {
+                                }
+                            }
+                        });
 
-             } else { // someone else's review
+                saveReviewButton = new Button(this);
+                saveReviewButton.setId(id_padding + uniqueCounter + 2);
+                saveReviewButton.setText("Save");
+                saveReviewButton.setOnClickListener(
+                        new View.OnClickListener() {
+                            public void onClick(View view) {
+                                try {
+                                    saveReview(view.getId(), username);
+                                } catch (Exception e) {
+                                }
+                            }
+                        });
 
-                 reviewText.setFocusableInTouchMode(false);
-                 reviewText.setFocusable(false);
-                 reviewText.setClickable(false);
-             }
-             uniqueCounter += 3;
-             reviewCounter++;
-         }
+                deleteReviewButton = new Button(this);
+                deleteReviewButton.setId(id_padding + uniqueCounter + 3);
+                deleteReviewButton.setText("Delete");
+                deleteReviewButton.setOnClickListener(
+                        new View.OnClickListener() {
+                            public void onClick(View view) {
+                                try {
+                                    deleteReview(view.getId());
+                                } catch (Exception e) {
+                                }
+                            }
+                        });
+
+                ButtonsLinearLayout.addView(editReviewButton);
+                ButtonsLinearLayout.addView(saveReviewButton);
+                ButtonsLinearLayout.addView(deleteReviewButton);
+            } else { // someone else's review
+                reviewText.setFocusableInTouchMode(false);
+                reviewText.setFocusable(false);
+                reviewText.setClickable(false);
+            }
+
+            ReviewsLinearLayout.addView(reviewText);
+            if (user_owns_review)
+                ReviewsLinearLayout.addView(ButtonsLinearLayout);
+
+            uniqueCounter += 3;
+            reviewCounter++;
+        }
     }
 
     /**
      * makes a review field editable
+     *
      * @param id
      */
     private void editReview(int id) {
         System.out.println("ID is " + id);
         // edit review button id is 1 item ahead of the text view
-        EditText review_text = (EditText) findViewById(id-1);
+        EditText review_text = (EditText) findViewById(id - 1);
 
         // enable editing
         review_text.setFocusable(true);
@@ -240,13 +289,14 @@ public class ViewTutor extends AppCompatActivity {
 
     /**
      * saves an editable review to database
+     *
      * @param id
      */
     private void saveReview(int id, String username) {
         System.out.println("ID is " + id);
 
-        // edit review button id is 2 items ahead of the text view
-        EditText review_text = (EditText) findViewById(id-2);
+        // save review button id is 2 items ahead of the text view
+        EditText review_text = (EditText) findViewById(id - 2);
 
         // disable editing
         review_text.setFocusable(false);
@@ -255,7 +305,6 @@ public class ViewTutor extends AppCompatActivity {
 
         // get review text
         String review = review_text.getText().toString();
-
 
         userReviews.add("reviews", ParseUser.getCurrentUser().getUsername() + ":::" + review);
         userReviews.put("username", username);
@@ -270,6 +319,22 @@ public class ViewTutor extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    /**
+     * deletes an existing review from database
+     *
+     * @param id
+     */
+    private void deleteReview(int id) {
+        // delete review button id is 3 items ahead of the text view
+        EditText review_text = (EditText) findViewById(id - 3);
+
+        // TODO delete review on parse
+
+        // TODO reload the page without the review
+
+        Toast.makeText(ViewTutor.this, "Deleting review", Toast.LENGTH_SHORT).show();
     }
 
     /**
