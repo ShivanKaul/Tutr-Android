@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -17,7 +16,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,11 +34,10 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -97,49 +94,40 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
             return;
         }
         setUpUIelements();
-
-        pro_pic.setOnClickListener(this);
+        loadProfilePicFromStorage();
+        saveChangesButton.setOnClickListener(this);
         upload_image.setOnClickListener(this);
 
-        saveChangesButton.setOnClickListener(
-                new OnClickListener() {
-                    public void onClick(View view) {
-                        try {
-                            saveChanges();
-                        } catch (Exception e) {
-                            startActivity(new Intent(ProfileEditActivity.this, LoginActivity.class));
-                        }
-                    }
-                });
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-        loadProfilePicFromStorage();
+        // load the picture
     }
 
     private void loadProfilePicFromStorage() {
-        try {
+       // try {
             ContextWrapper cw = new ContextWrapper(getApplicationContext());
             // path to /data/data/yourapp/app_data/imageDir
             File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
             File f = new File(directory.getAbsolutePath(), "profile.jpg");
-            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-            pro_pic.setImageBitmap(b);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
+            Picasso.with(this).load(f).fit().into(pro_pic);
     }
 
     //Select and upload image from gallery
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.pro_pic:
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+            case R.id.profileEditSaveChangesButton:
+                try {
+                    saveChanges();
+                } catch (Exception e) {
+                    startActivity(new Intent(ProfileEditActivity.this, LoginActivity.class));
+                }
                 break;
             case R.id.upload_image:
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
                 //Parse Code to actually save image to database
                 if (pro_pic.getDrawable() != null) {
                     Bitmap bitmap = ((BitmapDrawable) pro_pic.getDrawable()).getBitmap();
@@ -186,7 +174,8 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
-            pro_pic.setImageURI(selectedImage);
+            //load and fit imageview with picasso
+            Picasso.with(this).load(selectedImage).fit().into(pro_pic);
         }
     }
 
