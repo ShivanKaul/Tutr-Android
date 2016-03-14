@@ -217,7 +217,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:hint="Add a new review"
+                    android:hint="Add a new review. Note that this will replace your previous review."
                     android:id="@+id/add_new_review"
                     android:layout_below="@+id/display_phone"
                     android:background="@android:drawable/edit_text"
