@@ -3,6 +3,7 @@ package com.example.android.tutr;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -216,11 +217,14 @@ public class ViewTutor extends AppCompatActivity {
                         courses.setText(stringBuilder.toString());
                     } else courses.setText("");
 
-                    phone.setText(user.getString("phone"));
-                    if ((phone.getText()).equals("")) {
+                    if (!TextUtils.isEmpty(user.getString("phone"))) {
+                        phone.setText(user.getString("phone"));
+                    } else {
+                        phone.setText("");
                         callButton.setVisibility(View.GONE);
                         msgButton.setVisibility(View.GONE);
                     }
+
                     if (user.getDouble("hourlyRate") != 0) {
                         rate.setText(String.valueOf(user.getDouble("hourlyRate")));
                     } else rate.setText("");
