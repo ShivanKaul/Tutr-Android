@@ -1,7 +1,11 @@
 package com.example.android.tutr;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,22 +23,13 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
-import android.view.View;
-import android.widget.*;
 
 /** View Tutor class. Handles the view of the tutor's profile - what is diplayed when
  * the user clicks on a Tutor while searching.
@@ -78,8 +73,6 @@ public class ViewTutor extends AppCompatActivity {
         String username = intent.getStringExtra("username");
         String name = intent.getStringExtra("name");
 
-        addListenerOnRatingBar(username);
-
         setUpUIElements(name, username);
 
         addListenerOnRatingBar(username);
@@ -93,7 +86,8 @@ public class ViewTutor extends AppCompatActivity {
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
                     callIntent.setData(Uri.parse("tel:" + phone.getText()));
                     startActivity(callIntent);
@@ -104,7 +98,8 @@ public class ViewTutor extends AppCompatActivity {
         msgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
                     Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
                     smsIntent.setData(Uri.parse("sms:" + phone.getText()));
                     startActivity(smsIntent);
@@ -126,7 +121,6 @@ public class ViewTutor extends AppCompatActivity {
             public void onRatingChanged(RatingBar ratingBar, float rating,
                                         boolean fromUser) {
                 if (notRatedYet) {
-                    System.out.println("DEBUG: Entered rating bar handler");
                     // Make read-only
                     rating_bar.setIsIndicator(true);
                     // Calculate new rating + update rating counter
@@ -337,7 +331,6 @@ public class ViewTutor extends AppCompatActivity {
      * @param id
      */
     private void editReview(int id) {
-        System.out.println("ID is " + id);
         // edit review button id is 1 item ahead of the text view
         EditText review_text = (EditText) findViewById(id - 1);
         // put save to be clickable and edit to be nonclickable
@@ -366,7 +359,6 @@ public class ViewTutor extends AppCompatActivity {
      * @param name
      */
     private void saveReview(int id, final String username, final String name) {
-        System.out.println("ID is " + id);
         // Grey out save button
         findViewById(id).setEnabled(false);
 
@@ -382,8 +374,6 @@ public class ViewTutor extends AppCompatActivity {
             return;
         }
 
-        System.out.println("DEBUG Review contains at least one letter: " + review_text.getText().toString());
-
         // Set edit button to be enabled
         findViewById(id - 1).setEnabled(true);
 
@@ -396,12 +386,10 @@ public class ViewTutor extends AppCompatActivity {
         String review = review_text.getText().toString();
         String sanitizedReview = review;
 
-        // Check if first wo
+        // Check if first characters are the ordering numbers
         final Matcher matcher = Pattern.compile("[0-9]\\.").matcher(review);
         if(matcher.find()){
-            System.out.println("Found number dot something.");
             sanitizedReview = review.substring(matcher.end()).trim();
-            System.out.println(sanitizedReview);
         }
 
         userReviews.add("reviews", ParseUser.getCurrentUser().getUsername() + ":::" + sanitizedReview);
@@ -493,7 +481,6 @@ public class ViewTutor extends AppCompatActivity {
                         for (Object usernameAndRating : userRating.getList("ratedBy")) {
                             if (usernameAndRating.toString().contains(ParseUser.getCurrentUser().getUsername())) {
                                 notRatedYet = false;
-                                System.out.println("DEBUG: " + usernameAndRating.toString());
                                 float stars = Float.parseFloat(usernameAndRating.toString().split(",")[1]);
                                 rating_bar.setRating(stars);
                                 rating_bar.setIsIndicator(true);
