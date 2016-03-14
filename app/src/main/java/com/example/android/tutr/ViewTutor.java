@@ -3,6 +3,7 @@ package com.example.android.tutr;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,9 +22,12 @@ import com.parse.SaveCallback;
 import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * View Tutor class. Handles the view of the tutor's profile - what is diplayed when
@@ -113,16 +117,12 @@ public class ViewTutor extends AppCompatActivity {
         });
     }
 
-    public static double averageRating(int newCounter, float rating, double old_rating, double rating_counter) {
-        double average = (rating_counter == 0) ?
-                rating : ((old_rating * rating_counter) + rating) / (newCounter);
-        return average;
-    }
+
 
     /**
      * Set up UI elements
      */
-    private void setUpUIElements(String name, final String username) {
+    private void setUpUIElements(final String name, final String username) {
         // need to assign default value to fields in case
         // no ratings
         setTitle(name);
@@ -143,29 +143,11 @@ public class ViewTutor extends AppCompatActivity {
                 new View.OnClickListener() {
                     public void onClick(View view) {
                         try {
-                            saveNewReview(username);
+                            saveNewReview(username, name);
                         } catch (Exception e) {
                         }
                     }
                 });
-    }
-
-    private void saveNewReview(String username) {
-        String new_review = enter_new_review_field.getText().toString();
-
-        userReviews.add("reviews", ParseUser.getCurrentUser().getUsername() + ":::" + new_review);
-        userReviews.put("username", username);
-        userReviews.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-
-                    Toast.makeText(ViewTutor.this, "Saved, thank you!", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(ViewTutor.this, "Problem storing review " + e, Toast.LENGTH_LONG).show();
-                }
-            }
-        });
     }
 
     /**
@@ -194,24 +176,26 @@ public class ViewTutor extends AppCompatActivity {
             return;
         }
 
+        List reviews = userReviews.getList("reviews");
+
         // Collect reviews from Parse Object
-        for (Object usernameAndReviewFromParse : userReviews.getList("reviews")) {
-            String user = usernameAndReviewFromParse.toString().split(":::")[0];
-            String review = usernameAndReviewFromParse.toString().split(":::")[1];
-            usernameReview.put(user, review);
+        for (Object usernameAndReviewFromParse : reviews) {
+            if (usernameAndReviewFromParse.toString().split(":::").length == 2) {
+                String user = usernameAndReviewFromParse.toString().split(":::")[0];
+                String review = usernameAndReviewFromParse.toString().split(":::")[1];
+                usernameReview.put(user, review);
+            }
         }
 
         int uniqueCounter = 0;
         int reviewCounter = 1;
 
         // Display all reviews
-        final int id_padding = 100000; // need to have a unique id. TODO: this is too ugly
+        final int id_padding = 100000; // need to have a unique id
         for (Map.Entry<String, String> cursor : usernameReview.entrySet()) {
-//        for (int  i = 0; i < 5; i++) {
             // Display review
             reviewText = new EditText(this);
             reviewText.setText(reviewCounter + ". " + cursor.getValue());
-//            reviewText.setText(reviewCounter + ". text" + i);
             reviewText.setId(id_padding + uniqueCounter);
             reviewText.setFocusableInTouchMode(false);
             reviewText.setFocusable(false);
@@ -221,7 +205,6 @@ public class ViewTutor extends AppCompatActivity {
 
             // check if logged in user owns review
             boolean user_owns_review = cursor.getKey().equals(ParseUser.getCurrentUser().getUsername());
-//            boolean user_owns_review = true;
             if (user_owns_review) {
                 // let them edit
                 ButtonsLinearLayout = new LinearLayout(this);
@@ -250,7 +233,7 @@ public class ViewTutor extends AppCompatActivity {
                         new View.OnClickListener() {
                             public void onClick(View view) {
                                 try {
-                                    saveReview(view.getId(), username);
+                                    saveReview(view.getId(), username, name);
                                 } catch (Exception e) {
                                 }
                             }
@@ -281,7 +264,39 @@ public class ViewTutor extends AppCompatActivity {
     }
 
     /**
-     * makes a review field editable
+     * Saves new review to database
+     *
+     * @param username
+     * @param name
+     */
+    private void saveNewReview(final String username, final String name) {
+        String new_review = enter_new_review_field.getText().toString();
+
+        // Check if review is empty
+        if (TextUtils.isEmpty(new_review)) {
+            enter_new_review_field.setError(getString(R.string.error_CapCase));
+            // request focus to the text field
+            enter_new_review_field.requestFocus();
+            return;
+        }
+
+        userReviews.add("reviews", ParseUser.getCurrentUser().getUsername() + ":::" + new_review);
+        userReviews.put("username", username);
+
+        try {
+            userReviews.save();
+            Toast.makeText(ViewTutor.this, "Saved, thank you!", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(ViewTutor.this, ViewTutor.class);
+            intent.putExtra("username", username);
+            intent.putExtra("name", name);
+            startActivity(intent);
+        } catch (ParseException e) {
+            Toast.makeText(ViewTutor.this, "Problem storing review " + e, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * Makes a review field editable
      *
      * @param id
      */
@@ -311,16 +326,30 @@ public class ViewTutor extends AppCompatActivity {
      * save and overwrite if editing a review.
      *
      * @param id
+     * @param username
+     * @param name
      */
-    private void saveReview(int id, String username) {
+    private void saveReview(int id, final String username, final String name) {
         System.out.println("ID is " + id);
         // Grey out save button
         findViewById(id).setEnabled(false);
 
         // save review button id is 2 items ahead of the text view
         EditText review_text = (EditText) findViewById(id - 2);
-        findViewById(id - 1).setEnabled(true);
 
+        // Check if review contains >= 1 letter
+        if (!review_text.getText().toString().matches(".*[a-zA-Z]+.*")) {
+            review_text.setError("Review cannot be empty!");
+            findViewById(id).setEnabled(true);
+            // request focus to the text field
+            review_text.requestFocus();
+            return;
+        }
+
+        System.out.println("DEBUG Review contains at least one letter: " + review_text.getText().toString());
+
+        // Set edit button to be enabled
+        findViewById(id - 1).setEnabled(true);
 
         // disable editing
         review_text.setFocusable(false);
@@ -328,38 +357,37 @@ public class ViewTutor extends AppCompatActivity {
         review_text.setClickable(false);
 
         // get review text
-        String review = review_text.getText().toString().substring(3);
+        String review = review_text.getText().toString();
+        String sanitizedReview = review;
 
-        System.out.println("Original review: " + originalReview);
+        // Check if first wo
+        final Matcher matcher = Pattern.compile("[0-9]\\.").matcher(review);
+        if(matcher.find()){
+            System.out.println("Found number dot something.");
+            sanitizedReview = review.substring(matcher.end()).trim();
+            System.out.println(sanitizedReview);
+        }
 
-        userReviews.removeAll("reviews", Arrays.asList(originalReview));
+        userReviews.add("reviews", ParseUser.getCurrentUser().getUsername() + ":::" + sanitizedReview);
         userReviews.put("username", username);
         try {
             userReviews.save();
+            Toast.makeText(ViewTutor.this, "Saved, thank you!", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(ViewTutor.this, ViewTutor.class);
+            intent.putExtra("username", username);
+            intent.putExtra("name", name);
+            startActivity(intent);
         } catch (ParseException e) {
-            Toast.makeText(ViewTutor.this, "Problem modifying existing review: deleting unsuccessful",
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(ViewTutor.this, "Problem storing review " + e, Toast.LENGTH_LONG).show();
         }
-        userReviews.add("reviews", ParseUser.getCurrentUser().getUsername() + ":::" + review);
-        userReviews.put("username", username);
-        // Fire off Parse event in background thread
-        userReviews.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-
-                    Toast.makeText(ViewTutor.this, "Saved, thank you!", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(ViewTutor.this, "Problem storing review " + e, Toast.LENGTH_LONG).show();
-                }
-            }
-        });
     }
 
     /**
      * deletes an existing review from database
      *
      * @param id
+     * @param username
+     * @param name
      */
     private void deleteReview(int id, final String username, final String name) {
         // delete review button id is 3 items ahead of the text view
@@ -469,5 +497,16 @@ public class ViewTutor extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    /* HELPER METHODS */
+
+    /**
+     * Get average rating.
+     */
+    public static double averageRating(int newCounter, float rating, double old_rating, double rating_counter) {
+        double average = (rating_counter == 0) ?
+                rating : ((old_rating * rating_counter) + rating) / (newCounter);
+        return average;
     }
 }

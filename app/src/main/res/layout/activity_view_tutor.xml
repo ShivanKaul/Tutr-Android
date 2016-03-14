@@ -231,7 +231,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
                     android:allowUndo="true"
-                    android:text="Save Review" />
+                    android:text="Save New Review" />
             </LinearLayout>
 
         </RelativeLayout>
