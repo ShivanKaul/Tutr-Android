@@ -95,6 +95,7 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
         }
         setUpUIelements();
 //        loadProfilePicFromStorage();
+        loadProfilePicFromParse();
         saveChangesButton.setOnClickListener(this);
         upload_image.setOnClickListener(this);
 
@@ -105,13 +106,25 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
         // load the picture
     }
 
+    private void loadProfilePicFromParse() {
+        try {
+            currentUser.fetch();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        ParseFile postImage = currentUser.getParseFile("profilePicture");
+        String imageUrl = postImage.getUrl();//live url
+        Uri imageUri = Uri.parse(imageUrl);
+        Picasso.with(ProfileEditActivity.this).load(imageUri.toString()).fit().into(pro_pic);
+    }
+
     private void loadProfilePicFromStorage() {
-       // try {
-            ContextWrapper cw = new ContextWrapper(getApplicationContext());
-            // path to /data/data/yourapp/app_data/imageDir
-            File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-            File f = new File(directory.getAbsolutePath(), "profile.jpg");
-            Picasso.with(this).load(f).fit().into(pro_pic);
+        // try {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        File f = new File(directory.getAbsolutePath(), "profile.jpg");
+        Picasso.with(this).load(f).fit().into(pro_pic);
     }
 
     //Select and upload image from gallery
@@ -128,25 +141,6 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
             case R.id.upload_image:
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
-                //Parse Code to actually save image to database
-                if (pro_pic.getDrawable() != null) {
-                    Bitmap bitmap = ((BitmapDrawable) pro_pic.getDrawable()).getBitmap();
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    byte[] image = stream.toByteArray();
-                    ParseFile file = new ParseFile(currentUser.getObjectId() + currentUser.getUsername() + "PROFILE.jpeg", image);
-                    file.saveInBackground();
-                    currentUser.put("profilePicture", file);
-                    currentUser.saveInBackground();
-//                    Toast.makeText(ProfileEditActivity.this, "Profile Picture uploaded", Toast.LENGTH_LONG).show();
-//                    try {
-//                        saveToInternalStorage(bitmap);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-                } else {
-                    Toast.makeText(ProfileEditActivity.this, "No Profile Picture to upload", Toast.LENGTH_LONG).show();
-                }
                 break;
         }
     }
@@ -174,8 +168,80 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
+            File f = new File(selectedImage.getPath());
+            long size = f.length();
+            Log.e("profilePicture", size+"");
             //load and fit imageview with picasso
-            Picasso.with(this).load(selectedImage).fit().into(pro_pic);
+            pro_pic.setImageURI(selectedImage);
+            if (pro_pic.getDrawable() != null) {
+                Bitmap bitmap = ((BitmapDrawable) pro_pic.getDrawable()).getBitmap();
+                if (bitmap.getByteCount() > 32000000) { //bigger than 4MB?
+                    Log.e("profilePicture", "too Big: " + bitmap.getByteCount());
+                    Toast.makeText(ProfileEditActivity.this, "Profile Picture should be less than 4MB", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] image = stream.toByteArray();
+                ParseFile file = new ParseFile(currentUser.getObjectId() + currentUser.getUsername() + "PROFILE.jpeg", image);
+                file.saveInBackground();
+                currentUser.put("profilePicture", file);
+                currentUser.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        Toast.makeText(ProfileEditActivity.this, "Profile Picture uploaded", Toast.LENGTH_LONG).show();
+                        loadProfilePicFromParse();
+                    }
+                });
+//                    try {
+//                        saveToInternalStorage(bitmap);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+            } else {
+                Toast.makeText(ProfileEditActivity.this, "No Profile Picture to upload", Toast.LENGTH_LONG).show();
+            }
+//            Picasso.with(this).load(selectedImage.toString()).fit().into(pro_pic, new Callback() {
+//
+//                @Override
+//                public void onSuccess() {
+//                    if (pro_pic.getDrawable() != null) {
+//                        Bitmap bitmap = ((BitmapDrawable) pro_pic.getDrawable()).getBitmap();
+//                        if (bitmap.getByteCount() > 400000) { //bigger than 4MB?
+//                            Log.e("profilePicture", "too Big: " + bitmap.getByteCount());
+//                            Toast.makeText(ProfileEditActivity.this, "Profile Picture should be less than 4MB", Toast.LENGTH_LONG).show();
+//                            return;
+//                        }
+//                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//                        byte[] image = stream.toByteArray();
+//                        ParseFile file = new ParseFile(currentUser.getObjectId() + currentUser.getUsername() + "PROFILE.jpeg", image);
+//                        file.saveInBackground();
+//                        currentUser.put("profilePicture", file);
+//                        currentUser.saveInBackground(new SaveCallback() {
+//                            @Override
+//                            public void done(ParseException e) {
+//                                Toast.makeText(ProfileEditActivity.this, "Profile Picture uploaded", Toast.LENGTH_LONG).show();
+//                                loadProfilePicFromParse();
+//                            }
+//                        });
+////                    try {
+////                        saveToInternalStorage(bitmap);
+////                    } catch (IOException e) {
+////                        e.printStackTrace();
+////                    }
+//                    } else {
+//                        Toast.makeText(ProfileEditActivity.this, "No Profile Picture to upload", Toast.LENGTH_LONG).show();
+//                    }
+//                }
+//
+//                @Override
+//                public void onError() {
+//
+//                }
+//            });
+//            //Parse Code to actually save image to database
+
         }
     }
 
