@@ -4,12 +4,14 @@ package com.example.android.tutr;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -168,15 +170,16 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
-            File f = new File(selectedImage.getPath());
-            long size = f.length();
-            Log.e("profilePicture", size+"");
+            Cursor returnCursor =
+                    getContentResolver().query(selectedImage, null, null, null, null);
+            int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+            returnCursor.moveToFirst();
             //load and fit imageview with picasso
             pro_pic.setImageURI(selectedImage);
             if (pro_pic.getDrawable() != null) {
                 Bitmap bitmap = ((BitmapDrawable) pro_pic.getDrawable()).getBitmap();
-                if (bitmap.getByteCount() > 32000000) { //bigger than 4MB?
-                    Log.e("profilePicture", "too Big: " + bitmap.getByteCount());
+                if (returnCursor.getLong(sizeIndex) > 4000000) { //bigger than 4MB?
+                    Log.e("profilePicture", Long.toString(returnCursor.getLong(sizeIndex)));
                     Toast.makeText(ProfileEditActivity.this, "Profile Picture should be less than 4MB", Toast.LENGTH_LONG).show();
                     return;
                 }
