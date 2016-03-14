@@ -94,7 +94,7 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
             return;
         }
         setUpUIelements();
-        loadProfilePicFromStorage();
+//        loadProfilePicFromStorage();
         saveChangesButton.setOnClickListener(this);
         upload_image.setOnClickListener(this);
 
@@ -132,18 +132,18 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
                 if (pro_pic.getDrawable() != null) {
                     Bitmap bitmap = ((BitmapDrawable) pro_pic.getDrawable()).getBitmap();
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     byte[] image = stream.toByteArray();
                     ParseFile file = new ParseFile(currentUser.getObjectId() + currentUser.getUsername() + "PROFILE.jpeg", image);
                     file.saveInBackground();
                     currentUser.put("profilePicture", file);
                     currentUser.saveInBackground();
-                    Toast.makeText(ProfileEditActivity.this, "Profile Picture uploaded", Toast.LENGTH_LONG).show();
-                    try {
-                        saveToInternalStorage(bitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+//                    Toast.makeText(ProfileEditActivity.this, "Profile Picture uploaded", Toast.LENGTH_LONG).show();
+//                    try {
+//                        saveToInternalStorage(bitmap);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
                 } else {
                     Toast.makeText(ProfileEditActivity.this, "No Profile Picture to upload", Toast.LENGTH_LONG).show();
                 }
