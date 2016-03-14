@@ -111,7 +111,7 @@ public class ViewTutor extends AppCompatActivity {
                     double average =  averageRating(newCounter, rating, old_rating, rating_counter);
 
                     userRating.put("rating", average);
-                    userRating.add("ratedBy", ParseUser.getCurrentUser().getUsername() + "," + average);
+                    userRating.add("ratedBy", ParseUser.getCurrentUser().getUsername() + "," + rating);
                     userRating.put("username", username);
                     userRating.put("ratingCount", newCounter);
                     // Fire off Parse event in background thread
