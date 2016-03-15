@@ -3,8 +3,6 @@ package com.example.android.tutr;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.ContextWrapper;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -42,9 +40,6 @@ import com.parse.SaveCallback;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -202,55 +197,11 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
                         loadProfilePicFromParse();
                     }
                 });
-//                    try {
-//                        saveToInternalStorage(bitmap);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
+
             } else {
                 Toast.makeText(ProfileEditActivity.this, "No Profile Picture to upload", Toast.LENGTH_LONG).show();
             }
-//            Picasso.with(this).load(selectedImage.toString()).fit().into(pro_pic, new Callback() {
 //
-//                @Override
-//                public void onSuccess() {
-//                    if (pro_pic.getDrawable() != null) {
-//                        Bitmap bitmap = ((BitmapDrawable) pro_pic.getDrawable()).getBitmap();
-//                        if (bitmap.getByteCount() > 400000) { //bigger than 4MB?
-//                            Log.e("profilePicture", "too Big: " + bitmap.getByteCount());
-//                            Toast.makeText(ProfileEditActivity.this, "Profile Picture should be less than 4MB", Toast.LENGTH_LONG).show();
-//                            return;
-//                        }
-//                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                        byte[] image = stream.toByteArray();
-//                        ParseFile file = new ParseFile(currentUser.getObjectId() + currentUser.getUsername() + "PROFILE.jpeg", image);
-//                        file.saveInBackground();
-//                        currentUser.put("profilePicture", file);
-//                        currentUser.saveInBackground(new SaveCallback() {
-//                            @Override
-//                            public void done(ParseException e) {
-//                                Toast.makeText(ProfileEditActivity.this, "Profile Picture uploaded", Toast.LENGTH_LONG).show();
-//                                loadProfilePicFromParse();
-//                            }
-//                        });
-////                    try {
-////                        saveToInternalStorage(bitmap);
-////                    } catch (IOException e) {
-////                        e.printStackTrace();
-////                    }
-//                    } else {
-//                        Toast.makeText(ProfileEditActivity.this, "No Profile Picture to upload", Toast.LENGTH_LONG).show();
-//                    }
-//                }
-//
-//                @Override
-//                public void onError() {
-//
-//                }
-//            });
-//            //Parse Code to actually save image to database
-
         }
     }
 

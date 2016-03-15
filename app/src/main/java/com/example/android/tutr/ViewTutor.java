@@ -8,11 +8,14 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,13 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
-import android.view.View;
-import android.widget.*;
 
 /** View Tutor class. Handles the view of the tutor's profile - what is diplayed when
  * the user clicks on a Tutor while searching.
@@ -122,8 +118,9 @@ public class ViewTutor extends AppCompatActivity {
     private void loadProfilePicFromParse(ParseUser currentUser) {
         ParseFile postImage = currentUser.getParseFile("profilePicture");
         if (postImage == null) {
-            // default image
-            tutor_pic.setImageDrawable(getResources().getDrawable(R.mipmap.default_image));
+            tutor_pic.setVisibility(View.INVISIBLE);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(0, 0);
+            tutor_pic.setLayoutParams(layoutParams);
             return;
         }
         String imageUrl = postImage.getUrl();//live url
