@@ -164,23 +164,38 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    // only take jpeg and png image
+    private void handlePictureFormat(Uri selectedImage)
+    {
+        String mimeType = getContentResolver().getType(selectedImage);
+        if (mimeType != null && mimeType.compareToIgnoreCase("image/jpeg") != 0
+                && mimeType.compareToIgnoreCase("image/png") != 0){
+
+            Toast.makeText(ProfileEditActivity.this,
+                    "The image must have jpeg or png format ", Toast.LENGTH_LONG).show();
+            return;
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
 
+            handlePictureFormat(selectedImage);
             Cursor returnCursor =
                     getContentResolver().query(selectedImage, null, null, null, null);
             int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
             returnCursor.moveToFirst();
-            pro_pic.setImageURI(selectedImage);
+
             if (pro_pic.getDrawable() != null) {
                 if (returnCursor.getLong(sizeIndex) > 4000000) { //bigger than 4MB?
                     Log.e("profilePicture", Long.toString(returnCursor.getLong(sizeIndex)));
                     Toast.makeText(ProfileEditActivity.this, "Profile Picture should be less than 4MB", Toast.LENGTH_LONG).show();
                     return;
                 }
+                pro_pic.setImageURI(selectedImage);
                 //load and fit imageview with picasso
                 Picasso.with(this).load(selectedImage).fit().centerCrop().into(pro_pic, new Callback() {
                     @Override
@@ -414,7 +429,6 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
 
             if (pro_pic.getDrawable() == null) {
                 currentUser.remove("profilePicture");
-                Log.e("REMMMOOVVEEDD", "REMMOOOOMMEVVEEDD");
             }
             else{
                 file.saveInBackground();
