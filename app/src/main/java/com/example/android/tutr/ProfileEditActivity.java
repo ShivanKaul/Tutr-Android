@@ -37,6 +37,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -65,6 +66,7 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
     private ImageView pro_pic;
     Button upload_image;
     private static final int RESULT_LOAD_IMAGE = 1;
+    private ParseFile file = null;
     /**
      * drop down menu.
      * if user selects nothing. spinner.getValue is equal to String "Select"
@@ -147,8 +149,7 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
                     builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             // User clicked OK button
-                            currentUser.remove("profilePicture");
-                            pro_pic.setImageDrawable(null);
+                            pro_pic.setImageDrawable(getResources().getDrawable(R.mipmap.default_image));
                         }
                     });
                     builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -173,31 +174,32 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
                     getContentResolver().query(selectedImage, null, null, null, null);
             int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
             returnCursor.moveToFirst();
-            //load and fit imageview with picasso
             pro_pic.setImageURI(selectedImage);
             if (pro_pic.getDrawable() != null) {
-                Bitmap bitmap = ((BitmapDrawable) pro_pic.getDrawable()).getBitmap();
-
                 if (returnCursor.getLong(sizeIndex) > 4000000) { //bigger than 4MB?
                     Log.e("profilePicture", Long.toString(returnCursor.getLong(sizeIndex)));
                     Toast.makeText(ProfileEditActivity.this, "Profile Picture should be less than 4MB", Toast.LENGTH_LONG).show();
-                    pro_pic.setImageDrawable(null);
                     return;
                 }
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-                byte[] image = stream.toByteArray();
-                ParseFile file = new ParseFile("profile.jpeg", image);
-                file.saveInBackground();
-                currentUser.put("profilePicture", file);
-                currentUser.saveInBackground(new SaveCallback() {
+                //load and fit imageview with picasso
+                Picasso.with(this).load(selectedImage).fit().centerCrop().into(pro_pic, new Callback() {
                     @Override
-                    public void done(ParseException e) {
+                    public void onSuccess() {
+                        Bitmap bitmap = ((BitmapDrawable) pro_pic.getDrawable()).getBitmap();
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+                        byte[] image = stream.toByteArray();
+                        file = new ParseFile("profile.jpeg", image);
                         Toast.makeText(ProfileEditActivity.this, "Profile Picture uploaded", Toast.LENGTH_LONG).show();
-                        loadProfilePicFromParse();
+                        //loadProfilePicFromParse();
+                    }
+
+                    @Override
+                    public void onError() {
+                        Toast.makeText(ProfileEditActivity.this, "Profile Picture was unable to be uploaded", Toast.LENGTH_LONG).show();
+
                     }
                 });
-
             } else {
                 Toast.makeText(ProfileEditActivity.this, "No Profile Picture to upload", Toast.LENGTH_LONG).show();
             }
@@ -409,6 +411,13 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
             currentUser.put("hourlyRate", wageDouble);
             currentUser.put("phone", phone.getText().toString());
             currentUser.put("available", availability_spinner.getSelectedItem().toString().toLowerCase());
+            if (pro_pic.getDrawable() == null) {
+                currentUser.remove("profilePicture");
+            }
+            else{
+                file.saveInBackground();
+                currentUser.put("profilePicture", file);
+            }
             Toast.makeText(ProfileEditActivity.this, "Changed profile successfully", Toast.LENGTH_LONG).show();
             currentUser.saveInBackground(new SaveCallback() {
                 @Override
