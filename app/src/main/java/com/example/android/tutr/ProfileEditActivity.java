@@ -149,7 +149,7 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
                     builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             // User clicked OK button
-                            pro_pic.setImageDrawable(getResources().getDrawable(R.mipmap.default_image));
+                            pro_pic.setImageDrawable(null);
                         }
                     });
                     builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -411,13 +411,16 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
             currentUser.put("hourlyRate", wageDouble);
             currentUser.put("phone", phone.getText().toString());
             currentUser.put("available", availability_spinner.getSelectedItem().toString().toLowerCase());
+
             if (pro_pic.getDrawable() == null) {
                 currentUser.remove("profilePicture");
+                Log.e("REMMMOOVVEEDD", "REMMOOOOMMEVVEEDD");
             }
             else{
                 file.saveInBackground();
                 currentUser.put("profilePicture", file);
             }
+
             Toast.makeText(ProfileEditActivity.this, "Changed profile successfully", Toast.LENGTH_LONG).show();
             currentUser.saveInBackground(new SaveCallback() {
                 @Override
