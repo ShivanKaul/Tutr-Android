@@ -1,8 +1,10 @@
 package com.example.android.tutr;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -100,6 +102,7 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
         loadProfilePicFromParse();
         saveChangesButton.setOnClickListener(this);
         upload_image.setOnClickListener(this);
+        pro_pic.setOnClickListener(this);
 
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -115,6 +118,10 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
             e.printStackTrace();
         }
         ParseFile postImage = currentUser.getParseFile("profilePicture");
+        if (postImage == null) {
+            pro_pic.setImageDrawable(null);
+            return;
+        }
         String imageUrl = postImage.getUrl();//live url
         Uri imageUri = Uri.parse(imageUrl);
         Picasso.with(ProfileEditActivity.this).load(imageUri.toString()).fit().into(pro_pic);
@@ -144,11 +151,31 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
                 break;
+            case R.id.pro_pic:
+                if (pro_pic.getDrawable() != null) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ProfileEditActivity.this);
+                    builder.setMessage(R.string.dialog_deleteProfile);
+                    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User clicked OK button
+                            currentUser.remove("profilePicture");
+                            pro_pic.setImageDrawable(null);
+                        }
+                    });
+                    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                            dialog.cancel();
+                        }
+                    });
+                    builder.show();
+                }
+                break;
         }
     }
 
     private void saveToInternalStorage(Bitmap bitmap) throws IOException {
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        ContextWrapper cw = new ContextWrapper(this);
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         File myPath = new File(directory, "profile.jpg");
@@ -181,12 +208,13 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
                 if (returnCursor.getLong(sizeIndex) > 4000000) { //bigger than 4MB?
                     Log.e("profilePicture", Long.toString(returnCursor.getLong(sizeIndex)));
                     Toast.makeText(ProfileEditActivity.this, "Profile Picture should be less than 4MB", Toast.LENGTH_LONG).show();
+                    pro_pic.setImageDrawable(null);
                     return;
                 }
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
                 byte[] image = stream.toByteArray();
-                ParseFile file = new ParseFile(currentUser.getObjectId() + currentUser.getUsername() + "PROFILE.jpeg", image);
+                ParseFile file = new ParseFile("profile.jpeg", image);
                 file.saveInBackground();
                 currentUser.put("profilePicture", file);
                 currentUser.saveInBackground(new SaveCallback() {
