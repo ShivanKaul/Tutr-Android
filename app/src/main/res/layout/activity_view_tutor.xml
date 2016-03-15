@@ -166,7 +166,7 @@
                 android:id="@+id/call"
                 android:layout_alignBaseline="@id/display_phone"
                 android:layout_toRightOf="@id/display_phone"
-                android:layout_alignParentBottom="true"/>
+                android:layout_alignBottom="@id/display_phone"/>
 
             <Button
                 style="?android:attr/buttonStyleSmall"
@@ -177,7 +177,7 @@
                 android:id="@+id/msg"
                 android:layout_alignBaseline="@id/display_phone"
                 android:layout_toRightOf="@+id/call"
-                android:layout_alignParentBottom="true" />
+                android:layout_alignBottom="@id/display_phone" />
 
             <TextView
                 android:layout_width="wrap_content"
