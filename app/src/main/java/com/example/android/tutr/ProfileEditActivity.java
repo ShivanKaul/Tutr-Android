@@ -67,6 +67,7 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
     Button upload_image;
     private static final int RESULT_LOAD_IMAGE = 1;
     private ParseFile file = null;
+    private boolean ischanged = false;
     /**
      * drop down menu.
      * if user selects nothing. spinner.getValue is equal to String "Select"
@@ -205,8 +206,10 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
                         byte[] image = stream.toByteArray();
                         file = new ParseFile("profile.jpeg", image);
+                        file.saveInBackground();
                         Toast.makeText(ProfileEditActivity.this, "Profile Picture uploaded", Toast.LENGTH_LONG).show();
                         //loadProfilePicFromParse();
+                        ischanged = true;
                     }
 
                     @Override
@@ -375,6 +378,7 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
                 currentUser.getString("available").equalsIgnoreCase("Yes")) {
             availability_spinner.setSelection(availability_menu_adapter.getPosition("Yes"));
         }
+        ischanged = false;
 
     }
 
@@ -421,19 +425,20 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
             focusView.requestFocus();
             return;
         } else {
+            if (pro_pic.getDrawable() == null) {
+                currentUser.remove("profilePicture");
+            }
+            else if(ischanged == true){
+                currentUser.put("profilePicture", file);
+            }
+
             currentUser.put("courses", Arrays.asList(courses));
             currentUser.put("description", description.getText().toString());
             currentUser.put("hourlyRate", wageDouble);
             currentUser.put("phone", phone.getText().toString());
             currentUser.put("available", availability_spinner.getSelectedItem().toString().toLowerCase());
+            Log.e("SSSPPIINNERRR",availability_spinner.getSelectedItem().toString() );
 
-            if (pro_pic.getDrawable() == null) {
-                currentUser.remove("profilePicture");
-            }
-            else{
-                file.saveInBackground();
-                currentUser.put("profilePicture", file);
-            }
 
             Toast.makeText(ProfileEditActivity.this, "Changed profile successfully", Toast.LENGTH_LONG).show();
             currentUser.saveInBackground(new SaveCallback() {
