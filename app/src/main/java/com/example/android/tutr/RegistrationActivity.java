@@ -198,8 +198,14 @@ public class RegistrationActivity extends AppCompatActivity implements EditText.
                     userRating.put("rating", 0);
                     userRating.put("ratingCount", 0);
 
+                    // If sign up was successful, populate Ratings table (just to be safe)
+                    ParseObject userReview = new ParseObject("Reviews");
+                    userReview.put("username", mEmail);
+                    userReview.put("reviews", "");
+
                     try {
                         userRating.save();
+                        userReview.save();
                         // Shivan: I chose not to raise an exception or error message here,
                         // so as to not detract from the "UX"
                     } catch (ParseException p) {}
