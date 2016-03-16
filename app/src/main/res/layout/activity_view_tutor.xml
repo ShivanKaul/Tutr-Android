@@ -18,19 +18,36 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
+
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
 
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/tutor_pic"
+                android:layout_centerHorizontal="true"
+                android:background="#246971"
+                android:layout_margin="10dp"
+                android:layout_alignParentTop="true"
+                android:src="@mipmap/default_image"
+                />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Rating:"
                 android:id="@+id/view_rating"
-                android:layout_alignParentTop="true"
+                android:layout_below="@+id/tutor_pic"
+
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="false" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -101,6 +118,7 @@
                 android:text="Rating "
                 android:textSize="20sp"
                 android:id="@+id/display_rating"
+
                 android:layout_above="@+id/view_ownRating"
                 android:layout_toRightOf="@+id/view_subjects"
                 android:layout_toEndOf="@+id/view_subjects" />
@@ -200,6 +218,7 @@
                 android:textSize="20sp"
                 android:id="@+id/display_counter"
                 android:layout_above="@+id/view_ownRating"
+                android:layout_marginTop="20dp"
                 android:layout_centerHorizontal="true" />
 
             <TextView
@@ -257,4 +276,5 @@
 
         </RelativeLayout>
     </ScrollView>
+
 </RelativeLayout>

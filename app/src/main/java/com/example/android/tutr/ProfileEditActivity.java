@@ -1,15 +1,18 @@
 package com.example.android.tutr;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -34,12 +37,10 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -65,6 +66,8 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
     private ImageView pro_pic;
     Button upload_image;
     private static final int RESULT_LOAD_IMAGE = 1;
+    private ParseFile file = null;
+    private boolean ischanged = false;
     /**
      * drop down menu.
      * if user selects nothing. spinner.getValue is equal to String "Select"
@@ -94,9 +97,10 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
             return;
         }
         setUpUIelements();
-        loadProfilePicFromStorage();
+        loadProfilePicFromParse();
         saveChangesButton.setOnClickListener(this);
         upload_image.setOnClickListener(this);
+        pro_pic.setOnClickListener(this);
 
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -105,14 +109,23 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
         // load the picture
     }
 
-    private void loadProfilePicFromStorage() {
-       // try {
-            ContextWrapper cw = new ContextWrapper(getApplicationContext());
-            // path to /data/data/yourapp/app_data/imageDir
-            File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-            File f = new File(directory.getAbsolutePath(), "profile.jpg");
-            Picasso.with(this).load(f).fit().into(pro_pic);
+    private void loadProfilePicFromParse() {
+        try {
+            currentUser.fetch();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        ParseFile postImage = currentUser.getParseFile("profilePicture");
+        if (postImage == null) {
+            pro_pic.setImageDrawable(getResources().getDrawable(R.mipmap.default_image));
+
+            return;
+        }
+        String imageUrl = postImage.getUrl();//live url
+        Uri imageUri = Uri.parse(imageUrl);
+        Picasso.with(ProfileEditActivity.this).load(imageUri.toString()).fit().into(pro_pic);
     }
+
 
     //Select and upload image from gallery
     @Override
@@ -128,44 +141,40 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
             case R.id.upload_image:
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
-                //Parse Code to actually save image to database
+                break;
+
+            case R.id.pro_pic:
                 if (pro_pic.getDrawable() != null) {
-                    Bitmap bitmap = ((BitmapDrawable) pro_pic.getDrawable()).getBitmap();
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
-                    byte[] image = stream.toByteArray();
-                    ParseFile file = new ParseFile(currentUser.getObjectId() + currentUser.getUsername() + "PROFILE.jpeg", image);
-                    file.saveInBackground();
-                    currentUser.put("profilePicture", file);
-                    currentUser.saveInBackground();
-                    Toast.makeText(ProfileEditActivity.this, "Profile Picture uploaded", Toast.LENGTH_LONG).show();
-                    try {
-                        saveToInternalStorage(bitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    Toast.makeText(ProfileEditActivity.this, "No Profile Picture to upload", Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ProfileEditActivity.this);
+                    builder.setMessage(R.string.dialog_deleteProfile);
+                    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User clicked OK button
+                            pro_pic.setImageDrawable(null);
+                        }
+                    });
+                    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                            dialog.cancel();
+                        }
+                    });
+                    builder.show();
                 }
                 break;
         }
     }
 
-    private void saveToInternalStorage(Bitmap bitmap) throws IOException {
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        File myPath = new File(directory, "profile.jpg");
+    // only take jpeg and png image
+    private void handlePictureFormat(Uri selectedImage)
+    {
+        String mimeType = getContentResolver().getType(selectedImage);
+        if (mimeType != null && mimeType.compareToIgnoreCase("image/jpeg") != 0
+                && mimeType.compareToIgnoreCase("image/png") != 0){
 
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(myPath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 10, fos);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            fos.close();
+            Toast.makeText(ProfileEditActivity.this,
+                    "The image must have jpeg or png format ", Toast.LENGTH_LONG).show();
+            return;
         }
     }
 
@@ -174,8 +183,45 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
-            //load and fit imageview with picasso
-            Picasso.with(this).load(selectedImage).fit().into(pro_pic);
+
+            handlePictureFormat(selectedImage);
+            Cursor returnCursor =
+                    getContentResolver().query(selectedImage, null, null, null, null);
+            int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+            returnCursor.moveToFirst();
+
+            if (pro_pic.getDrawable() != null) {
+                if (returnCursor.getLong(sizeIndex) > 4000000) { //bigger than 4MB?
+                    Log.e("profilePicture", Long.toString(returnCursor.getLong(sizeIndex)));
+                    Toast.makeText(ProfileEditActivity.this, "Profile Picture should be less than 4MB", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                pro_pic.setImageURI(selectedImage);
+                //load and fit imageview with picasso
+                Picasso.with(this).load(selectedImage).fit().centerCrop().into(pro_pic, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Bitmap bitmap = ((BitmapDrawable) pro_pic.getDrawable()).getBitmap();
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+                        byte[] image = stream.toByteArray();
+                        file = new ParseFile("profile.jpeg", image);
+                        file.saveInBackground();
+                        Toast.makeText(ProfileEditActivity.this, "Profile Picture uploaded", Toast.LENGTH_LONG).show();
+                        //loadProfilePicFromParse();
+                        ischanged = true;
+                    }
+
+                    @Override
+                    public void onError() {
+                        Toast.makeText(ProfileEditActivity.this, "Profile Picture was unable to be uploaded", Toast.LENGTH_LONG).show();
+
+                    }
+                });
+            } else {
+                Toast.makeText(ProfileEditActivity.this, "No Profile Picture to upload", Toast.LENGTH_LONG).show();
+            }
+//
         }
     }
 
@@ -332,6 +378,7 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
                 currentUser.getString("available").equalsIgnoreCase("Yes")) {
             availability_spinner.setSelection(availability_menu_adapter.getPosition("Yes"));
         }
+        ischanged = false;
 
     }
 
@@ -378,11 +425,21 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
             focusView.requestFocus();
             return;
         } else {
+            if (pro_pic.getDrawable() == null) {
+                currentUser.remove("profilePicture");
+            }
+            else if(ischanged == true){
+                currentUser.put("profilePicture", file);
+            }
+
             currentUser.put("courses", Arrays.asList(courses));
             currentUser.put("description", description.getText().toString());
             currentUser.put("hourlyRate", wageDouble);
             currentUser.put("phone", phone.getText().toString());
             currentUser.put("available", availability_spinner.getSelectedItem().toString().toLowerCase());
+            Log.e("SSSPPIINNERRR",availability_spinner.getSelectedItem().toString() );
+
+
             Toast.makeText(ProfileEditActivity.this, "Changed profile successfully", Toast.LENGTH_LONG).show();
             currentUser.saveInBackground(new SaveCallback() {
                 @Override

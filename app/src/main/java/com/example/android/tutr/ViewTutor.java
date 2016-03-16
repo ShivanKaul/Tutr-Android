@@ -8,20 +8,25 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -63,6 +68,8 @@ public class ViewTutor extends AppCompatActivity {
     private Button callButton;
     private Button msgButton;
 
+    private  ImageView tutor_pic;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,12 +87,12 @@ public class ViewTutor extends AppCompatActivity {
         getDataForTutor(username);
 
         setUpReviews(username, name);
-
         callButton = (Button) this.findViewById(R.id.call);
         msgButton = (Button) this.findViewById(R.id.msg);
         callButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (ActivityCompat.checkSelfPermission(getApplicationContext(),
                         Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
@@ -94,6 +101,7 @@ public class ViewTutor extends AppCompatActivity {
                 }
             }
         });
+
 
         msgButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +114,18 @@ public class ViewTutor extends AppCompatActivity {
                 }
             }
         });
+    }
+    private void loadProfilePicFromParse(ParseUser currentUser) {
+        ParseFile postImage = currentUser.getParseFile("profilePicture");
+        if (postImage == null) {
+            tutor_pic.setVisibility(View.INVISIBLE);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(0, 0);
+            tutor_pic.setLayoutParams(layoutParams);
+            return;
+        }
+        String imageUrl = postImage.getUrl();//live url
+        Uri imageUri = Uri.parse(imageUrl);
+        Picasso.with(this).load(imageUri.toString()).fit().into(tutor_pic);
     }
 
     /**
@@ -156,6 +176,8 @@ public class ViewTutor extends AppCompatActivity {
         // need to assign default value to fields in case
         // no ratings
         setTitle(name);
+
+        tutor_pic = (ImageView) findViewById(R.id.tutor_pic);
         current_rating = (TextView) findViewById(R.id.display_rating);
         ratingCounter = (TextView) findViewById(R.id.display_counter);
         description = (TextView) findViewById(R.id.display_description);
@@ -458,6 +480,7 @@ public class ViewTutor extends AppCompatActivity {
                     // in main activity
                     try {
                         user = users.get(0);
+                        loadProfilePicFromParse(user);
                     } catch (Exception exp) {
                         Toast.makeText(ViewTutor.this, "Could not fetch item from Ratings, which" +
                                 "is really weird because we were able to just a second back" + exp, Toast.LENGTH_LONG).show();
@@ -525,6 +548,7 @@ public class ViewTutor extends AppCompatActivity {
                     Toast.makeText(ViewTutor.this, "Problem fetching user from database" + e, Toast.LENGTH_LONG).show();
                 }
             }
+
         });
     }
 
