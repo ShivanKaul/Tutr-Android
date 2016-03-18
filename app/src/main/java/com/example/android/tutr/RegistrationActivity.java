@@ -21,6 +21,7 @@ import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 import com.squareup.picasso.Picasso;
 
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 
@@ -192,23 +193,25 @@ public class RegistrationActivity extends AppCompatActivity implements EditText.
             public void done(ParseException e) {
                 if (e == null) {
 
-                    // If sign up was successful, populate Ratings table (just to be safe)
+                    // If sign up was successful, populate Ratings table
                     ParseObject userRating = new ParseObject("Ratings");
                     userRating.put("username", mEmail);
                     userRating.put("rating", 0);
                     userRating.put("ratingCount", 0);
 
-                    // If sign up was successful, populate Ratings table (just to be safe)
+                    // If sign up was successful, populate Reviews table
                     ParseObject userReview = new ParseObject("Reviews");
                     userReview.put("username", mEmail);
-                    userReview.put("reviews", "");
 
                     try {
                         userRating.save();
                         userReview.save();
                         // Shivan: I chose not to raise an exception or error message here,
                         // so as to not detract from the "UX"
-                    } catch (ParseException p) {}
+                    } catch (ParseException p) {
+                        System.out.println("DEBUG: Got error while trying to save ratings " +
+                                "and reviews " + p);
+                    }
 
 
                     Toast.makeText(RegistrationActivity.this, "Registration Successful!", Toast.LENGTH_LONG).show();

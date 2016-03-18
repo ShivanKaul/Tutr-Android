@@ -235,6 +235,9 @@ public class ViewTutor extends AppCompatActivity {
             if (usernameAndReviewFromParse.toString().split(":::").length == 2) {
                 String user = usernameAndReviewFromParse.toString().split(":::")[0];
                 String review = usernameAndReviewFromParse.toString().split(":::")[1];
+                if (user.equals(ParseUser.getCurrentUser().getEmail())) {
+                    originalReview = usernameAndReviewFromParse.toString();
+                }
                 usernameReview.put(user, review);
             }
         }
@@ -316,7 +319,8 @@ public class ViewTutor extends AppCompatActivity {
     }
 
     /**
-     * Saves new review to database
+     * Saves new review to database.
+     * Overwrites previous one.
      *
      * @param username
      * @param name
@@ -326,14 +330,25 @@ public class ViewTutor extends AppCompatActivity {
 
         // Check if review is empty
         if (TextUtils.isEmpty(new_review)) {
-            enter_new_review_field.setError(getString(R.string.error_CapCase));
+            enter_new_review_field.setError("Review cannot be empty!");
             // request focus to the text field
             enter_new_review_field.requestFocus();
             return;
         }
 
+        // Replace previous review
+        userReviews.removeAll("reviews", Arrays.asList(originalReview));
+        userReviews.put("username", username);
+        try {
+            userReviews.save();
+        } catch (ParseException e) {
+            Toast.makeText(ViewTutor.this, "Problem modifying existing review: deleting unsuccessful",
+                    Toast.LENGTH_LONG).show();
+        }
+
         userReviews.add("reviews", ParseUser.getCurrentUser().getUsername() + ":::" + new_review);
         userReviews.put("username", username);
+
 
         try {
             userReviews.save();
@@ -360,8 +375,8 @@ public class ViewTutor extends AppCompatActivity {
         saveButton.setEnabled(true);
         findViewById(id).setEnabled(false);
 
-        originalReview = ParseUser.getCurrentUser().getUsername() + ":::" +
-                review_text.getText().toString().substring(3);
+//        originalReview = ParseUser.getCurrentUser().getUsername() + ":::" +
+//                review_text.getText().toString().substring(3);
 
         // enable editing
         review_text.setFocusable(true);
@@ -413,6 +428,18 @@ public class ViewTutor extends AppCompatActivity {
         if(matcher.find()){
             sanitizedReview = review.substring(matcher.end()).trim();
         }
+
+        // Replace previous review
+
+        userReviews.removeAll("reviews", Arrays.asList(originalReview));
+        userReviews.put("username", username);
+        try {
+            userReviews.save();
+        } catch (ParseException e) {
+            Toast.makeText(ViewTutor.this, "Problem modifying existing review: deleting unsuccessful",
+                    Toast.LENGTH_LONG).show();
+        }
+
 
         userReviews.add("reviews", ParseUser.getCurrentUser().getUsername() + ":::" + sanitizedReview);
         userReviews.put("username", username);
