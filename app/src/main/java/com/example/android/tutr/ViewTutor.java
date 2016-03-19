@@ -237,14 +237,7 @@ public class ViewTutor extends AppCompatActivity {
     public void onFavorite(View view) {
         ParseUser currentUser = ParseUser.getCurrentUser();
         List<String> favoritesList =  (List<String>) currentUser.get("favorites");
-        if(favoritesList == null){
-            System.out.println("wtf");
-            String[] temp = {tutorUsername};
-            currentUser.put("favorites", Arrays.asList(temp));
-            currentUser.saveInBackground();
-            Toast.makeText(ViewTutor.this, "Added to favorites", Toast.LENGTH_LONG).show();
-        }
-        else if (favoriteButton.isChecked()){
+        if (favoriteButton.isChecked()){
             favoritesList.add(tutorUsername);
             currentUser.put("favorites", favoritesList);
             currentUser.saveInBackground();
@@ -259,17 +252,13 @@ public class ViewTutor extends AppCompatActivity {
     }
 
     public void initializeFavoritesButton(List<String> favoritesList, String username){
-        if(favoritesList == null){
-            favoriteButton.setChecked(false);
-        }
-        else {
-            for (int i = 0; i < favoritesList.size(); i++) {
-                if (favoritesList.get(i).equals(username)) {
-                    favoriteButton.setChecked(true);
-                    break;
-                } else {
-                    favoriteButton.setChecked(false);
-                }
+
+        for (int i = 0; i < favoritesList.size(); i++) {
+            if (favoritesList.get(i).equals(username)) {
+                favoriteButton.setChecked(true);
+                break;
+            } else {
+                favoriteButton.setChecked(false);
             }
         }
     }

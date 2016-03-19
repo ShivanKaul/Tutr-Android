@@ -30,7 +30,6 @@ import java.util.List;
 public class FavoritesActivity extends AppCompatActivity implements customButtonListener {
 
     TutorListAdapter adapter;
-    int searchInputCheck;
     List<UserToRating> usersToRatings = null;
 
     @Override
@@ -38,11 +37,6 @@ public class FavoritesActivity extends AppCompatActivity implements customButton
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
 
-        //Fetch and populate list
-//        List<UserToRating> favorites = fetchFavoriteList();
-//        populateResults((ArrayList) favorites);
-
-        //Temporary code
         fetchFavoritesList();
     }
 
@@ -60,6 +54,7 @@ public class FavoritesActivity extends AppCompatActivity implements customButton
 
         query.whereEqualTo("available", "yes");
         query.orderByAscending("name");
+
         query.whereContainedIn("username", favoritesList);
 
         //Fetch list
@@ -72,7 +67,6 @@ public class FavoritesActivity extends AppCompatActivity implements customButton
 
                     if (parseUsers.size() == 0) {
                         Toast.makeText(FavoritesActivity.this, "No Favorites", Toast.LENGTH_LONG).show();
-
                     } else {
                         List<ParseQuery<ParseObject>> queries = new ArrayList<ParseQuery<ParseObject>>();
                         for (ParseObject user : parseUsersList) {
