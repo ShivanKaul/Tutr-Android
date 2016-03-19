@@ -202,6 +202,7 @@ public class RegistrationActivity extends AppCompatActivity implements EditText.
                     // If sign up was successful, populate Reviews table
                     ParseObject userReview = new ParseObject("Reviews");
                     userReview.put("username", mEmail);
+                    userReview.put("reviews", Arrays.asList(""));
 
                     try {
                         userRating.save();
