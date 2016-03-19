@@ -17,9 +17,11 @@ import android.widget.Toast;
 
 import com.example.android.tutr.TutorListAdapter.customButtonListener;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,6 +50,11 @@ public class FavoritesActivity extends AppCompatActivity implements customButton
 
         String name = "N";
         String course = "";
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        List<String> favoritesList = (List<String>)currentUser.get("favorites");
+
+
+
 
         //Clear listView
         ListView list = (ListView) findViewById(R.id.favorites_list);
@@ -59,21 +66,22 @@ public class FavoritesActivity extends AppCompatActivity implements customButton
 
         query.whereEqualTo("available", "yes");
         query.orderByAscending("name");
+        query.whereContainedIn("username", favoritesList);
 
-        if (searchInputCheck == 0) {
-            Toast.makeText(FavoritesActivity.this, "Empty Search Parameters", Toast.LENGTH_LONG).show();
-            return;
-        } else if (searchInputCheck == 1) {
-            query.whereStartsWith("name", name);
-        } else if (searchInputCheck == 2) {
-            query.whereEqualTo("courses", course);
-        } else if (searchInputCheck == 3) {
-            query.whereStartsWith("name", name);
-            query.whereEqualTo("courses", course);
-        } else {
-            Toast.makeText(FavoritesActivity.this, "Names only contain standard alphabet", Toast.LENGTH_LONG).show();
-            return;
-        }
+//        if (searchInputCheck == 0) {
+//            Toast.makeText(FavoritesActivity.this, "Empty Search Parameters", Toast.LENGTH_LONG).show();
+//            return;
+//        } else if (searchInputCheck == 1) {
+//            query.whereStartsWith("name", name);
+//        } else if (searchInputCheck == 2) {
+//            query.whereEqualTo("courses", course);
+//        } else if (searchInputCheck == 3) {
+//            query.whereStartsWith("name", name);
+//            query.whereEqualTo("courses", course);
+//        } else {
+//            Toast.makeText(FavoritesActivity.this, "Names only contain standard alphabet", Toast.LENGTH_LONG).show();
+//            return;
+//        }
 
         //Fetch list
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -84,13 +92,8 @@ public class FavoritesActivity extends AppCompatActivity implements customButton
                     TextView searchResultTextView = (TextView) findViewById(R.id.searchResultTextView);
 
                     if (parseUsers.size() == 0) {
-                        if (searchInputCheck == 1) {
-                            Toast.makeText(FavoritesActivity.this, "No Results found for tutor name specified.", Toast.LENGTH_LONG).show();
-                        } else if (searchInputCheck == 2) {
-                            Toast.makeText(FavoritesActivity.this, "No Results found for course specified.", Toast.LENGTH_LONG).show();
-                        } else if (searchInputCheck == 3) {
-                            Toast.makeText(FavoritesActivity.this, "No Results found.", Toast.LENGTH_LONG).show();
-                        }
+                        Toast.makeText(FavoritesActivity.this, "No Favorites", Toast.LENGTH_LONG).show();
+
                     } else {
                         List<ParseQuery<ParseObject>> queries = new ArrayList<ParseQuery<ParseObject>>();
                         for (ParseObject user : parseUsersList) {
