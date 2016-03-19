@@ -184,7 +184,8 @@ public class RegistrationActivity extends AppCompatActivity implements EditText.
     public void register(final String mEmail, final String mPassword, final String mName) {
 
         final ParseUser user = new ParseUser();
-
+        String[] temp = {""};
+        user.put("favorites", Arrays.asList(temp));
         user.put("name", mName);
         user.setPassword(mPassword);
         user.setUsername(mEmail);
