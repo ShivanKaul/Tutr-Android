@@ -46,7 +46,7 @@ public class FavoritesActivity extends AppCompatActivity implements customButton
 
     private void search(){
 
-        String name = "T";
+        String name = "N";
         String course = "";
 
         //Clear listView
