@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class FavoritesActivity extends AppCompatActivity implements customButtonListener{
+public class FavoritesActivity extends AppCompatActivity implements customButtonListener {
 
     TutorListAdapter adapter;
     int searchInputCheck;
@@ -43,18 +43,13 @@ public class FavoritesActivity extends AppCompatActivity implements customButton
 //        populateResults((ArrayList) favorites);
 
         //Temporary code
-        search();
+        fetchFavoritesList();
     }
 
-    private void search(){
+    private void fetchFavoritesList() {
 
-        String name = "N";
-        String course = "";
         ParseUser currentUser = ParseUser.getCurrentUser();
-        List<String> favoritesList = (List<String>)currentUser.get("favorites");
-
-
-
+        List<String> favoritesList = (List<String>) currentUser.get("favorites");
 
         //Clear listView
         ListView list = (ListView) findViewById(R.id.favorites_list);
@@ -62,26 +57,10 @@ public class FavoritesActivity extends AppCompatActivity implements customButton
 
         //Setup query
         final ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
-        searchInputCheck = inputChecker(name, course);
 
         query.whereEqualTo("available", "yes");
         query.orderByAscending("name");
         query.whereContainedIn("username", favoritesList);
-
-//        if (searchInputCheck == 0) {
-//            Toast.makeText(FavoritesActivity.this, "Empty Search Parameters", Toast.LENGTH_LONG).show();
-//            return;
-//        } else if (searchInputCheck == 1) {
-//            query.whereStartsWith("name", name);
-//        } else if (searchInputCheck == 2) {
-//            query.whereEqualTo("courses", course);
-//        } else if (searchInputCheck == 3) {
-//            query.whereStartsWith("name", name);
-//            query.whereEqualTo("courses", course);
-//        } else {
-//            Toast.makeText(FavoritesActivity.this, "Names only contain standard alphabet", Toast.LENGTH_LONG).show();
-//            return;
-//        }
 
         //Fetch list
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -89,7 +68,7 @@ public class FavoritesActivity extends AppCompatActivity implements customButton
                 if (e == null) {
 
                     List<ParseObject> parseUsersList = parseUsers;
-                    TextView searchResultTextView = (TextView) findViewById(R.id.searchResultTextView);
+                    //TextView searchResultTextView = (TextView) findViewById(R.id.searchResultTextView);
 
                     if (parseUsers.size() == 0) {
                         Toast.makeText(FavoritesActivity.this, "No Favorites", Toast.LENGTH_LONG).show();
@@ -123,6 +102,7 @@ public class FavoritesActivity extends AppCompatActivity implements customButton
 
     /**
      * Return a list of UserToRating objects consisting of 2 parse objects, one for the rating and one for the tutor
+     *
      * @param users
      * @param ratings
      * @return
@@ -141,6 +121,7 @@ public class FavoritesActivity extends AppCompatActivity implements customButton
 
     /**
      * Notify user that the rating query and tutor query sizes didn't match
+     *
      * @param u
      * @param r
      */
@@ -151,29 +132,8 @@ public class FavoritesActivity extends AppCompatActivity implements customButton
     }
 
     /**
-     * Check the search input and assign in to one of 5 categories.
-     * @param name
-     * @param course
-     * @return
-     */
-    public static int inputChecker(String name, String course) {
-        if (name.matches("[A-Za-z]+") || name.equals("")) {
-            if (name.equals("") && course.equals("")) {
-                return 0;
-            } else if (!name.equals("") && course.equals("")) {
-                return 1;
-            } else if (name.equals("") && !course.equals("")) {
-                return 2;
-            } else {
-                return 3;
-            }
-        } else {
-            return 4;
-        }
-    }
-
-    /**
      * Populates the search results list to be displayed to the user
+     *
      * @param userToRatings
      */
     private void populateResults(ArrayList<UserToRating> userToRatings) {
@@ -206,16 +166,15 @@ public class FavoritesActivity extends AppCompatActivity implements customButton
     }
 
     //TODO
-    private List <UserToRating> fetchFavoriteList(){
-        List <UserToRating> favorites = null;
-        return favorites;
+    private void removeUserFromParse(ParseObject user) {
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        List<String> favoritesList = (List<String>) currentUser.get("favorites");
+        String username = user.getString("username");
+        favoritesList.remove(username);
+        currentUser.put("favorites", favoritesList);
+        currentUser.saveInBackground();
+        Toast.makeText(FavoritesActivity.this, username + " Removed", Toast.LENGTH_SHORT).show();
     }
-
-    //TODO
-    private void removeUserFromParse(ParseObject user){
-
-    }
-
 
     @Override
     public void onButtonClickListner(int position, UserToRating user) {
@@ -224,12 +183,7 @@ public class FavoritesActivity extends AppCompatActivity implements customButton
         adapter.notifyDataSetChanged();
 
         //Remove from parse
-        removeUserFromParse (user.getUser());
-
-        //Notify that it has been removed
-        String username = user.getUser().getString("username");
-        Toast.makeText(FavoritesActivity.this, username + " Removed",Toast.LENGTH_SHORT).show();
-
+        removeUserFromParse(user.getUser());
     }
 
 }
