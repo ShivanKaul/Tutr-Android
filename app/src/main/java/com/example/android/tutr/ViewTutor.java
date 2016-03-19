@@ -2,6 +2,7 @@ package com.example.android.tutr;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
@@ -10,14 +11,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.RefreshCallback;
 import com.parse.SaveCallback;
 
+import org.json.JSONArray;
+
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 /** View Tutor class. Handles the view of the tutor's profile - what is diplayed when
  * the user clicks on a Tutor while searching.
@@ -43,6 +53,7 @@ public class ViewTutor extends AppCompatActivity {
 
     private ParseObject userRating;
     private boolean notRatedYet = true;
+    private String tutorUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +64,19 @@ public class ViewTutor extends AppCompatActivity {
         String username = intent.getStringExtra("username");
         String name = intent.getStringExtra("name");
         setUpUIElements(name);
-
+        tutorUsername = intent.getStringExtra("username");
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        ParseUser.getCurrentUser().refreshInBackground(new RefreshCallback() {
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    // Success!
+                } else {
+                    Toast.makeText(ViewTutor.this, "Could not refresh current user", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        List<String> favoritesList =  (List<String>) currentUser.get("favorites");
+        initializeFavoritesButton(favoritesList, username);
 
         addListenerOnRatingBar(username);
 
@@ -78,7 +101,7 @@ public class ViewTutor extends AppCompatActivity {
                     rating_bar.setIsIndicator(true);
                     // Calculate new rating + update rating counter
                     int newCounter = (int) (rating_counter) + 1;
-                    double average =  averageRating(newCounter, rating, old_rating, rating_counter);
+                    double average = averageRating(newCounter, rating, old_rating, rating_counter);
 
                     userRating.put("rating", average);
                     userRating.add("ratedBy", ParseUser.getCurrentUser().getUsername() + "," + average);
@@ -212,11 +235,42 @@ public class ViewTutor extends AppCompatActivity {
     }
 
     public void onFavorite(View view) {
-        if (favoriteButton.isChecked()){
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        List<String> favoritesList =  (List<String>) currentUser.get("favorites");
+        if(favoritesList == null){
+            System.out.println("wtf");
+            String[] temp = {tutorUsername};
+            currentUser.put("favorites", Arrays.asList(temp));
+            currentUser.saveInBackground();
+            Toast.makeText(ViewTutor.this, "Added to favorites", Toast.LENGTH_LONG).show();
+        }
+        else if (favoriteButton.isChecked()){
+            favoritesList.add(tutorUsername);
+            currentUser.put("favorites", favoritesList);
+            currentUser.saveInBackground();
             Toast.makeText(ViewTutor.this, "Added to favorites", Toast.LENGTH_LONG).show();
         }
         else{
+            favoritesList.remove(tutorUsername);
+            currentUser.put("favorites", favoritesList);
+            currentUser.saveInBackground();
             Toast.makeText(ViewTutor.this, "Removed from favorites", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void initializeFavoritesButton(List<String> favoritesList, String username){
+        if(favoritesList == null){
+            favoriteButton.setChecked(false);
+        }
+        else {
+            for (int i = 0; i < favoritesList.size(); i++) {
+                if (favoritesList.get(i).equals(username)) {
+                    favoriteButton.setChecked(true);
+                    break;
+                } else {
+                    favoriteButton.setChecked(false);
+                }
+            }
         }
     }
 
