@@ -55,7 +55,9 @@ public class FavoritesActivity extends AppCompatActivity implements customButton
         return false;
     }
 
-
+    /**
+     * Fetch the user's favorite tutors list
+     */
     private void fetchFavoritesList() {
 
         ParseUser currentUser = ParseUser.getCurrentUser();
