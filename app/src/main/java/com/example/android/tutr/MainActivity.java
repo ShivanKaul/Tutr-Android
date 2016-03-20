@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Called when the activity has detected the user's press of the back key.
+     * Called when the activity has detected the user's presses the back key.
      */
     @Override
     public void onBackPressed() {
