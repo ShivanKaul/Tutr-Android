@@ -376,6 +376,7 @@ public class ViewTutor extends AppCompatActivity {
         try {
             userReviews.save();
             Toast.makeText(ViewTutor.this, "Saved, thank you!", Toast.LENGTH_LONG).show();
+            finish();
             Intent intent = new Intent(ViewTutor.this, ViewTutor.class);
             intent.putExtra("username", username);
             intent.putExtra("name", name);

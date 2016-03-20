@@ -69,7 +69,10 @@
         <activity
             android:name=".ViewTutor"
             android:label="@string/title_activity_view_tutor"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            ></activity>
         <!--
              ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
