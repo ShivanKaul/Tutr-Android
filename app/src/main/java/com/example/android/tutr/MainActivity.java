@@ -43,7 +43,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    
+
     int searchInputCheck;
     List<UserToRating> usersToRatings = null;
     View navHeaderLayout;
@@ -334,14 +334,14 @@ public class MainActivity extends AppCompatActivity
             if(usersToRatings != null) populateResults((ArrayList) usersToRatings);
         }
 
-            //From down to up
+        //From down to up
         else if (currentOrdering.getConstantState().equals(downArrow.getConstantState())){
             hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, upArrow, null);
             usersToRatings = orderList(usersToRatings, "hourlyAscending");
             if(usersToRatings != null) populateResults((ArrayList) usersToRatings);
         }
 
-            //From up to down
+        //From up to down
         else if (currentOrdering.getConstantState().equals(upArrow.getConstantState())){
             hourlyButton.setCompoundDrawablesWithIntrinsicBounds(null, null, downArrow, null);
             usersToRatings = orderList(usersToRatings, "hourlyDescending");

@@ -19,6 +19,7 @@
         android:layout_height="wrap_content">
 
 
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,7 +37,6 @@
                 android:layout_margin="10dp"
                 android:layout_alignParentTop="true"
                 />
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -117,6 +117,7 @@
                 android:text="Rating "
                 android:textSize="20sp"
                 android:id="@+id/display_rating"
+
                 android:layout_above="@+id/view_ownRating"
                 android:layout_toRightOf="@+id/view_subjects"
                 android:layout_toEndOf="@+id/view_subjects" />
@@ -272,16 +273,18 @@
                     android:text="Save New Review" />
             </LinearLayout>
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/favoriteButton"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:checked="false"
-                android:onClick="onFavorite"
-                android:button="@drawable/favorite_button" />/>
         </RelativeLayout>
     </ScrollView>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/favoriteButton"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:checked="false"
+        android:onClick="onFavorite"
+        android:button="@drawable/favorite_button" />/>
+
 </RelativeLayout>

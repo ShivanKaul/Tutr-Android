@@ -7,250 +7,250 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@color/aluminium"
-    android:gravity="right"
-    android:label="Edit Profile"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:weightSum="1"
-    tools:context="com.example.android.tutr.ProfileEditActivity">
-
-    <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="fill_horizontal"
-        android:text="Subjects"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/peacockBlue"
-        android:textSize="18dp"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/enter_subjects"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="5dp"
-        android:background="@color/peacockBlue"
-        android:hint="Math 100, ECSE 322..."
-        android:inputType="text"
-        android:textAlignment="center"
-        android:textColor="#ffffff"
-        android:textColorHighlight="#ffffff"
-        android:textColorHint="#ffffff" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:background="@color/aluminium"
         android:gravity="right"
-        android:orientation="horizontal">
+        android:label="Edit Profile"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:weightSum="1"
+        tools:context="com.example.android.tutr.ProfileEditActivity">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginRight="30dp"
-            android:text="Enter\nPhone"
-            android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/peacockBlue"
-            android:textSize="18dp" />
-
-        <EditText
-            android:id="@+id/enter_phone"
-            android:layout_width="220dp"
-            android:layout_height="match_parent"
-            android:background="@color/peacockBlue"
-            android:hint="Enter phone"
-            android:inputType="number"
-            android:textAlignment="center"
-            android:textColor="#ffffff"
-            android:textColorHighlight="#ffffff"
-            android:textColorHint="#ffffff" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="right"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="15dp"
-            android:text="Available"
-            android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/peacockBlue"
-            android:textSize="18dp" />
-
-        <Spinner
-            android:id="@+id/availability_spinner"
-            android:layout_width="220dp"
-            android:layout_height="40dp"
-            android:layout_centerHorizontal="true"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="right"
-        android:orientation="horizontal"
-        android:weightSum="1">
-
-        <TextView
-            android:layout_width="74dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="15dp"
-            android:text="Hourly\nRate"
-            android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/peacockBlue"
-            android:textSize="18dp" />
-
-        <EditText
-            android:id="@+id/enter_hourly_rate"
-            android:layout_width="220dp"
-            android:layout_height="match_parent"
-            android:background="@color/peacockBlue"
-            android:hint="Enter rate in $/hour"
-            android:inputType="numberDecimal"
-            android:textAlignment="center"
-            android:textColor="#ffffff"
-            android:textColorHighlight="#ffffff"
-            android:textColorHint="#ffffff" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="5dp"
-        android:gravity="right"
-        android:orientation="horizontal"
-        android:weightSum="1">
-
-        <TextView
-            android:id="@+id/rating_title"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="Rating"
-            android:textAlignment="center"
+            android:layout_gravity="fill_horizontal"
+            android:text="Subjects"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/peacockBlue"
             android:textSize="18dp"
-            android:layout_weight="1.01" />
+            android:textStyle="bold" />
 
-        <RatingBar
-            style="?android:attr/ratingBarStyleIndicator"
-            android:backgroundTint="@color/peacockBlue"
-            android:id="@+id/ratingBar"
-            android:layout_marginRight="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:numStars="5"
-            android:stepSize="1.0" />
+        <EditText
+            android:id="@+id/enter_subjects"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="5dp"
+            android:background="@color/peacockBlue"
+            android:hint="Math 100, ECSE 322..."
+            android:inputType="text"
+            android:textAlignment="center"
+            android:textColor="#ffffff"
+            android:textColorHighlight="#ffffff"
+            android:textColorHint="#ffffff" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginRight="30dp"
+                android:text="Enter\nPhone"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/peacockBlue"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/enter_phone"
+                android:layout_width="220dp"
+                android:layout_height="match_parent"
+                android:background="@color/peacockBlue"
+                android:hint="Enter phone"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textColorHighlight="#ffffff"
+                android:textColorHint="#ffffff" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="15dp"
+                android:text="Available"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/peacockBlue"
+                android:textSize="18dp" />
+
+            <Spinner
+                android:id="@+id/availability_spinner"
+                android:layout_width="220dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:background="@android:drawable/btn_dropdown"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="right"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="74dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="15dp"
+                android:text="Hourly\nRate"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/peacockBlue"
+                android:textSize="18dp" />
+
+            <EditText
+                android:id="@+id/enter_hourly_rate"
+                android:layout_width="220dp"
+                android:layout_height="match_parent"
+                android:background="@color/peacockBlue"
+                android:hint="Enter rate in $/hour"
+                android:inputType="numberDecimal"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textColorHighlight="#ffffff"
+                android:textColorHint="#ffffff" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:gravity="right"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/rating_title"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="Rating"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/peacockBlue"
+                android:textSize="18dp"
+                android:layout_weight="1.01" />
+
+            <RatingBar
+                style="?android:attr/ratingBarStyleIndicator"
+                android:backgroundTint="@color/peacockBlue"
+                android:id="@+id/ratingBar"
+                android:layout_marginRight="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:numStars="5"
+                android:stepSize="1.0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="rc"
+                android:textColor="@color/peacockBlue"
+                android:id="@+id/rate_count" />
+        </LinearLayout>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="rc"
+            android:layout_width="351dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_horizontal"
+            android:text="Description 400/400"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginTop="7dp"
             android:textColor="@color/peacockBlue"
-            android:id="@+id/rate_count" />
-    </LinearLayout>
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:id="@+id/descTextView" />
 
-    <TextView
-        android:layout_width="351dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="fill_horizontal"
-        android:text="Description 400/400"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_marginTop="7dp"
-        android:textColor="@color/peacockBlue"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        android:id="@+id/descTextView" />
+        <EditText
+            android:id="@+id/enter_description"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="left"
+            android:gravity="top"
+            android:background="@color/peacockBlue"
+            android:textSize="14dp"
+            android:hint="Enter Description"
+            android:maxLength="400"
+            android:inputType="textMultiLine"
+            android:layout_weight="1"
+            android:ellipsize="none"
+            android:maxLines="100"
+            android:scrollHorizontally="false"
+            android:textColor="#ffffff"
+            android:textColorHighlight="#ffffff"
+            android:textColorHint="#ffffff" />
 
-    <EditText
-        android:id="@+id/enter_description"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_gravity="left"
-        android:gravity="top"
-        android:background="@color/peacockBlue"
-        android:textSize="14dp"
-        android:hint="Enter Description"
-        android:maxLength="400"
-        android:inputType="textMultiLine"
-        android:layout_weight="1"
-        android:ellipsize="none"
-        android:maxLines="100"
-        android:scrollHorizontally="false"
-        android:textColor="#ffffff"
-        android:textColorHighlight="#ffffff"
-        android:textColorHint="#ffffff" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_horizontal"
+            android:text="Profile Picture"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/peacockBlue"
+            android:textSize="18dp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="fill_horizontal"
-        android:text="Profile Picture"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/peacockBlue"
-        android:textSize="18dp"
-        android:textStyle="bold" />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/pro_pic"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="#246971" />
 
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/pro_pic"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"
-        android:background="#246971" />
+        <Button
+            android:id="@+id/upload_image"
+            style="?android:textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_alignBottom="@+id/enter_description"
+            android:allowUndo="true"
+            android:text="Upload Image"
+            android:textColor="@color/peacockBlue"
+            android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/upload_image"
-        style="?android:textAppearanceLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
-        android:layout_alignBottom="@+id/enter_description"
-        android:allowUndo="true"
-        android:text="Upload Image"
-        android:textColor="@color/peacockBlue"
-        android:textStyle="bold" />
-
-    <Button
-        android:id="@+id/profileEditSaveChangesButton"
-        style="?android:textAppearanceLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
-        android:layout_alignBottom="@+id/enter_description"
-        android:allowUndo="true"
-        android:text="Save Changes"
-        android:textColor="@color/peacockBlue"
-        android:textStyle="bold" />
+        <Button
+            android:id="@+id/profileEditSaveChangesButton"
+            style="?android:textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_alignBottom="@+id/enter_description"
+            android:allowUndo="true"
+            android:text="Save Changes"
+            android:textColor="@color/peacockBlue"
+            android:textStyle="bold" />
     </LinearLayout>
 </ScrollView>

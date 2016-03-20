@@ -102,6 +102,7 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
         upload_image.setOnClickListener(this);
         pro_pic.setOnClickListener(this);
 
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -189,33 +190,33 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
             int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
             returnCursor.moveToFirst();
 
-                if (returnCursor.getLong(sizeIndex) > 4000000) { //bigger than 4MB?
-                    Log.e("profilePicture", Long.toString(returnCursor.getLong(sizeIndex)));
-                    Toast.makeText(ProfileEditActivity.this, "Profile Picture should be less than 4MB", Toast.LENGTH_LONG).show();
-                    return;
+            if (returnCursor.getLong(sizeIndex) > 4000000) { //bigger than 4MB?
+                Log.e("profilePicture", Long.toString(returnCursor.getLong(sizeIndex)));
+                Toast.makeText(ProfileEditActivity.this, "Profile Picture should be less than 4MB", Toast.LENGTH_LONG).show();
+                return;
+            }
+            pro_pic.setImageURI(selectedImage);
+            //load and fit imageview with picasso
+            Picasso.with(this).load(selectedImage).fit().centerCrop().into(pro_pic, new Callback() {
+                @Override
+                public void onSuccess() {
+                    Bitmap bitmap = ((BitmapDrawable) pro_pic.getDrawable()).getBitmap();
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+                    byte[] image = stream.toByteArray();
+                    file = new ParseFile("profile.jpeg", image);
+                    file.saveInBackground();
+                    Toast.makeText(ProfileEditActivity.this, "Profile Picture uploaded", Toast.LENGTH_LONG).show();
+                    //loadProfilePicFromParse();
+                    ischanged = true;
                 }
-                pro_pic.setImageURI(selectedImage);
-                //load and fit imageview with picasso
-                Picasso.with(this).load(selectedImage).fit().centerCrop().into(pro_pic, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        Bitmap bitmap = ((BitmapDrawable) pro_pic.getDrawable()).getBitmap();
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-                        byte[] image = stream.toByteArray();
-                        file = new ParseFile("profile.jpeg", image);
-                        file.saveInBackground();
-                        Toast.makeText(ProfileEditActivity.this, "Profile Picture uploaded", Toast.LENGTH_LONG).show();
-                        //loadProfilePicFromParse();
-                        ischanged = true;
-                    }
 
-                    @Override
-                    public void onError() {
-                        Toast.makeText(ProfileEditActivity.this, "Profile Picture was unable to be uploaded", Toast.LENGTH_LONG).show();
+                @Override
+                public void onError() {
+                    Toast.makeText(ProfileEditActivity.this, "Profile Picture was unable to be uploaded", Toast.LENGTH_LONG).show();
 
-                    }
-                });
+                }
+            });
 
 //
         }
@@ -379,7 +380,7 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
     }
 
     /**
-     * Acts on press of "Save Changes" button. Checks inputs and saves to Parse database if valid. 
+     * Acts on press of "Save Changes" button. Checks inputs and saves to Parse database if valid.
      */
     protected void saveChanges() {
         final String wageStr = wage.getText().toString();
@@ -433,8 +434,8 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
             currentUser.put("hourlyRate", wageDouble);
             currentUser.put("phone", phone.getText().toString());
             currentUser.put("available", availability_spinner.getSelectedItem().toString().toLowerCase());
-
             Log.e("SSSPPIINNERRR",availability_spinner.getSelectedItem().toString() );
+
 
             Toast.makeText(ProfileEditActivity.this, "Changed profile successfully", Toast.LENGTH_LONG).show();
             currentUser.saveInBackground(new SaveCallback() {

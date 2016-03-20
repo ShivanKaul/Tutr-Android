@@ -45,7 +45,7 @@ public class TutorListAdapter extends BaseAdapter {
     }
 
     public void removeAt(int position) {
-         usersToRatings.remove(position);
+        usersToRatings.remove(position);
     }
 
     public void setCustomButtonListner(customButtonListener listener) {
