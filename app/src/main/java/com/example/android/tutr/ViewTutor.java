@@ -602,6 +602,10 @@ public class ViewTutor extends AppCompatActivity {
         });
     }
 
+    /**
+     * Star icon listener
+     * @param view
+     */
     public void onFavorite(View view) {
         ParseUser currentUser = ParseUser.getCurrentUser();
         List<String> favoritesList =  (List<String>) currentUser.get("favorites");
@@ -619,9 +623,16 @@ public class ViewTutor extends AppCompatActivity {
         }
     }
 
+    /**
+     * Update the favorite star icon when the activity is created
+     * @param username
+     */
     public void initializeFavoritesButton(String username){
 
+        //Get current user
         ParseUser currentUser = ParseUser.getCurrentUser();
+
+        //Refresh the favorite list of the user
         ParseUser.getCurrentUser().refreshInBackground(new RefreshCallback() {
             public void done(ParseObject object, ParseException e) {
                 if (e == null) {
@@ -631,9 +642,11 @@ public class ViewTutor extends AppCompatActivity {
                 }
             }
         });
+
+        //Get the favorites list
         List<String> favoritesList =  (List<String>) currentUser.get("favorites");
 
-
+        //Update the star icon
         for (int i = 0; i < favoritesList.size(); i++) {
             if (favoritesList.get(i).equals(username)) {
                 favoriteButton.setChecked(true);

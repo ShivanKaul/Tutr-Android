@@ -52,7 +52,9 @@ public class TutorListAdapter extends BaseAdapter {
         this.customListner = listener;
     }
 
-
+    /**
+     * Custom button for each item in the list
+     */
     public interface customButtonListener {
         public void onButtonClickListner(int position, UserToRating value);
     }

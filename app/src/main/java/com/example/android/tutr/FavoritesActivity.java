@@ -175,14 +175,21 @@ public class FavoritesActivity extends AppCompatActivity implements customButton
         });
     }
 
-
+    /**
+     * Remove the specified tutor from the user's favorite tutor's list
+     * @param user
+     */
     private void removeUserFromParse(ParseObject user) {
         ParseUser currentUser = ParseUser.getCurrentUser();
         List<String> favoritesList = (List<String>) currentUser.get("favorites");
         String username = user.getString("username");
+
+        //Remove and update
         favoritesList.remove(username);
         currentUser.put("favorites", favoritesList);
         currentUser.saveInBackground();
+
+        //Notify user
         Toast.makeText(FavoritesActivity.this, username + " Removed", Toast.LENGTH_SHORT).show();
     }
 
