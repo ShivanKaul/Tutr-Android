@@ -28,6 +28,17 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true">
 
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/favoriteButton"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:checked="false"
+                android:onClick="onFavorite"
+                android:button="@drawable/favorite_button" />
+
             <ImageView
                 android:layout_width="100dp"
                 android:layout_height="100dp"
@@ -179,7 +190,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Call"
-                android:textStyle="bold"
                 android:id="@+id/call"
                 android:layout_alignBaseline="@id/display_phone"
                 android:layout_toRightOf="@id/display_phone"
@@ -190,7 +200,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Message"
-                android:textStyle="bold"
                 android:id="@+id/msg"
                 android:layout_alignBaseline="@id/display_phone"
                 android:layout_toRightOf="@+id/call"
@@ -274,17 +283,9 @@
             </LinearLayout>
 
         </RelativeLayout>
-    </ScrollView>
+    </ScrollView><![CDATA[
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/favoriteButton"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:checked="false"
-        android:onClick="onFavorite"
-        android:button="@drawable/favorite_button" />/>
+    />
 
+]]>
 </RelativeLayout>

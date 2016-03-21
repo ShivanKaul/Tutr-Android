@@ -70,7 +70,7 @@ public class TutorListAdapter extends BaseAdapter {
         //Get the textviews
         TextView name = (TextView) rowView.findViewById(R.id.tutorName);
         TextView rating = (TextView) rowView.findViewById(R.id.rating);
-        TextView rate = (TextView) rowView.findViewById(R.id.hourlyRate);
+        TextView hourlyRate = (TextView) rowView.findViewById(R.id.hourlyRate);
 
         //Get parse user + rating
 
@@ -84,9 +84,9 @@ public class TutorListAdapter extends BaseAdapter {
         
         //Set Hourly rate
         if (userObj.getDouble("hourlyRate") == 0)
-            rate.setText(context.getString(R.string.hourly_rate_text) + "N/A");
+            hourlyRate.setText(context.getString(R.string.hourly_rate_text) + "N/A");
         else
-            rate.setText(context.getString(R.string.hourly_rate_text) + String.format("%.2f", userObj.getDouble("hourlyRate")));
+            hourlyRate.setText(context.getString(R.string.hourly_rate_text) + String.format("%.2f", userObj.getDouble("hourlyRate")));
         
         //Set Rating
         if (ratingObj.getDouble("rating") == 0)
