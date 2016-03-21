@@ -166,7 +166,7 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
     }
 
     // only take jpeg and png image
-    private void handlePictureFormat(Uri selectedImage)
+    private boolean handlePictureFormat(Uri selectedImage)
     {
         String mimeType = getContentResolver().getType(selectedImage);
         if (mimeType != null && mimeType.compareToIgnoreCase("image/jpeg") != 0
@@ -174,8 +174,9 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
 
             Toast.makeText(ProfileEditActivity.this,
                     "The image must have jpeg or png format ", Toast.LENGTH_LONG).show();
-            return;
+            return false;
         }
+        return true;
     }
 
     @Override
@@ -184,7 +185,9 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri selectedImage = data.getData();
 
-            handlePictureFormat(selectedImage);
+            if(!handlePictureFormat(selectedImage))
+                return;
+
             Cursor returnCursor =
                     getContentResolver().query(selectedImage, null, null, null, null);
             int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
@@ -434,8 +437,6 @@ public class ProfileEditActivity extends AppCompatActivity implements View.OnCli
             currentUser.put("hourlyRate", wageDouble);
             currentUser.put("phone", phone.getText().toString());
             currentUser.put("available", availability_spinner.getSelectedItem().toString().toLowerCase());
-            Log.e("SSSPPIINNERRR",availability_spinner.getSelectedItem().toString() );
-
 
             Toast.makeText(ProfileEditActivity.this, "Changed profile successfully", Toast.LENGTH_LONG).show();
             currentUser.saveInBackground(new SaveCallback() {
