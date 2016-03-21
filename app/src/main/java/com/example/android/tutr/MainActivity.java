@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity
 
                     List<ParseObject> parseUsersList = parseUsers;
                     TextView searchResultTextView = (TextView) findViewById(R.id.searchResultTextView);
-                    searchResultTextView.setText("Search result - " + parseUsers.size() + " tutors found");
+                    searchResultTextView.setText("Search result - " + parseUsers.size() + " tutor(s) found");
 
                     if (parseUsers.size() == 0) {
                         if (searchInputCheck == 1) {
