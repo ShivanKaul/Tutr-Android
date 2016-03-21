@@ -1,3 +1,5 @@
+![Tutr Logo](https://raw.githubusercontent.com/ShivanKaul/Tutr-Android/master/app/src/main/assets/tutr_img.jpg)
+
 # Tutr
 Tinder for tutoring. Currently available only to McGill students.
 
