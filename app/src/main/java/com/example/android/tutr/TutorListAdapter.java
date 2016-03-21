@@ -78,14 +78,21 @@ public class TutorListAdapter extends BaseAdapter {
         final ParseObject userObj = utr.getUser();
         final ParseObject ratingObj = utr.getRating();
 
-
-        //Set fields
+        //Set name
         name.setText(userObj.getString("name"));
-        rating.setText(context.getString(R.string.hourly_rate_text) + String.format("%.2f", userObj.getDouble("hourlyRate")));
-        if (ratingObj.getDouble("rating") == 0)
-            rate.setText(context.getString(R.string.rating_text) + "N/A");
+        
+        
+        //Set Hourly rate
+        if (userObj.getDouble("hourlyRate") == 0)
+            rate.setText(context.getString(R.string.hourly_rate_text) + "N/A");
         else
-            rate.setText(context.getString(R.string.rating_text) + String.format("%.1f", ratingObj.getDouble("rating")) + " (" + ratingObj.getInt("ratingCount") + ")");
+            rate.setText(context.getString(R.string.hourly_rate_text) + String.format("%.2f", userObj.getDouble("hourlyRate")));
+        
+        //Set Rating
+        if (ratingObj.getDouble("rating") == 0)
+            rating.setText(context.getString(R.string.rating_text) + "N/A");
+        else
+            rating.setText(context.getString(R.string.rating_text) + String.format("%.1f", ratingObj.getDouble("rating")) + " (" + ratingObj.getInt("ratingCount") + ")");
 
 
 
