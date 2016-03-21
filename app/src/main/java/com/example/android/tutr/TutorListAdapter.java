@@ -86,7 +86,7 @@ public class TutorListAdapter extends BaseAdapter {
         if (userObj.getDouble("hourlyRate") == 0)
             hourlyRate.setText(context.getString(R.string.hourly_rate_text) + "N/A");
         else
-            hourlyRate.setText(context.getString(R.string.hourly_rate_text) + String.format("%.2f", userObj.getDouble("hourlyRate")));
+            hourlyRate.setText(context.getString(R.string.hourly_rate_text) + "$" + String.format("%.2f", userObj.getDouble("hourlyRate")));
         
         //Set Rating
         if (ratingObj.getDouble("rating") == 0)
