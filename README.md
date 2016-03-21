@@ -1,9 +1,5 @@
 # Tutr
-Tinder for tutoring. 
+Tinder for tutoring. Currently available only to McGill students.
 
 ## Features:
-- Rate tutors
-- Contact tutors
-- Set up profile
-- Reviews 
-- Favourite tutors
+Tutoring by matching tutees with qualified tutors. Each tutor will have a profile including information regarding their teaching experience and other qualifications. The tutees identify tutors by searching relevant keywords in a search engine, after which they can select, contact, review and rate their tutors.
