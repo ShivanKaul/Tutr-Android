@@ -663,7 +663,7 @@ public class ViewTutor extends AppCompatActivity {
     /**
      * Get average rating.
      */
-    public double averageRating(int newCounter, float rating, double old_rating, double rating_counter) {
+    public static double averageRating(int newCounter, float rating, double old_rating, double rating_counter) {
         double average = (rating_counter == 0) ?
                 rating : ((old_rating * rating_counter) + rating) / (newCounter);
         return average;
