@@ -1,9 +1,7 @@
+![Tutr Logo](https://raw.githubusercontent.com/ShivanKaul/Tutr-Android/master/app/src/main/assets/tutr_img.jpg)
+
 # Tutr
-Tinder for tutoring. SEP project, Winter 2016.
+Tinder for tutoring. Currently available only to McGill students.
 
-## For Developers
-Each branch is there for a purpose:
-* master: The main branch; General bug fixes and feature updates are pushed here.
-* stable: Only contains the version with minimal errors.
-
--- It is always recommended to branch out from the most recent master whenever building a new feature or fixing bugs and return to master as soon as it is done in order to reduce merge conflicts.
+## Features:
+Tutoring by matching tutees with qualified tutors. Each tutor will have a profile including information regarding their teaching experience and other qualifications. The tutees identify tutors by searching relevant keywords in a search engine, after which they can select, contact, review and rate their tutors.
