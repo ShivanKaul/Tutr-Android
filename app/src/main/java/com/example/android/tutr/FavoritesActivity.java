@@ -122,10 +122,15 @@ public class FavoritesActivity extends AppCompatActivity implements customButton
     private List<UserToRating> zipLists(List<ParseObject> users, List<ParseObject> ratings) {
         if (users.size() != ratings.size()) complainAboutSizes(users.size(), ratings.size());
         List<UserToRating> usersToRatings = new ArrayList<UserToRating>();
-        Iterator<ParseObject> i1 = users.iterator();
-        Iterator<ParseObject> i2 = ratings.iterator();
-        while (i1.hasNext() && i2.hasNext()) {
-            usersToRatings.add(new UserToRating(i1.next(), i2.next()));
+
+        //Link corresponding user to rating
+        for (int i = 0; i < users.size(); i++){
+            for (int j = 0; j < ratings.size(); j++){
+                if (users.get(i).getString("username").equals(ratings.get(j).getString("username"))){
+                    usersToRatings.add(new UserToRating(users.get(i), ratings.get(j)));
+                    break;
+                }
+            }
         }
 
         return usersToRatings;

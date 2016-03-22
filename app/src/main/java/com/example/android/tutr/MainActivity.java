@@ -224,14 +224,14 @@ public class MainActivity extends AppCompatActivity
                         }
                         List<ParseObject> ratings = null;
                         try {
-                            ratings =  ParseQuery.or(queries).find();
+                            ratings = ParseQuery.or(queries).find();
                         } catch (ParseException p) {
                             Toast.makeText(MainActivity.this, "Problem fetching data from Ratings table" + p, Toast.LENGTH_LONG).show();
                             // What is even happening, just die
                             finish();
                         }
                         usersToRatings = zipLists(parseUsersList, ratings);
-                        populateResults((ArrayList)usersToRatings);
+                        populateResults((ArrayList) usersToRatings);
                     }
                 } else {
                     //request has failed
@@ -249,11 +249,17 @@ public class MainActivity extends AppCompatActivity
      */
     private List<UserToRating> zipLists(List<ParseObject> users, List<ParseObject> ratings) {
         if (users.size() != ratings.size()) complainAboutSizes(users.size(), ratings.size());
+
         List<UserToRating> usersToRatings = new ArrayList<UserToRating>();
-        Iterator<ParseObject> i1 = users.iterator();
-        Iterator<ParseObject> i2 = ratings.iterator();
-        while (i1.hasNext() && i2.hasNext()) {
-            usersToRatings.add(new UserToRating(i1.next(), i2.next()));
+
+        //Link corresponding user to rating
+        for (int i = 0; i < users.size(); i++){
+            for (int j = 0; j < ratings.size(); j++){
+                if (users.get(i).getString("username").equals(ratings.get(j).getString("username"))){
+                    usersToRatings.add(new UserToRating(users.get(i), ratings.get(j)));
+                    break;
+                }
+            }
         }
 
         return usersToRatings;
@@ -485,6 +491,7 @@ public class MainActivity extends AppCompatActivity
                 UserToRating clickedUser = (UserToRating) parent.getItemAtPosition(position);
                 String username = clickedUser.getUser().getString("username");
                 String name = clickedUser.getUser().getString("name");
+
                 Intent intent = new Intent(MainActivity.this, ViewTutor.class);
                 intent.putExtra("username", username);
                 intent.putExtra("name", name);
